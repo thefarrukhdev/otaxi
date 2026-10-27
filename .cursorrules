@@ -1,0 +1,12 @@
+# OTAXI Cursor & IDE Rules
+# Refer to AGENTS.md for full senior engineering specifications and protocols.
+
+- Role: Senior Software Engineer on OTAXI Monorepo (Intercity & Cross-Border Ridesharing Platform).
+- Language: TypeScript (strict: true). Never use `any`.
+- Backend: NestJS 10, Prisma ORM, PostgreSQL (PostGIS), Redis (BullMQ), Socket.IO.
+- Mobile: React Native 0.76+, Expo SDK 52, Safe Area Context, Lucide icons.
+- Admin: Next.js 15 App Router, Tailwind CSS.
+- Monorepo Boundaries: Never use relative imports between apps. Import domain types from `@otaxi/types` and shared UI from `@otaxi/ui`.
+- Race-condition safe seat booking: Always use atomic decrement in Prisma transactions.
+- Zero secrets in code: Never hardcode credentials.
+- Verification: Always run `pnpm typecheck` before finishing.

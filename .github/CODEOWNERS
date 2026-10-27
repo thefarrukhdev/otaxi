@@ -1,0 +1,36 @@
+# ==============================================================================
+# OTAXI PLATFORM — Global Code Ownership Specification (.github/CODEOWNERS)
+# Defines PR review responsibilities for Farrukh (Frontend) and Ravshan (Backend).
+# ==============================================================================
+
+# Global fallback maintainer
+* @thefarrukhdev
+
+# Core Configurations & CI/CD
+/.github/                     @thefarrukhdev
+/docker-compose.yml           @thefarrukhdev
+/turbo.json                   @thefarrukhdev
+/pnpm-workspace.yaml          @thefarrukhdev
+/package.json                 @thefarrukhdev
+/.gitignore                   @thefarrukhdev
+
+# Documentation & PRD Architecture
+/docs/                        @thefarrukhdev
+/README.md                    @thefarrukhdev
+/CONTRIBUTING.md              @thefarrukhdev
+/AGENTS.md                    @thefarrukhdev
+
+# Shared Domain Packages (Requires review from both leads when changed)
+/packages/types/              @thefarrukhdev
+/packages/config/             @thefarrukhdev
+/packages/ui/                 @thefarrukhdev
+
+# Backend API & Database Infrastructure (Ravshan & Farrukh)
+/apps/backend/                @thefarrukhdev
+/apps/backend/prisma/         @thefarrukhdev
+
+# Mobile Applications (iOS & Android Expo) (Farrukh)
+/apps/mobile/                 @thefarrukhdev
+
+# Web Admin CRM & ERP Platform (Farrukh)
+/apps/web-admin/              @thefarrukhdev
