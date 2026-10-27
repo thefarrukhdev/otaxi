@@ -1,0 +1,378 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  PASSENGER
+  DRIVER
+  ADMIN
+  MODERATOR
+  OPERATOR
+  FINANCIER
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BLOCKED
+  DELETED
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+enum DocumentType {
+  DRIVER_LICENSE_FRONT
+  DRIVER_LICENSE_BACK
+  TECH_PASSPORT_FRONT
+  TECH_PASSPORT_BACK
+  SELFIE_WITH_ID
+  CAR_PHOTO_FRONT
+  CAR_PHOTO_BACK
+  CAR_PHOTO_INTERIOR
+  INSURANCE
+  INTERNATIONAL_PERMIT
+}
+
+enum TripStatus {
+  DRAFT
+  PUBLISHED
+  FULL
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum BookingStatus {
+  PENDING_PAYMENT
+  CONFIRMED
+  CANCELLED_BY_PASSENGER
+  CANCELLED_BY_DRIVER
+  IN_PROGRESS
+  COMPLETED
+  REFUNDED
+  NO_SHOW
+  EXPIRED
+}
+
+enum PaymentProvider {
+  PAYME
+  CLICK
+  UZUM
+  CASH
+  WALLET
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum WalletTransactionType {
+  EARNING
+  COMMISSION
+  PAYOUT
+  REFUND
+  BONUS
+}
+
+enum Currency {
+  UZS
+  KZT
+  KGS
+  USD
+}
+
+enum CountryCode {
+  UZ
+  KZ
+  KG
+  TJ
+}
+
+model User {
+  id                String         @id @default(uuid())
+  phone             String         @unique
+  fullName          String
+  avatarUrl         String?
+  role              UserRole       @default(PASSENGER)
+  status            UserStatus     @default(ACTIVE)
+  preferredLanguage String         @default("uz")
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  driverProfile     DriverProfile?
+  bookings          Booking[]
+  ratingsGiven      Rating[]       @relation("RatingsGiven")
+  ratingsReceived   Rating[]       @relation("RatingsReceived")
+  supportTickets    SupportTicket[]
+  staffProfile      Staff?
+
+  @@index([phone])
+  @@index([role])
+}
+
+model DriverProfile {
+  id                 String             @id @default(uuid())
+  userId             String             @unique
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  rejectionReason    String?
+  verifiedAt         DateTime?
+  verifiedBy         String?
+  rating             Float              @default(5.0)
+  totalTrips         Int                @default(0)
+  totalReviews       Int                @default(0)
+  isAvailable        Boolean            @default(true)
+  walletBalance      Decimal            @default(0) @db.Decimal(12, 2)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  documents          DriverDocument[]
+  vehicles           Vehicle[]
+  trips              Trip[]
+  walletTransactions WalletTransaction[]
+
+  @@index([verificationStatus])
+}
+
+model DriverDocument {
+  id             String        @id @default(uuid())
+  driverId       String
+  driver         DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  type           DocumentType
+  fileUrl        String
+  expiresAt      DateTime?
+  isVerified     Boolean       @default(false)
+  rejectedReason String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([driverId, type])
+}
+
+model Vehicle {
+  id                String        @id @default(uuid())
+  driverId          String
+  driver            DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  make              String        // e.g. Chevrolet, Toyota
+  model             String        // e.g. Lacetti, Cobalt, Camry
+  color             String
+  year              Int
+  licensePlate      String        @unique
+  totalSeats        Int           @default(4)
+  hasAirConditioner Boolean       @default(true)
+  hasLuggageSpace   Boolean       @default(true)
+  photos            String[]      @default([])
+  isActive          Boolean       @default(true)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  trips             Trip[]
+
+  @@index([driverId])
+}
+
+model Trip {
+  id                   String        @id @default(uuid())
+  driverId             String
+  driver               DriverProfile @relation(fields: [driverId], references: [id])
+  vehicleId            String
+  vehicle              Vehicle       @relation(fields: [vehicleId], references: [id])
+  originCity           String
+  originCountry        CountryCode   @default(UZ)
+  originAddress        String
+  destinationCity      String
+  destinationCountry   CountryCode   @default(UZ)
+  destinationAddress   String
+  departureTime        DateTime
+  estimatedArrivalTime DateTime
+  totalSeats           Int
+  availableSeats       Int
+  pricePerSeat         Decimal       @db.Decimal(10, 2)
+  currency             Currency      @default(UZS)
+  isInternational      Boolean       @default(false)
+  status               TripStatus    @default(PUBLISHED)
+  allowLuggage         Boolean       @default(true)
+  notes                String?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  stops                TripStop[]
+  bookings             Booking[]
+
+  @@index([originCity, destinationCity, departureTime])
+  @@index([status])
+  @@index([driverId])
+}
+
+model TripStop {
+  id               String      @id @default(uuid())
+  tripId           String
+  trip             Trip        @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  cityName         String
+  countryCode      CountryCode @default(UZ)
+  order            Int
+  estimatedArrival DateTime
+  priceDelta       Decimal     @default(0) @db.Decimal(10, 2)
+
+  @@index([tripId, order])
+}
+
+model Booking {
+  id                 String        @id @default(uuid())
+  tripId             String
+  trip               Trip          @relation(fields: [tripId], references: [id])
+  passengerId        String
+  passenger          User          @relation(fields: [passengerId], references: [id])
+  seatCount          Int           @default(1)
+  totalPrice         Decimal       @db.Decimal(10, 2)
+  commissionAmount   Decimal       @default(0) @db.Decimal(10, 2)
+  driverEarnings     Decimal       @default(0) @db.Decimal(10, 2)
+  promoCodeId        String?
+  promoCode          PromoCode?    @relation(fields: [promoCodeId], references: [id])
+  status             BookingStatus @default(PENDING_PAYMENT)
+  pickupAddress      String?
+  dropoffAddress     String?
+  cancellationReason String?
+  verificationCode   String        // 4-digit code presented to driver upon boarding
+  paymentExpiresAt   DateTime
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  payments           Payment[]
+  rating             Rating?
+
+  @@index([tripId])
+  @@index([passengerId])
+  @@index([status])
+}
+
+model Payment {
+  id             String          @id @default(uuid())
+  bookingId      String
+  booking        Booking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  provider       PaymentProvider
+  providerTxId   String?
+  amount         Decimal         @db.Decimal(10, 2)
+  currency       Currency        @default(UZS)
+  status         PaymentStatus   @default(PENDING)
+  idempotencyKey String          @unique
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@index([bookingId])
+  @@index([status])
+}
+
+model WalletTransaction {
+  id            String                @id @default(uuid())
+  driverId      String
+  driver        DriverProfile         @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  type          WalletTransactionType
+  amount        Decimal               @db.Decimal(10, 2)
+  balanceBefore Decimal               @db.Decimal(12, 2)
+  balanceAfter  Decimal               @db.Decimal(12, 2)
+  referenceId   String?
+  description   String
+  createdAt     DateTime              @default(now())
+
+  @@index([driverId])
+}
+
+model Rating {
+  id         String   @id @default(uuid())
+  bookingId  String   @unique
+  booking    Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  fromUserId String
+  fromUser   User     @relation("RatingsGiven", fields: [fromUserId], references: [id])
+  toUserId   String
+  toUser     User     @relation("RatingsReceived", fields: [toUserId], references: [id])
+  score      Int      // 1 to 5
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  @@index([toUserId])
+}
+
+model BorderChecklist {
+  id             String      @id @default(uuid())
+  fromCountry    CountryCode
+  toCountry      CountryCode
+  title          String
+  description    String
+  version        String      @default("1.0")
+  items          Json        // Array of IChecklistItem
+  lastVerifiedAt DateTime    @default(now())
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@unique([fromCountry, toCountry])
+}
+
+model PromoCode {
+  id              String    @id @default(uuid())
+  code            String    @unique
+  discountPercent Int?      // percentage e.g. 10%
+  fixedDiscount   Decimal?  @db.Decimal(10, 2)
+  validFrom       DateTime  @default(now())
+  validTo         DateTime
+  usageLimit      Int       @default(100)
+  usedCount       Int       @default(0)
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+
+  bookings        Booking[]
+}
+
+model SupportTicket {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  channel         String   @default("APP")
+  subject         String
+  description     String
+  status          String   @default("OPEN")
+  assignedStaffId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Staff {
+  id                 String     @id @default(uuid())
+  userId             String     @unique
+  user               User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permissions        String[]   @default([])
+  department         String     @default("OPERATIONS")
+  isTwoFactorEnabled Boolean    @default(false)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  auditLogs          AuditLog[]
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  staffId   String
+  staff     Staff    @relation(fields: [staffId], references: [id])
+  action    String
+  entity    String
+  entityId  String
+  diff      Json?
+  createdAt DateTime @default(now())
+
+  @@index([staffId])
+  @@index([entity, entityId])
+}

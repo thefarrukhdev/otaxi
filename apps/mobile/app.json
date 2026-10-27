@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "OTAXI",
+    "slug": "otaxi-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "otaxi",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#059669"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.otaxi.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "OTAXI sizga yaqin oradagi shaharlararo va xalqaro reyslarni qidirish hamda haydovchi joylashuvini ko'rsatish uchun joylashuv ma'lumotlaridan foydalanadi.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Haydovchi safar davomida yo'lovchilarga real vaqtda joylashuvni ko'rsatishi va chegara punktlariga yaqinlashganda xabar berish uchun joylashuv ruxsati zarur.",
+        "NSCameraUsageDescription": "Haydovchilik guvohnomasi, avtomobil texpasporti va chegara hujjatlarini suratga olib yuklash uchun kamera ruxsati kerak.",
+        "NSPhotoLibraryUsageDescription": "Hujjatlar va avtomobil fotosuratlarini yuklash uchun galereyaga kirish ruxsati zarur."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#059669"
+      },
+      "package": "com.otaxi.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Haydovchi safar davomida fon rejimida joylashuvni yangilashi uchun ruxsat talab etiladi."
+        }
+      ]
+    ]
+  }
+}
