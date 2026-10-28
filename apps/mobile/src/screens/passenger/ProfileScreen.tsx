@@ -7,9 +7,12 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { COLORS, SHADOWS } from '../../lib/theme';
-import { Header } from '../../components/Header';
-import { Badge } from '../../components/Badge';
+import { COLORS } from '../../lib/theme';
+import { Header } from '../../components/shared/Header';
+import { Card } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { Badge } from '../../components/ui/Badge';
+import { Haptics } from '../../components/ui/Haptics';
 import { useApp } from '../../context/AppContext';
 import {
   User,
@@ -27,13 +30,30 @@ import {
 export const ProfileScreen: React.FC = () => {
   const { toggleUserMode } = useApp();
 
+  const handleSupport = () => {
+    Haptics.light();
+    Alert.alert('Qo’llab-quvvatlash', 'OTAXI 24/7 Call Center: +998 71 200 00 00');
+  };
+
+  const handleLogout = () => {
+    Haptics.warning();
+    Alert.alert('Chiqish', 'Akkauntdan chiqishni tasdiqlaysizmi?', [
+      { text: 'Bekor qilish', style: 'cancel' },
+      { text: 'Chiqish', style: 'destructive', onPress: () => {} },
+    ]);
+  };
+
   return (
     <View style={styles.container}>
       <Header title="Profil va sozlamalar" subtitle="Shaxsiy ma’lumotlar va xavfsizlik" />
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* User Card */}
-        <View style={styles.userCard}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* User Profile Card */}
+        <Card variant="surface" style={styles.userCard}>
           <View style={styles.avatar}>
             <Text style={styles.avatarText}>FB</Text>
           </View>
@@ -44,79 +64,76 @@ export const ProfileScreen: React.FC = () => {
             </View>
             <Text style={styles.userPhone}>+998 90 999 88 11</Text>
             <View style={{ marginTop: 4 }}>
-              <Badge label="Tasdiqlangan yo’lovchi" variant="emerald" />
+              <Badge label="Tasdiqlangan yo’lovchi" variant="success" size="sm" />
             </View>
           </View>
-        </View>
+        </Card>
 
-        {/* Switch to Driver Mode Banner (inDrive style) */}
-        <TouchableOpacity style={styles.switchModeCard} onPress={toggleUserMode} activeOpacity={0.85}>
+        {/* inDrive Mode Switch Banner */}
+        <Card
+          variant="surface"
+          pressable
+          onPress={() => {
+            Haptics.medium();
+            toggleUserMode();
+          }}
+          style={styles.switchModeCard}
+        >
           <View style={styles.switchIconBox}>
             <Car size={24} color={COLORS.amber[500]} />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.switchTitle}>Haydovchi rejimiga o’tish</Text>
             <Text style={styles.switchSubtitle}>
-              Shaharlararo yoki xalqaro reys e’lon qiling va daromad oling
+              Shaharlararo yoki xalqaro reys e’lon qiling va barqaror daromad oling.
             </Text>
           </View>
-          <ChevronRight size={20} color={COLORS.amber[400]} />
-        </TouchableOpacity>
+          <ChevronRight size={18} color={COLORS.gray[400]} />
+        </Card>
 
-        {/* Saved Travel Documents */}
-        <View style={styles.menuSection}>
-          <Text style={styles.sectionHeading}>Safar hujjatlari</Text>
-          <View style={styles.menuCard}>
-            <View style={styles.menuItem}>
-              <FileText size={18} color={COLORS.gray[500]} />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.menuItemTitle}>Xorijiy pasport (Biometrik)</Text>
-                <Text style={styles.menuItemSubtitle}>FA1234567 • Yaroqlilik: 2032-yilgacha</Text>
-              </View>
-              <Badge label="Faol" variant="emerald" />
+        {/* Settings Group */}
+        <Card variant="surface" style={styles.settingsGroup}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => Haptics.selection()} activeOpacity={0.7}>
+            <View style={styles.menuIconCircle}>
+              <Globe size={18} color={COLORS.emerald[700]} />
             </View>
-          </View>
-        </View>
+            <Text style={styles.menuTitle}>Ilova tili</Text>
+            <Text style={styles.menuValue}>O’zbekcha</Text>
+            <ChevronRight size={16} color={COLORS.gray[400]} />
+          </TouchableOpacity>
 
-        {/* Support & Contacts */}
-        <View style={styles.menuSection}>
-          <Text style={styles.sectionHeading}>Qo’llab-quvvatlash</Text>
-          <View style={styles.menuCard}>
-            <TouchableOpacity
-              style={styles.menuItem}
-              onPress={() => Alert.alert('Aloqa', 'OTAXI 24/7 Call-markazi: +998 71 200 00 00')}
-            >
-              <Headphones size={18} color={COLORS.emerald[600]} />
-              <Text style={[styles.menuItemTitle, { flex: 1 }]}>24/7 Qo’llab-quvvatlash xizmati</Text>
-              <ChevronRight size={18} color={COLORS.gray[400]} />
-            </TouchableOpacity>
+          <View style={styles.menuDivider} />
 
-            <View style={styles.menuDivider} />
-
-            <TouchableOpacity
-              style={styles.menuItem}
-              onPress={() => Alert.alert('SOS', 'Favqulodda tezkor yordam liniyasi: 112 / 102')}
-            >
-              <PhoneCall size={18} color={COLORS.red[500]} />
-              <Text style={[styles.menuItemTitle, { flex: 1, color: COLORS.red[600] }]}>
-                Favqulodda SOS yordam
-              </Text>
-              <ChevronRight size={18} color={COLORS.gray[400]} />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* General Settings */}
-        <View style={styles.menuSection}>
-          <Text style={styles.sectionHeading}>Ilova sozlamalari</Text>
-          <View style={styles.menuCard}>
-            <View style={styles.menuItem}>
-              <Globe size={18} color={COLORS.gray[500]} />
-              <Text style={[styles.menuItemTitle, { flex: 1 }]}>Ilova tili</Text>
-              <Text style={styles.langValue}>O’zbekcha</Text>
+          <TouchableOpacity style={styles.menuItem} onPress={handleSupport} activeOpacity={0.7}>
+            <View style={styles.menuIconCircle}>
+              <Headphones size={18} color={COLORS.emerald[700]} />
             </View>
-          </View>
-        </View>
+            <Text style={styles.menuTitle}>24/7 Qo’llab-quvvatlash xizmati</Text>
+            <ChevronRight size={16} color={COLORS.gray[400]} />
+          </TouchableOpacity>
+
+          <View style={styles.menuDivider} />
+
+          <TouchableOpacity style={styles.menuItem} onPress={() => Haptics.selection()} activeOpacity={0.7}>
+            <View style={styles.menuIconCircle}>
+              <FileText size={18} color={COLORS.emerald[700]} />
+            </View>
+            <Text style={styles.menuTitle}>Foydalanish shartlari va maxfiylik</Text>
+            <ChevronRight size={16} color={COLORS.gray[400]} />
+          </TouchableOpacity>
+        </Card>
+
+        {/* Logout Button */}
+        <Button
+          title="Tizimdan chiqish"
+          variant="outline"
+          size="md"
+          fullWidth
+          onPress={handleLogout}
+          leftIcon={<LogOut size={16} color={COLORS.red[600]} />}
+          style={styles.logoutBtn}
+          textStyle={{ color: COLORS.red[600] }}
+        />
       </ScrollView>
     </View>
   );
@@ -132,35 +149,30 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
-    paddingBottom: 40,
+    paddingBottom: 36,
   },
   userCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: 18,
-    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
+    padding: 16,
     gap: 14,
-    borderWidth: 1,
-    borderColor: COLORS.gray[200],
-    marginBottom: 16,
-    ...SHADOWS.sm,
+    marginBottom: 12,
   },
   avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: COLORS.emerald[600],
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarText: {
+    fontSize: 18,
+    fontWeight: '800',
     color: COLORS.white,
-    fontWeight: '900',
-    fontSize: 20,
   },
   userName: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '800',
     color: COLORS.gray[900],
   },
@@ -170,81 +182,68 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   switchModeCard: {
-    backgroundColor: COLORS.navy[900],
-    borderRadius: 18,
-    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
-    marginBottom: 20,
-    borderWidth: 1,
+    padding: 16,
+    gap: 12,
+    marginBottom: 12,
+    backgroundColor: COLORS.navy[900],
     borderColor: COLORS.navy[800],
-    ...SHADOWS.md,
   },
   switchIconBox: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: COLORS.navy[800],
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: 'rgba(245, 158, 11, 0.15)',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: COLORS.amber[500],
   },
   switchTitle: {
     fontSize: 15,
     fontWeight: '800',
-    color: COLORS.white,
+    color: COLORS.amber[400],
   },
   switchSubtitle: {
     fontSize: 11,
     color: COLORS.navy[300],
     marginTop: 2,
-    lineHeight: 16,
+    lineHeight: 15,
   },
-  menuSection: {
-    marginBottom: 18,
-  },
-  sectionHeading: {
-    fontSize: 13,
-    fontWeight: '800',
-    color: COLORS.gray[500],
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 8,
-    marginLeft: 4,
-  },
-  menuCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: COLORS.gray[200],
-    ...SHADOWS.sm,
+  settingsGroup: {
+    padding: 6,
+    marginBottom: 16,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 14,
-    gap: 12,
+    padding: 12,
+    gap: 10,
   },
-  menuItemTitle: {
+  menuIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: COLORS.emerald[50],
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  menuTitle: {
     fontSize: 14,
-    fontWeight: '700',
-    color: COLORS.gray[900],
+    fontWeight: '600',
+    color: COLORS.gray[800],
+    flex: 1,
   },
-  menuItemSubtitle: {
-    fontSize: 11,
+  menuValue: {
+    fontSize: 12,
     color: COLORS.gray[500],
-    marginTop: 2,
+    fontWeight: '500',
   },
   menuDivider: {
     height: 1,
     backgroundColor: COLORS.gray[100],
-    marginHorizontal: 14,
+    marginHorizontal: 12,
   },
-  langValue: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: COLORS.emerald[700],
+  logoutBtn: {
+    borderColor: COLORS.red[200],
   },
 });

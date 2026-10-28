@@ -79,6 +79,41 @@ export const COLORS = {
   },
 };
 
+export const THEME = {
+  passenger: {
+    isDark: false,
+    background: '#F8FAFC',
+    surface: '#FFFFFF',
+    surfaceSubtle: '#F1F5F9',
+    card: '#FFFFFF',
+    text: '#0F172A',
+    textMuted: '#64748B',
+    textSubtle: '#94A3B8',
+    primary: '#059669', // Emerald Oasis
+    primaryLight: '#D1FAE5',
+    primaryDark: '#064E3B',
+    accent: '#F43F5E',
+    border: '#E2E8F0',
+    borderFocus: '#059669',
+  },
+  driver: {
+    isDark: true,
+    background: '#090D16', // Obsidian Cockpit
+    surface: '#111827', // Card Graphite
+    surfaceSubtle: '#1E293B',
+    card: '#111827',
+    text: '#F8FAFC',
+    textMuted: '#94A3B8',
+    textSubtle: '#64748B',
+    primary: '#F59E0B', // Amber Gold
+    primaryLight: '#FEF3C7',
+    primaryDark: '#B45309',
+    accent: '#10B981', // Signal Emerald
+    border: '#1F2937',
+    borderFocus: '#F59E0B',
+  },
+};
+
 export const SHADOWS = {
   sm: {
     shadowColor: '#000',
@@ -100,5 +135,40 @@ export const SHADOWS = {
     shadowOpacity: 0.12,
     shadowRadius: 8,
     elevation: 5,
+  },
+};
+
+export const TYPOGRAPHY = {
+  hero: {
+    fontSize: 28,
+    fontWeight: '700' as const,
+    letterSpacing: -0.5,
+  },
+  title1: {
+    fontSize: 22,
+    fontWeight: '600' as const,
+    letterSpacing: -0.3,
+  },
+  title2: {
+    fontSize: 18,
+    fontWeight: '600' as const,
+  },
+  body: {
+    fontSize: 15,
+    fontWeight: '400' as const,
+    lineHeight: 22,
+  },
+  bodyBold: {
+    fontSize: 15,
+    fontWeight: '600' as const,
+  },
+  caption: {
+    fontSize: 12,
+    fontWeight: '500' as const,
+  },
+  otpCode: {
+    fontSize: 32,
+    fontWeight: '800' as const,
+    letterSpacing: 6,
   },
 };

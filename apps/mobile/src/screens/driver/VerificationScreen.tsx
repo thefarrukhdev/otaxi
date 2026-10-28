@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
-import { Badge } from '../../components/Badge';
 import { useApp } from '../../context/AppContext';
+import { Haptics } from '../../components/ui/Haptics';
 import {
   ShieldCheck,
   FileText,
@@ -21,35 +21,62 @@ import {
   AlertCircle,
   UploadCloud,
   FileCheck,
+  ChevronRight,
+  Globe,
+  RefreshCw,
+  ExternalLink,
+  Shield,
 } from 'lucide-react-native';
 
 export const VerificationScreen: React.FC = () => {
   const { verification, uploadDocument, submitVerification } = useApp();
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
 
-  const handleSimulateUpload = (name: string, type: any) => {
+  const handleSimulateUpload = (
+    name: string,
+    type: 'licenseFront' | 'licenseBack' | 'techPassport' | 'insurance' | 'carPhotos'
+  ) => {
+    Haptics.medium();
     uploadDocument(type);
-    Alert.alert('Yuklandi', `${name} fotosurati muvaffaqiyatli biriktirildi.`);
+    Alert.alert(
+      'Hujjat yangilandi',
+      `${name} muvaffaqiyatli yuklandi va xavfsizlik xizmati tomonidan tasdiqlandi.`
+    );
   };
+
+  const carPhotoSlots = [
+    { id: 1, title: 'Old ko’rinish', status: 'Yuklangan' },
+    { id: 2, title: 'Orqa ko’rinish', status: 'Yuklangan' },
+    { id: 3, title: 'O’ng yon tomon', status: 'Yuklangan' },
+    { id: 4, title: 'Salon tozaligi', status: 'Yuklangan' },
+  ];
 
   return (
     <View style={styles.container}>
       <Header
         title="Haydovchi Verifikatsiyasi"
-        subtitle="Xavfsizlik va xalqaro qatnov uchun hujjatlar tekshiruvi"
+        subtitle="Rasmiy hujjatlar va xalqaro qatnov litsenziyasi"
       />
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* Status Stepper */}
+        {/* Verification Status Stepper Card */}
         <View style={styles.stepperCard}>
-          <Text style={styles.stepperTitle}>Ariza holati:</Text>
+          <View style={styles.stepperHeader}>
+            <Text style={styles.stepperTitle}>ARIZA VA TEKSHIRUV HOLATI</Text>
+            <View style={styles.liveApprovedBadge}>
+              <CheckCircle2 size={12} color={COLORS.emerald[400]} />
+              <Text style={styles.liveApprovedText}>TASDIQLANGAN</Text>
+            </View>
+          </View>
 
+          {/* Stepper Dots & Line */}
           <View style={styles.stepsRow}>
             {/* Step 1 */}
             <View style={styles.stepItem}>
               <View style={[styles.stepDot, styles.stepDotDone]}>
-                <CheckCircle2 size={16} color={COLORS.white} />
+                <CheckCircle2 size={15} color="#FFFFFF" />
               </View>
-              <Text style={styles.stepLabel}>Yuborildi</Text>
+              <Text style={styles.stepLabel}>1. Yuborildi</Text>
             </View>
 
             <View style={[styles.stepLine, styles.stepLineDone]} />
@@ -57,9 +84,9 @@ export const VerificationScreen: React.FC = () => {
             {/* Step 2 */}
             <View style={styles.stepItem}>
               <View style={[styles.stepDot, styles.stepDotDone]}>
-                <CheckCircle2 size={16} color={COLORS.white} />
+                <CheckCircle2 size={15} color="#FFFFFF" />
               </View>
-              <Text style={styles.stepLabel}>Ko’rib chiqildi</Text>
+              <Text style={styles.stepLabel}>2. Tekshiruv</Text>
             </View>
 
             <View style={[styles.stepLine, styles.stepLineDone]} />
@@ -67,118 +94,195 @@ export const VerificationScreen: React.FC = () => {
             {/* Step 3 */}
             <View style={styles.stepItem}>
               <View style={[styles.stepDot, styles.stepDotApproved]}>
-                <ShieldCheck size={18} color={COLORS.white} />
+                <ShieldCheck size={18} color={COLORS.navy[950]} />
               </View>
-              <Text style={[styles.stepLabel, styles.stepLabelApproved]}>Tasdiqlandi</Text>
+              <Text style={[styles.stepLabel, styles.stepLabelApproved]}>3. Tasdiqlandi</Text>
             </View>
           </View>
 
+          {/* Official Verification Banner */}
           <View style={styles.approvedBanner}>
-            <ShieldCheck size={20} color={COLORS.emerald[400]} />
-            <Text style={styles.approvedBannerText}>
-              Tabriklaymiz! Siz OTAXI platformasida "Tasdiqlangan Xalqaro Haydovchi" maqomiga egasiz.
-            </Text>
+            <View style={styles.approvedIconCircle}>
+              <ShieldCheck size={22} color={COLORS.emerald[400]} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.approvedBannerTitle}>
+                Tasdiqlangan Xalqaro Haydovchi (Gold Tier)
+              </Text>
+              <Text style={styles.approvedBannerText}>
+                Hujjatlaringiz to’liq tekshirildi. O’zbekiston va Qozog’iston (Toshkent — Shymkent / Olmaota) xalqaro qatnovlariga ruxsat berilgan.
+              </Text>
+            </View>
           </View>
         </View>
 
-        {/* Required Documents List */}
-        <Text style={styles.sectionHeading}>Yuklangan rasmiy hujjatlar</Text>
+        {/* 4 Required Documents List */}
+        <Text style={styles.sectionHeading}>Yuklangan rasmiy hujjatlar (4 ta)</Text>
 
         {/* 1. Driver License */}
         <View style={styles.docCard}>
-          <View style={styles.docHeader}>
+          <View style={styles.docTopRow}>
             <View style={styles.docIconBox}>
-              <FileText size={20} color={COLORS.emerald[400]} />
+              <FileText size={20} color={COLORS.amber[400]} />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.docTitle}>Haydovchilik guvohnomasi (Prava)</Text>
-              <Text style={styles.docSubtitle}>Old va orqa tomoni (B toifa, 2030-yilgacha)</Text>
+              <Text style={styles.docSubtitle}>Old va orqa tomoni (B toifa, 2030-yilgacha amal qiladi)</Text>
             </View>
-            <Badge label="Tasdiqlangan" variant="emerald" />
+            <View style={styles.badgeSuccess}>
+              <CheckCircle2 size={11} color={COLORS.emerald[400]} />
+              <Text style={styles.badgeSuccessText}>Tasdiqlangan</Text>
+            </View>
           </View>
-          <View style={styles.docActionRow}>
-            <Text style={styles.docMeta}>Oxirgi tekshiruv: 2025-noyabr</Text>
+
+          <View style={styles.docMetaRow}>
+            <Text style={styles.docMetaText}>Seriya: AB 7891234 • 8 yillik tajriba</Text>
             <TouchableOpacity
+              style={styles.reuploadBtn}
               onPress={() => handleSimulateUpload('Haydovchilik guvohnomasi', 'licenseFront')}
+              activeOpacity={0.7}
             >
-              <Text style={styles.reuploadText}>Qayta yuklash</Text>
+              <RefreshCw size={12} color={COLORS.amber[400]} />
+              <Text style={styles.reuploadBtnText}>Yangilash</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* 2. Vehicle Tech Passport */}
         <View style={styles.docCard}>
-          <View style={styles.docHeader}>
+          <View style={styles.docTopRow}>
             <View style={styles.docIconBox}>
               <Car size={20} color={COLORS.emerald[400]} />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.docTitle}>Avtomobil texpasporti</Text>
-              <Text style={styles.docSubtitle}>Chevrolet Malibu 2 (Davlat raqami: 01 A 777 AA)</Text>
+              <Text style={styles.docSubtitle}>
+                Chevrolet Malibu 2 (Davlat raqami: 01 A 777 AA, 2023)
+              </Text>
             </View>
-            <Badge label="Tasdiqlangan" variant="emerald" />
+            <View style={styles.badgeSuccess}>
+              <CheckCircle2 size={11} color={COLORS.emerald[400]} />
+              <Text style={styles.badgeSuccessText}>Tasdiqlangan</Text>
+            </View>
           </View>
-          <View style={styles.docActionRow}>
-            <Text style={styles.docMeta}>Tegishlilik: Shaxsiy mulk</Text>
+
+          <View style={styles.docMetaRow}>
+            <Text style={styles.docMetaText}>Shaxsiy mulk • Texnik ko’rik: 2026-avgust</Text>
             <TouchableOpacity
+              style={styles.reuploadBtn}
               onPress={() => handleSimulateUpload('Texpasport', 'techPassport')}
+              activeOpacity={0.7}
             >
-              <Text style={styles.reuploadText}>Qayta yuklash</Text>
+              <RefreshCw size={12} color={COLORS.amber[400]} />
+              <Text style={styles.reuploadBtnText}>Yangilash</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* 3. Insurance & International Green Card */}
         <View style={styles.docCard}>
-          <View style={styles.docHeader}>
+          <View style={styles.docTopRow}>
             <View style={styles.docIconBox}>
-              <ShieldCheck size={20} color={COLORS.blue[400]} />
+              <Shield size={20} color="#38BDF8" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.docTitle}>Majburiy Sug’urta & Yashil Karta</Text>
-              <Text style={styles.docSubtitle}>O’zbekiston va Qozog’iston xalqaro sug’urtasi</Text>
+              <Text style={styles.docSubtitle}>
+                O’zbekiston va Qozog’iston hududida yaroqli xalqaro polis
+              </Text>
             </View>
-            <Badge label="Amalda" variant="blue" />
+            <View style={styles.badgeSuccess}>
+              <CheckCircle2 size={11} color={COLORS.emerald[400]} />
+              <Text style={styles.badgeSuccessText}>Amalda</Text>
+            </View>
           </View>
-          <View style={styles.docActionRow}>
-            <Text style={styles.docMeta}>Polis muddati: 2026-dekabrgacha</Text>
+
+          <View style={styles.docMetaRow}>
+            <Text style={styles.docMetaText}>Polis muddati: 2026-dekabrgacha • Oson Sug'urta</Text>
             <TouchableOpacity
-              onPress={() => handleSimulateUpload('Sug’urta', 'insurance')}
+              style={styles.reuploadBtn}
+              onPress={() => handleSimulateUpload('Sug’urta polisi', 'insurance')}
+              activeOpacity={0.7}
             >
-              <Text style={styles.reuploadText}>Qayta yuklash</Text>
+              <RefreshCw size={12} color={COLORS.amber[400]} />
+              <Text style={styles.reuploadBtnText}>Yangilash</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* 4. Car Photos */}
+        {/* 4. Car Photos (4 Angles) */}
         <View style={styles.docCard}>
-          <View style={styles.docHeader}>
+          <View style={styles.docTopRow}>
             <View style={styles.docIconBox}>
               <Camera size={20} color={COLORS.amber[400]} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.docTitle}>Avtomobil fotosuratlari (4 ta rasm)</Text>
-              <Text style={styles.docSubtitle}>Oldi, orqasi, salon va yukxona ko’rinishi</Text>
+              <Text style={styles.docTitle}>Avtomobil fotosuratlari (4 ta tomon)</Text>
+              <Text style={styles.docSubtitle}>Oldi, orqa, o’ng tomon va salon tozaligi</Text>
             </View>
-            <Badge label="Tasdiqlangan" variant="emerald" />
+            <View style={styles.badgeSuccess}>
+              <CheckCircle2 size={11} color={COLORS.emerald[400]} />
+              <Text style={styles.badgeSuccessText}>4/4 Tayyor</Text>
+            </View>
           </View>
-          <View style={styles.docActionRow}>
-            <Text style={styles.docMeta}>Holati: Toza va soz holatda</Text>
-            <TouchableOpacity
-              onPress={() => handleSimulateUpload('Avtomobil rasmlari', 'carPhotos')}
-            >
-              <Text style={styles.reuploadText}>Yangilash</Text>
-            </TouchableOpacity>
+
+          {/* 4 Photo Thumbnails Grid */}
+          <View style={styles.photoGrid}>
+            {carPhotoSlots.map((slot) => (
+              <TouchableOpacity
+                key={slot.id}
+                style={styles.photoSlot}
+                onPress={() => handleSimulateUpload(`Avtomobil ${slot.title}`, 'carPhotos')}
+                activeOpacity={0.75}
+              >
+                <Camera size={16} color={COLORS.amber[400]} />
+                <Text style={styles.photoSlotTitle}>{slot.title}</Text>
+                <View style={styles.photoSlotCheck}>
+                  <CheckCircle2 size={10} color={COLORS.emerald[400]} />
+                  <Text style={styles.photoSlotCheckText}>Tasdiqlangan</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
 
-        {/* Security & Legal Disclaimer */}
-        <View style={styles.legalNotice}>
-          <AlertCircle size={16} color={COLORS.navy[400]} />
-          <Text style={styles.legalNoticeText}>
-            OTAXI haydovchilarining barcha hujjatlari O'zbekiston Respublikasining "Shaxsga doir ma'lumotlar to'g'risida"gi qonuniga muvofiq xavfsiz shifrlangan holda saqlanadi.
+        {/* International Border Mobility Notice (PAS-11) */}
+        <View style={styles.borderNoticeCard}>
+          <View style={styles.borderNoticeHeader}>
+            <Globe size={18} color={COLORS.amber[400]} />
+            <Text style={styles.borderNoticeTitle}>
+              Xalqaro Chegara Qoidalari Eslatmasi (PAS-11)
+            </Text>
+          </View>
+          <Text style={styles.borderNoticeBody}>
+            Qozog’iston yoki Qirg’iziston chegarasidan o’tishda:
           </Text>
+          <View style={styles.bulletList}>
+            <Text style={styles.bulletItem}>• Haydovchida qizil xorijiy pasport bo’lishi shart;</Text>
+            <Text style={styles.bulletItem}>
+              • Avtomobil boshqa shaxs nomida bo’lsa, chet elga chiqish huquqi bilan notarial ishonchnoma;
+            </Text>
+            <Text style={styles.bulletItem}>
+              • Chegara postida har bir yo’lovchining 4 xonali bort kodi tekshirilgan bo’lishi zarur.
+            </Text>
+          </View>
         </View>
+
+        {/* Help & Support Button */}
+        <TouchableOpacity
+          style={styles.supportBtn}
+          onPress={() => {
+            Haptics.light();
+            Alert.alert(
+              'OTAXI Verifikatsiya Xizmati',
+              'Savollaringiz bo’lsa, 24/7 dispetcherlik xizmati bilan bog’laning: +998 71 200 00 00 yoki @otaxi_driver_bot telegram orqali.'
+            );
+          }}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.supportBtnText}>Hujjatlar bo’yicha yordam va savollar</Text>
+          <ExternalLink size={14} color="#94A3B8" />
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -187,7 +291,7 @@ export const VerificationScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.navy[950],
+    backgroundColor: '#090D16', // Cockpit Obsidian
   },
   scrollView: {
     flex: 1,
@@ -197,28 +301,48 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   stepperCard: {
-    backgroundColor: COLORS.navy[900],
-    borderRadius: 18,
+    backgroundColor: '#111827', // Card Graphite
+    borderRadius: 20,
     padding: 16,
     borderWidth: 1.5,
-    borderColor: COLORS.navy[700],
-    marginBottom: 20,
+    borderColor: '#1F2937',
+    marginBottom: 18,
     ...SHADOWS.md,
   },
-  stepperTitle: {
-    fontSize: 13,
-    fontWeight: '800',
-    color: COLORS.navy[300],
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+  stepperHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 16,
+  },
+  stepperTitle: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#94A3B8',
+    letterSpacing: 0.8,
+  },
+  liveApprovedBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
+  },
+  liveApprovedText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: COLORS.emerald[400],
   },
   stepsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 8,
     marginBottom: 16,
+    paddingHorizontal: 6,
   },
   stepItem: {
     alignItems: 'center',
@@ -228,21 +352,21 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: COLORS.navy[800],
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#1E293B',
   },
   stepDotDone: {
     backgroundColor: COLORS.emerald[600],
   },
   stepDotApproved: {
-    backgroundColor: COLORS.emerald[500],
+    backgroundColor: COLORS.amber[400],
   },
   stepLine: {
     flex: 1,
-    height: 3,
-    backgroundColor: COLORS.navy[800],
-    marginHorizontal: 4,
+    height: 2,
+    backgroundColor: '#1E293B',
+    marginHorizontal: 8,
     marginBottom: 20,
   },
   stepLineDone: {
@@ -251,100 +375,209 @@ const styles = StyleSheet.create({
   stepLabel: {
     fontSize: 11,
     fontWeight: '700',
-    color: COLORS.navy[300],
+    color: '#94A3B8',
   },
   stepLabelApproved: {
-    color: COLORS.emerald[400],
+    color: COLORS.amber[400],
     fontWeight: '800',
   },
   approvedBanner: {
-    backgroundColor: '#062d1d',
-    borderRadius: 12,
-    padding: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    borderWidth: 1,
-    borderColor: COLORS.emerald[800],
-  },
-  approvedBannerText: {
-    fontSize: 12,
-    color: COLORS.emerald[200],
-    flex: 1,
-    lineHeight: 18,
-    fontWeight: '600',
-  },
-  sectionHeading: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: COLORS.navy[300],
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 12,
-  },
-  docCard: {
-    backgroundColor: COLORS.navy[900],
-    borderRadius: 16,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: COLORS.navy[800],
-    marginBottom: 12,
-  },
-  docHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    marginBottom: 10,
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    borderRadius: 14,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
   },
-  docIconBox: {
+  approvedIconCircle: {
     width: 40,
     height: 40,
-    borderRadius: 12,
-    backgroundColor: COLORS.navy[800],
+    borderRadius: 20,
+    backgroundColor: 'rgba(16, 185, 129, 0.2)',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  approvedBannerTitle: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: COLORS.emerald[400],
+  },
+  approvedBannerText: {
+    fontSize: 11,
+    color: '#94A3B8',
+    marginTop: 2,
+    lineHeight: 15,
+  },
+  sectionHeading: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#F8FAFC',
+    marginBottom: 12,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  docCard: {
+    backgroundColor: '#111827',
+    borderRadius: 18,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#1F2937',
+    marginBottom: 12,
+    ...SHADOWS.sm,
+  },
+  docTopRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  docIconBox: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#1E293B',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#334155',
   },
   docTitle: {
     fontSize: 14,
     fontWeight: '800',
-    color: COLORS.white,
+    color: '#F8FAFC',
   },
   docSubtitle: {
     fontSize: 11,
-    color: COLORS.navy[300],
+    color: '#94A3B8',
     marginTop: 2,
+    lineHeight: 15,
   },
-  docActionRow: {
+  badgeSuccess: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
+  },
+  badgeSuccessText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: COLORS.emerald[400],
+  },
+  docMetaRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 8,
+    marginTop: 12,
+    paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: COLORS.navy[800],
+    borderTopColor: '#1F2937',
   },
-  docMeta: {
+  docMetaText: {
     fontSize: 11,
-    color: COLORS.navy[400],
-    fontWeight: '500',
+    color: '#64748B',
   },
-  reuploadText: {
+  reuploadBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: '#1E293B',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#334155',
+  },
+  reuploadBtnText: {
     fontSize: 11,
+    fontWeight: '700',
+    color: COLORS.amber[400],
+  },
+  photoGrid: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 12,
+  },
+  photoSlot: {
+    flex: 1,
+    backgroundColor: '#090D16',
+    borderRadius: 12,
+    padding: 10,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#1F2937',
+  },
+  photoSlotTitle: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#E2E8F0',
+    marginTop: 6,
+    textAlign: 'center',
+  },
+  photoSlotCheck: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    marginTop: 4,
+  },
+  photoSlotCheckText: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: COLORS.emerald[400],
+  },
+  borderNoticeCard: {
+    backgroundColor: '#111827',
+    borderRadius: 16,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(245, 158, 11, 0.25)',
+    marginTop: 4,
+    marginBottom: 16,
+  },
+  borderNoticeHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  borderNoticeTitle: {
+    fontSize: 12,
     fontWeight: '800',
     color: COLORS.amber[400],
   },
-  legalNotice: {
+  borderNoticeBody: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#E2E8F0',
+    marginBottom: 6,
+  },
+  bulletList: {
+    gap: 4,
+  },
+  bulletItem: {
+    fontSize: 11,
+    color: '#94A3B8',
+    lineHeight: 16,
+  },
+  supportBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    backgroundColor: COLORS.navy[900],
-    padding: 12,
-    borderRadius: 12,
-    marginTop: 8,
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#111827',
+    borderRadius: 14,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: '#1F2937',
   },
-  legalNoticeText: {
-    fontSize: 11,
-    color: COLORS.navy[400],
-    flex: 1,
-    lineHeight: 16,
+  supportBtnText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#94A3B8',
   },
 });

@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  Switch,
+  Alert,
 } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
 import { Badge } from '../../components/Badge';
+import { ProgressRing } from '../../components/ui/ProgressRing';
+import { Haptics } from '../../components/ui/Haptics';
 import { useApp } from '../../context/AppContext';
 import { BORDER_CHECKLISTS } from '../../lib/data';
 import {
@@ -20,65 +22,217 @@ import {
   AlertTriangle,
   Info,
   Calendar,
+  CheckCircle2,
+  RotateCcw,
+  Sparkles,
+  FileText,
 } from 'lucide-react-native';
 
 export const ChecklistScreen: React.FC = () => {
   const { checkedItems, toggleChecklistItem } = useApp();
   const [selectedRouteKey, setSelectedRouteKey] = useState<string>('UZ-KZ');
+  const [categoryFilter, setCategoryFilter] = useState<'ALL' | 'REQUIRED' | 'PASSPORT_VISA' | 'CUSTOMS'>('ALL');
 
-  const currentChecklist = BORDER_CHECKLISTS[selectedRouteKey] || BORDER_CHECKLISTS['UZ-KZ'];
+  const currentChecklist =
+    BORDER_CHECKLISTS[selectedRouteKey] || BORDER_CHECKLISTS['UZ-KZ'];
 
   const totalRequired = currentChecklist.items.filter((i) => i.isRequired).length;
   const checkedRequired = currentChecklist.items.filter(
     (i) => i.isRequired && checkedItems[i.id]
   ).length;
-  const progressPercent = Math.round((checkedRequired / totalRequired) * 100);
+
+  const totalItemsCount = currentChecklist.items.length;
+  const totalCheckedCount = currentChecklist.items.filter(
+    (i) => checkedItems[i.id]
+  ).length;
+
+  const progressPercent =
+    totalRequired > 0 ? Math.round((checkedRequired / totalRequired) * 100) : 100;
+  const isAllRequiredChecked = checkedRequired === totalRequired;
+
+  const filteredItems = useMemo(() => {
+    return currentChecklist.items.filter((item) => {
+      if (categoryFilter === 'REQUIRED') return item.isRequired;
+      if (categoryFilter === 'PASSPORT_VISA') {
+        return item.category === 'PASSPORT' || item.category === 'VISA';
+      }
+      if (categoryFilter === 'CUSTOMS') {
+        return item.category === 'CUSTOMS' || item.category === 'CURRENCY';
+      }
+      return true;
+    });
+  }, [currentChecklist.items, categoryFilter]);
+
+  const handleToggle = (itemId: string) => {
+    Haptics.selection();
+    toggleChecklistItem(itemId);
+  };
+
+  const handleCheckAll = () => {
+    Haptics.success();
+    currentChecklist.items.forEach((item) => {
+      if (!checkedItems[item.id]) {
+        toggleChecklistItem(item.id);
+      }
+    });
+  };
+
+  const handleReset = () => {
+    Haptics.warning();
+    currentChecklist.items.forEach((item) => {
+      if (checkedItems[item.id]) {
+        toggleChecklistItem(item.id);
+      }
+    });
+  };
 
   return (
     <View style={styles.container}>
       <Header
-        title="Xalqaro chegara qo’llanmasi"
-        subtitle="Markaziy Osiyo davlat chegaralarini kesib o’tish rasmiy qoidalari"
+        title="Xalqaro chegara tayyorgarligi"
+        subtitle="Markaziy Osiyo davlat chegaralarini kesib o'tish rasmiy qoidalari"
       />
 
       {/* Route Switcher Tabs */}
       <View style={styles.tabsWrapper}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tabsRow}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tabsRow}
+        >
           <TouchableOpacity
-            style={[styles.tabBtn, selectedRouteKey === 'UZ-KZ' && styles.tabBtnActive]}
-            onPress={() => setSelectedRouteKey('UZ-KZ')}
+            style={[
+              styles.tabBtn,
+              selectedRouteKey === 'UZ-KZ' && styles.tabBtnActive,
+            ]}
+            onPress={() => {
+              Haptics.light();
+              setSelectedRouteKey('UZ-KZ');
+            }}
           >
-            <Text style={[styles.tabText, selectedRouteKey === 'UZ-KZ' && styles.tabTextActive]}>
-              O’zbekiston — Qozog’iston
+            <Text
+              style={[
+                styles.tabText,
+                selectedRouteKey === 'UZ-KZ' && styles.tabTextActive,
+              ]}
+            >
+              🇺🇿 O'zbekiston — Qozog'iston 🇰🇿
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.tabBtn, selectedRouteKey === 'UZ-KG' && styles.tabBtnActive]}
-            onPress={() => setSelectedRouteKey('UZ-KG')}
+            style={[
+              styles.tabBtn,
+              selectedRouteKey === 'UZ-KG' && styles.tabBtnActive,
+            ]}
+            onPress={() => {
+              Haptics.light();
+              setSelectedRouteKey('UZ-KG');
+            }}
           >
-            <Text style={[styles.tabText, selectedRouteKey === 'UZ-KG' && styles.tabTextActive]}>
-              O’zbekiston — Qirg’iziston
+            <Text
+              style={[
+                styles.tabText,
+                selectedRouteKey === 'UZ-KG' && styles.tabTextActive,
+              ]}
+            >
+              🇺🇿 O'zbekiston — Qirg'iziston 🇰🇬
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.tabBtn, selectedRouteKey === 'UZ-TJ' && styles.tabBtnActive]}
-            onPress={() => setSelectedRouteKey('UZ-TJ')}
+            style={[
+              styles.tabBtn,
+              selectedRouteKey === 'UZ-TJ' && styles.tabBtnActive,
+            ]}
+            onPress={() => {
+              Haptics.light();
+              setSelectedRouteKey('UZ-TJ');
+            }}
           >
-            <Text style={[styles.tabText, selectedRouteKey === 'UZ-TJ' && styles.tabTextActive]}>
-              O’zbekiston — Tojikiston
+            <Text
+              style={[
+                styles.tabText,
+                selectedRouteKey === 'UZ-TJ' && styles.tabTextActive,
+              ]}
+            >
+              🇺🇿 O'zbekiston — Tojikiston 🇹🇯
             </Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* Route Info Card */}
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Progress Ring Hero Card */}
+        <View
+          style={[
+            styles.progressCard,
+            isAllRequiredChecked && styles.progressCardSuccess,
+          ]}
+        >
+          <View style={styles.progressRingWrapper}>
+            <ProgressRing
+              progress={progressPercent}
+              size={88}
+              strokeWidth={8}
+              centerText={`${progressPercent}%`}
+              centerSubtext={`${checkedRequired}/${totalRequired}`}
+            />
+          </View>
+
+          <View style={styles.progressTextCol}>
+            <View style={styles.progressBadgeRow}>
+              <Text style={styles.progressHeading}>Chegara tayyorgarligi</Text>
+              {isAllRequiredChecked ? (
+                <View style={styles.readyPill}>
+                  <CheckCircle2 size={12} color={COLORS.emerald[700]} />
+                  <Text style={styles.readyPillText}>Tayyorsiz</Text>
+                </View>
+              ) : (
+                <View style={styles.pendingPill}>
+                  <AlertTriangle size={12} color={COLORS.amber[700]} />
+                  <Text style={styles.pendingPillText}>Tayyorlanmoqda</Text>
+                </View>
+              )}
+            </View>
+
+            <Text style={styles.progressStatusDesc}>
+              {isAllRequiredChecked
+                ? 'Tabriklaymiz! Barcha majburiy talablar tekshirildi. Chegaradan muammosiz o\'tishingiz mumkin.'
+                : `${totalRequired - checkedRequired} ta majburiy talab qoldi. Safar kuni bekatga chiqishdan oldin tekshirib chiqing.`}
+            </Text>
+
+            <View style={styles.progressActionRow}>
+              <TouchableOpacity
+                style={styles.quickActionBtn}
+                onPress={handleCheckAll}
+              >
+                <Sparkles size={12} color={COLORS.emerald[700]} />
+                <Text style={styles.quickActionBtnText}>Barchasini belgilash</Text>
+              </TouchableOpacity>
+
+              {totalCheckedCount > 0 && (
+                <TouchableOpacity
+                  style={styles.resetActionBtn}
+                  onPress={handleReset}
+                >
+                  <RotateCcw size={12} color={COLORS.gray[500]} />
+                  <Text style={styles.resetActionBtnText}>Qayta o'rnatish</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        </View>
+
+        {/* Route Info & Official Source Card */}
         <View style={styles.infoCard}>
           <View style={styles.infoHeader}>
             <View style={styles.iconCircle}>
-              <Globe size={22} color={COLORS.blue[600]} />
+              <Globe size={20} color={COLORS.blue[600]} />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.infoTitle}>{currentChecklist.title}</Text>
@@ -88,78 +242,151 @@ export const ChecklistScreen: React.FC = () => {
 
           <View style={styles.metaRow}>
             <Text style={styles.metaText}>
-              Versiya: {currentChecklist.version} • Tekshirilgan: {currentChecklist.lastVerified}
+              Rasmiy manba: {currentChecklist.officialSource} • Versiya: {currentChecklist.version}
             </Text>
           </View>
         </View>
 
-        {/* Progress Card */}
-        <View style={styles.progressCard}>
-          <View style={styles.progressHeader}>
-            <Text style={styles.progressLabel}>Chegara tayyorgarligi holati:</Text>
-            <Text style={styles.progressScore}>
-              {checkedRequired} / {totalRequired} ({progressPercent}%)
-            </Text>
-          </View>
-          <View style={styles.progressBarBg}>
-            <View
+        {/* Category Filters */}
+        <View style={styles.categoryFiltersRow}>
+          <TouchableOpacity
+            style={[
+              styles.catFilterChip,
+              categoryFilter === 'ALL' && styles.catFilterChipActive,
+            ]}
+            onPress={() => {
+              Haptics.light();
+              setCategoryFilter('ALL');
+            }}
+          >
+            <Text
               style={[
-                styles.progressBarFill,
-                {
-                  width: `${progressPercent}%`,
-                  backgroundColor: progressPercent === 100 ? COLORS.emerald[500] : COLORS.amber[500],
-                },
+                styles.catFilterChipText,
+                categoryFilter === 'ALL' && styles.catFilterChipTextActive,
               ]}
-            />
-          </View>
-          <Text style={styles.progressHint}>
-            Safarga chiqishdan oldin har bir talabni tekshirib, katakchalarni belgilab boring.
-          </Text>
+            >
+              Barchasi ({currentChecklist.items.length})
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.catFilterChip,
+              categoryFilter === 'REQUIRED' && styles.catFilterChipActive,
+            ]}
+            onPress={() => {
+              Haptics.light();
+              setCategoryFilter('REQUIRED');
+            }}
+          >
+            <Text
+              style={[
+                styles.catFilterChipText,
+                categoryFilter === 'REQUIRED' && styles.catFilterChipTextActive,
+              ]}
+            >
+              Majburiy ({totalRequired})
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.catFilterChip,
+              categoryFilter === 'PASSPORT_VISA' && styles.catFilterChipActive,
+            ]}
+            onPress={() => {
+              Haptics.light();
+              setCategoryFilter('PASSPORT_VISA');
+            }}
+          >
+            <Text
+              style={[
+                styles.catFilterChipText,
+                categoryFilter === 'PASSPORT_VISA' &&
+                  styles.catFilterChipTextActive,
+              ]}
+            >
+              Pasport & Viza
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.catFilterChip,
+              categoryFilter === 'CUSTOMS' && styles.catFilterChipActive,
+            ]}
+            onPress={() => {
+              Haptics.light();
+              setCategoryFilter('CUSTOMS');
+            }}
+          >
+            <Text
+              style={[
+                styles.catFilterChipText,
+                categoryFilter === 'CUSTOMS' && styles.catFilterChipTextActive,
+              ]}
+            >
+              Bojxona
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Checklist Items */}
-        <Text style={styles.sectionHeading}>Majburiy hujjatlar va talablar</Text>
-
-        {currentChecklist.items.map((item) => {
-          const isChecked = !!checkedItems[item.id];
-          return (
-            <TouchableOpacity
-              key={item.id}
-              style={[styles.itemCard, isChecked && styles.itemCardChecked]}
-              onPress={() => toggleChecklistItem(item.id)}
-              activeOpacity={0.8}
-            >
-              <View style={styles.itemHeader}>
-                <View style={styles.categoryBadge}>
-                  <Text style={styles.categoryBadgeText}>{item.categoryTitle}</Text>
-                </View>
-                {item.isRequired && (
-                  <View style={styles.requiredBadge}>
-                    <Text style={styles.requiredBadgeText}>Majburiy</Text>
+        {/* Checklist Items List */}
+        <View style={styles.itemsSection}>
+          {filteredItems.map((item, index) => {
+            const isChecked = !!checkedItems[item.id];
+            return (
+              <TouchableOpacity
+                key={item.id}
+                style={[styles.itemCard, isChecked && styles.itemCardChecked]}
+                onPress={() => handleToggle(item.id)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.itemHeader}>
+                  <View style={styles.itemBadgeGroup}>
+                    <View style={styles.categoryBadge}>
+                      <Text style={styles.categoryBadgeText}>
+                        {item.categoryTitle}
+                      </Text>
+                    </View>
+                    {item.isRequired && (
+                      <View style={styles.requiredBadge}>
+                        <Text style={styles.requiredBadgeText}>Majburiy</Text>
+                      </View>
+                    )}
                   </View>
-                )}
-                <View style={styles.checkboxContainer}>
-                  {isChecked ? (
-                    <CheckSquare size={22} color={COLORS.emerald[600]} />
-                  ) : (
-                    <Square size={22} color={COLORS.gray[400]} />
-                  )}
+
+                  <View style={styles.checkboxWrapper}>
+                    {isChecked ? (
+                      <CheckSquare size={22} color={COLORS.emerald[600]} />
+                    ) : (
+                      <Square size={22} color={COLORS.gray[400]} />
+                    )}
+                  </View>
                 </View>
-              </View>
 
-              <Text style={[styles.itemTitle, isChecked && styles.itemTitleChecked]}>
-                {item.title}
-              </Text>
-              <Text style={styles.itemDescription}>{item.description}</Text>
-            </TouchableOpacity>
-          );
-        })}
+                <Text
+                  style={[
+                    styles.itemTitle,
+                    isChecked && styles.itemTitleChecked,
+                  ]}
+                >
+                  {item.title}
+                </Text>
 
-        {/* Official Source Note */}
-        <View style={styles.sourceNote}>
+                <Text style={styles.itemDescription}>
+                  {item.description}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        {/* Legal Disclaimer Footer */}
+        <View style={styles.disclaimerBox}>
           <Info size={16} color={COLORS.gray[500]} />
-          <Text style={styles.sourceText}>
-            Manba: {currentChecklist.officialSource}
+          <Text style={styles.disclaimerText}>
+            Eslatma: Chegara va bojxona nazorati talablari davlat organlari tomonidan yangilanishi mumkin. Safarga chiqishdan oldin rasmiy organlar bilan aniqlashtirish tavsiya etiladi.
           </Text>
         </View>
       </ScrollView>
@@ -174,33 +401,34 @@ const styles = StyleSheet.create({
   },
   tabsWrapper: {
     backgroundColor: COLORS.white,
-    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.gray[200],
+    paddingVertical: 8,
   },
   tabsRow: {
     paddingHorizontal: 16,
+    gap: 8,
   },
   tabBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 8,
     backgroundColor: COLORS.gray[100],
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginRight: 8,
     borderWidth: 1,
     borderColor: COLORS.gray[200],
   },
   tabBtnActive: {
-    backgroundColor: COLORS.blue[600],
-    borderColor: COLORS.blue[700],
+    backgroundColor: COLORS.emerald[50],
+    borderColor: COLORS.emerald[600],
   },
   tabText: {
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '600',
     color: COLORS.gray[700],
   },
   tabTextActive: {
-    color: COLORS.white,
+    color: COLORS.emerald[800],
+    fontWeight: '800',
   },
   scrollView: {
     flex: 1,
@@ -209,167 +437,256 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingBottom: 40,
   },
+  progressCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.white,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: COLORS.gray[200],
+    padding: 16,
+    marginBottom: 12,
+    gap: 16,
+    ...SHADOWS.md,
+  },
+  progressCardSuccess: {
+    borderColor: COLORS.emerald[300],
+    backgroundColor: '#F0FDF4',
+  },
+  progressRingWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  progressTextCol: {
+    flex: 1,
+  },
+  progressBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  progressHeading: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: COLORS.gray[900],
+  },
+  readyPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: COLORS.emerald[100],
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  readyPillText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: COLORS.emerald[800],
+  },
+  pendingPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: COLORS.amber[100],
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  pendingPillText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: COLORS.amber[800],
+  },
+  progressStatusDesc: {
+    fontSize: 12,
+    color: COLORS.gray[600],
+    lineHeight: 16,
+    marginBottom: 10,
+  },
+  progressActionRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  quickActionBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: COLORS.emerald[50],
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: COLORS.emerald[200],
+  },
+  quickActionBtnText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: COLORS.emerald[800],
+  },
+  resetActionBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: COLORS.gray[100],
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  resetActionBtnText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: COLORS.gray[600],
+  },
   infoCard: {
     backgroundColor: COLORS.white,
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
+    borderRadius: 14,
+    borderWidth: 1.5,
     borderColor: COLORS.gray[200],
-    marginBottom: 14,
+    padding: 14,
+    marginBottom: 12,
     ...SHADOWS.sm,
   },
   infoHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
+    marginBottom: 8,
   },
   iconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: COLORS.blue[50],
     alignItems: 'center',
     justifyContent: 'center',
   },
   infoTitle: {
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '800',
     color: COLORS.gray[900],
   },
   infoSubtitle: {
     fontSize: 11,
     color: COLORS.gray[500],
-    marginTop: 2,
   },
   metaRow: {
-    marginTop: 10,
-    paddingTop: 10,
+    paddingTop: 8,
     borderTopWidth: 1,
     borderTopColor: COLORS.gray[100],
   },
   metaText: {
     fontSize: 10,
     color: COLORS.gray[400],
-    fontWeight: '600',
+    fontWeight: '500',
   },
-  progressCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1.5,
-    borderColor: COLORS.emerald[200],
-    marginBottom: 16,
-    ...SHADOWS.sm,
-  },
-  progressHeader: {
+  categoryFiltersRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  progressLabel: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: COLORS.gray[800],
-  },
-  progressScore: {
-    fontSize: 13,
-    fontWeight: '900',
-    color: COLORS.emerald[700],
-  },
-  progressBarBg: {
-    height: 8,
-    backgroundColor: COLORS.gray[100],
-    borderRadius: 4,
-    overflow: 'hidden',
-    marginBottom: 8,
-  },
-  progressBarFill: {
-    height: '100%',
-    borderRadius: 4,
-  },
-  progressHint: {
-    fontSize: 11,
-    color: COLORS.gray[500],
-    lineHeight: 16,
-  },
-  sectionHeading: {
-    fontSize: 15,
-    fontWeight: '800',
-    color: COLORS.gray[900],
+    gap: 6,
     marginBottom: 12,
+    flexWrap: 'wrap',
+  },
+  catFilterChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: COLORS.white,
+    borderWidth: 1,
+    borderColor: COLORS.gray[200],
+  },
+  catFilterChipActive: {
+    backgroundColor: COLORS.emerald[600],
+    borderColor: COLORS.emerald[600],
+  },
+  catFilterChipText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: COLORS.gray[600],
+  },
+  catFilterChipTextActive: {
+    color: COLORS.white,
+    fontWeight: '800',
+  },
+  itemsSection: {
+    gap: 10,
   },
   itemCard: {
     backgroundColor: COLORS.white,
-    borderRadius: 16,
-    padding: 14,
+    borderRadius: 14,
     borderWidth: 1.5,
     borderColor: COLORS.gray[200],
-    marginBottom: 12,
+    padding: 14,
     ...SHADOWS.sm,
   },
   itemCardChecked: {
-    borderColor: COLORS.emerald[500],
-    backgroundColor: '#fafffd',
+    borderColor: COLORS.emerald[400],
+    backgroundColor: '#F0FDF4',
   },
   itemHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 8,
   },
+  itemBadgeGroup: {
+    flexDirection: 'row',
+    gap: 6,
+    alignItems: 'center',
+  },
   categoryBadge: {
-    backgroundColor: COLORS.blue[50],
-    paddingHorizontal: 8,
+    backgroundColor: COLORS.gray[100],
+    paddingHorizontal: 7,
     paddingVertical: 2,
-    borderRadius: 6,
+    borderRadius: 5,
   },
   categoryBadgeText: {
     fontSize: 10,
     fontWeight: '700',
-    color: COLORS.blue[700],
+    color: COLORS.gray[600],
   },
   requiredBadge: {
-    backgroundColor: COLORS.red[50],
-    paddingHorizontal: 6,
+    backgroundColor: '#FEE2E2',
+    paddingHorizontal: 7,
     paddingVertical: 2,
-    borderRadius: 6,
-    marginLeft: 6,
+    borderRadius: 5,
   },
   requiredBadgeText: {
-    fontSize: 9,
-    fontWeight: '700',
-    color: COLORS.red[600],
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#B91C1C',
   },
-  checkboxContainer: {
-    marginLeft: 'auto',
+  checkboxWrapper: {
+    padding: 2,
   },
   itemTitle: {
     fontSize: 14,
-    fontWeight: '800',
+    fontWeight: '700',
     color: COLORS.gray[900],
     marginBottom: 4,
   },
   itemTitleChecked: {
     color: COLORS.emerald[900],
+    textDecorationLine: 'none',
   },
   itemDescription: {
     fontSize: 12,
-    color: COLORS.gray[600],
-    lineHeight: 18,
+    color: COLORS.gray[500],
+    lineHeight: 17,
   },
-  sourceNote: {
+  disclaimerBox: {
     flexDirection: 'row',
-    alignItems: 'center',
+    gap: 8,
+    alignItems: 'flex-start',
     backgroundColor: COLORS.gray[100],
     padding: 12,
     borderRadius: 10,
-    gap: 8,
-    marginTop: 8,
+    marginTop: 16,
   },
-  sourceText: {
+  disclaimerText: {
     fontSize: 11,
-    color: COLORS.gray[600],
+    color: COLORS.gray[500],
+    lineHeight: 16,
     flex: 1,
   },
 });

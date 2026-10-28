@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -6,15 +6,25 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  RefreshControl,
 } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
 import { BoardingPassCard } from '../../components/BoardingPassCard';
 import { BorderChecklistModal } from '../../components/BorderChecklistModal';
+import { Haptics } from '../../components/ui/Haptics';
 import { useApp } from '../../context/AppContext';
 import { getBorderChecklist } from '../../lib/data';
 import { BookingStatus } from '@otaxi/types';
-import { Ticket, Calendar, CheckCircle2, History } from 'lucide-react-native';
+import {
+  Ticket,
+  Calendar,
+  CheckCircle2,
+  History,
+  Search,
+  Sparkles,
+  Compass,
+} from 'lucide-react-native';
 
 interface BookingsScreenProps {
   navigation: any;
@@ -24,58 +34,140 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ navigation }) =>
   const { bookings, cancelBooking } = useApp();
   const [activeTab, setActiveTab] = useState<'ACTIVE' | 'HISTORY'>('ACTIVE');
   const [selectedTripForChecklist, setSelectedTripForChecklist] = useState<any | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const activeBookings = bookings.filter((b) => b.status === BookingStatus.CONFIRMED);
-  const historyBookings = bookings.filter((b) => b.status !== BookingStatus.CONFIRMED);
+  const activeBookings = useMemo(
+    () => bookings.filter((b) => b.status === BookingStatus.CONFIRMED),
+    [bookings]
+  );
+
+  const historyBookings = useMemo(
+    () => bookings.filter((b) => b.status !== BookingStatus.CONFIRMED),
+    [bookings]
+  );
 
   const displayedList = activeTab === 'ACTIVE' ? activeBookings : historyBookings;
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 500);
+  };
+
+  const handleCancel = (bookingId: string) => {
+    Haptics.warning();
+    Alert.alert(
+      'Safarni bekor qilish',
+      'Safarni bekor qilmoqchimisiz? Reys jo\'nashiga 2 soatdan ko\'p vaqt qolganda to\'lov 100% qaytariladi.',
+      [
+        { text: 'Yo\'q, qolsin', style: 'cancel' },
+        {
+          text: 'Bekor qilish',
+          style: 'destructive',
+          onPress: () => {
+            Haptics.error();
+            cancelBooking(bookingId);
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <View style={styles.container}>
       <Header
         title="Mening safarlarim"
-        subtitle="Bortga chiqish chiptalari va safarlar tarixi"
+        subtitle="Aviachipta uslubidagi dinamik bort chiptalari va safarlar tarixi"
       />
 
       {/* Tabs */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[styles.tabBtn, activeTab === 'ACTIVE' && styles.tabBtnActive]}
-          onPress={() => setActiveTab('ACTIVE')}
+          onPress={() => {
+            Haptics.light();
+            setActiveTab('ACTIVE');
+          }}
+          activeOpacity={0.8}
         >
-          <Text style={[styles.tabText, activeTab === 'ACTIVE' && styles.tabTextActive]}>
-            Faol safarlar ({activeBookings.length})
-          </Text>
+          <View style={styles.tabBtnInner}>
+            <Ticket
+              size={15}
+              color={activeTab === 'ACTIVE' ? COLORS.white : COLORS.gray[500]}
+            />
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === 'ACTIVE' && styles.tabTextActive,
+              ]}
+            >
+              Faol safarlar ({activeBookings.length})
+            </Text>
+          </View>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.tabBtn, activeTab === 'HISTORY' && styles.tabBtnActive]}
-          onPress={() => setActiveTab('HISTORY')}
+          onPress={() => {
+            Haptics.light();
+            setActiveTab('HISTORY');
+          }}
+          activeOpacity={0.8}
         >
-          <Text style={[styles.tabText, activeTab === 'HISTORY' && styles.tabTextActive]}>
-            Tarix ({historyBookings.length})
-          </Text>
+          <View style={styles.tabBtnInner}>
+            <History
+              size={15}
+              color={activeTab === 'HISTORY' ? COLORS.white : COLORS.gray[500]}
+            />
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === 'HISTORY' && styles.tabTextActive,
+              ]}
+            >
+              Safarlar tarixi ({historyBookings.length})
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            colors={[COLORS.emerald[600]]}
+            tintColor={COLORS.emerald[600]}
+          />
+        }
+      >
         {displayedList.length === 0 ? (
           <View style={styles.emptyBox}>
-            <Ticket size={48} color={COLORS.gray[300]} />
+            <View style={styles.emptyIconCircle}>
+              <Ticket size={44} color={COLORS.gray[300]} />
+            </View>
             <Text style={styles.emptyTitle}>
-              {activeTab === 'ACTIVE' ? 'Faol safarlar mavjud emas' : 'Safarlar tarixi bo’sh'}
+              {activeTab === 'ACTIVE'
+                ? 'Hozircha faol safarlar mavjud emas'
+                : 'Safarlar tarixi bo\'sh'}
             </Text>
             <Text style={styles.emptyDesc}>
               {activeTab === 'ACTIVE'
-                ? 'Yangi shaharlararo yoki xalqaro reys qidirib, o’rindiqni band qiling.'
-                : 'Bajarilgan safarlaringiz shu yerda saqlanadi.'}
+                ? 'Yangi shaharlararo yoki xalqaro reys qidirib, o\'zingizga qulay o\'rindiqni band qiling.'
+                : 'Bajarilgan va bekor qilingan safarlaringiz shu yerda saqlanadi.'}
             </Text>
             {activeTab === 'ACTIVE' && (
               <TouchableOpacity
                 style={styles.findTripsBtn}
                 onPress={() => navigation.navigate('Home')}
+                activeOpacity={0.85}
               >
-                <Text style={styles.findTripsBtnText}>Reys qidirish</Text>
+                <Compass size={16} color={COLORS.white} />
+                <Text style={styles.findTripsBtnText}>Reyslarni qidirish</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -85,7 +177,7 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ navigation }) =>
               key={booking.id}
               booking={booking}
               onOpenChecklist={() => setSelectedTripForChecklist(booking.trip)}
-              onCancelBooking={(id) => cancelBooking(id)}
+              onCancelBooking={handleCancel}
             />
           ))
         )}
@@ -114,25 +206,32 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
     backgroundColor: COLORS.white,
-    padding: 6,
+    padding: 4,
     marginHorizontal: 16,
     marginTop: 12,
+    marginBottom: 6,
     borderRadius: 14,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: COLORS.gray[200],
     ...SHADOWS.sm,
   },
   tabBtn: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 9,
     alignItems: 'center',
     borderRadius: 10,
   },
   tabBtnActive: {
     backgroundColor: COLORS.emerald[600],
+    ...SHADOWS.sm,
+  },
+  tabBtnInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   tabText: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '700',
     color: COLORS.gray[600],
   },
@@ -148,34 +247,48 @@ const styles = StyleSheet.create({
   },
   emptyBox: {
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 60,
+    paddingVertical: 56,
     paddingHorizontal: 24,
+  },
+  emptyIconCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: COLORS.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+    borderWidth: 1.5,
+    borderColor: COLORS.gray[200],
+    ...SHADOWS.sm,
   },
   emptyTitle: {
     fontSize: 16,
     fontWeight: '800',
     color: COLORS.gray[800],
-    marginTop: 16,
+    marginBottom: 6,
+    textAlign: 'center',
   },
   emptyDesc: {
-    fontSize: 12,
+    fontSize: 13,
     color: COLORS.gray[500],
     textAlign: 'center',
-    marginTop: 6,
     lineHeight: 18,
+    marginBottom: 20,
   },
   findTripsBtn: {
-    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     backgroundColor: COLORS.emerald[600],
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 12,
-    ...SHADOWS.md,
+    ...SHADOWS.sm,
   },
   findTripsBtnText: {
-    color: COLORS.white,
     fontSize: 13,
     fontWeight: '800',
+    color: COLORS.white,
   },
 });

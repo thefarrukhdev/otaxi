@@ -16,17 +16,18 @@ export const DriverNavigator: React.FC = () => {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: COLORS.amber[400],
-        tabBarInactiveTintColor: COLORS.navy[400],
+        tabBarInactiveTintColor: '#64748B',
         tabBarStyle: {
-          backgroundColor: COLORS.navy[900],
-          borderTopColor: COLORS.navy[800],
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 6,
+          backgroundColor: '#090D16', // Cockpit Obsidian
+          borderTopColor: '#1F2937',
+          borderTopWidth: 1,
+          height: 64,
+          paddingBottom: 10,
+          paddingTop: 8,
         },
         tabBarLabelStyle: {
           fontSize: 10,
-          fontWeight: '700',
+          fontWeight: '800',
         },
       }}
     >

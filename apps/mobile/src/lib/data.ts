@@ -408,7 +408,7 @@ export const BORDER_CHECKLISTS: Record<string, BorderChecklistGroup> = {
   },
 };
 
-export function getBorderChecklist(fromCountry: CountryCode, toCountry: CountryCode): BorderChecklistGroup {
+export function getBorderChecklist(fromCountry: CountryCode | string, toCountry: CountryCode | string): BorderChecklistGroup {
   const key = `${fromCountry}-${toCountry}`;
   return BORDER_CHECKLISTS[key] || BORDER_CHECKLISTS['UZ-KZ'];
 }

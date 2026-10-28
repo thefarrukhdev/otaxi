@@ -11,6 +11,7 @@ import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
 import { Badge } from '../../components/Badge';
 import { useApp } from '../../context/AppContext';
+import { Haptics } from '../../components/ui/Haptics';
 import {
   Car,
   Star,
@@ -24,6 +25,9 @@ import {
   MapPin,
   Clock,
   Compass,
+  Zap,
+  Globe,
+  CheckCircle2,
 } from 'lucide-react-native';
 
 interface DashboardScreenProps {
@@ -34,170 +38,289 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
   const { driverBalance, activeDriverTrip, verification } = useApp();
   const [isOnline, setIsOnline] = useState(true);
 
+  const handleToggleOnline = (value: boolean) => {
+    Haptics.medium();
+    setIsOnline(value);
+  };
+
+  const bookedCount = activeDriverTrip.passengers.length;
+  const totalSeats = activeDriverTrip.totalSeats;
+  const availableSeats = Math.max(0, totalSeats - bookedCount);
+
   return (
     <View style={styles.container}>
       <Header
         title="Haydovchi Boshqaruv Paneli"
-        subtitle="Xush kelibsiz, Alisher Usmonov"
+        subtitle="Alisher Usmonov • Chevrolet Malibu 2"
       />
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* Online/Offline Status Bar */}
+        {/* Online / Offline Cockpit Toggle Card */}
         <View style={[styles.statusCard, isOnline ? styles.statusCardOnline : styles.statusCardOffline]}>
           <View style={styles.statusLeft}>
             <View
               style={[
                 styles.statusIndicatorDot,
-                { backgroundColor: isOnline ? COLORS.emerald[500] : COLORS.gray[400] },
+                { backgroundColor: isOnline ? COLORS.emerald[400] : '#64748B' },
               ]}
             />
-            <View>
-              <Text style={styles.statusTitle}>
-                {isOnline ? 'Safarga tayyorman (Online)' : 'Dam olish rejimi (Offline)'}
-              </Text>
+            <View style={{ flex: 1 }}>
+              <View style={styles.statusTitleRow}>
+                <Text style={styles.statusTitle}>
+                  {isOnline ? 'Safarga tayyorman (ONLAYN)' : 'Dam olish rejimi (OFLAYN)'}
+                </Text>
+                <View style={[styles.onlineBadge, isOnline ? styles.onlineBadgeActive : styles.onlineBadgeInactive]}>
+                  <Text style={[styles.onlineBadgeText, isOnline ? styles.onlineBadgeTextActive : styles.onlineBadgeTextInactive]}>
+                    {isOnline ? 'Faol qatnov' : 'Nofaol'}
+                  </Text>
+                </View>
+              </View>
               <Text style={styles.statusSubtitle}>
                 {isOnline
-                  ? 'Yo’lovchilar sizning reyslaringizni ko’rib, bron qilishlari mumkin'
-                  : 'Yangi buyurtmalar qabul qilinmaydi'}
+                  ? 'Yo’lovchilar sizning reyslaringizni ko’rib, real vaqtda bron qilishlari mumkin'
+                  : 'Yangi buyurtmalar vaqtinchalik qabul qilinmaydi'}
               </Text>
             </View>
           </View>
+
           <Switch
             value={isOnline}
-            onValueChange={setIsOnline}
-            trackColor={{ false: COLORS.gray[600], true: COLORS.emerald[500] }}
-            thumbColor={COLORS.white}
+            onValueChange={handleToggleOnline}
+            trackColor={{ false: '#1E293B', true: COLORS.emerald[500] }}
+            thumbColor="#FFFFFF"
           />
         </View>
 
-        {/* Verification Status Pill */}
+        {/* Verification Status Banner */}
         <TouchableOpacity
           style={styles.verificationBanner}
-          onPress={() => navigation.navigate('Verification')}
+          onPress={() => {
+            Haptics.light();
+            navigation.navigate('Verification');
+          }}
           activeOpacity={0.85}
         >
-          <ShieldCheck size={20} color={COLORS.emerald[400]} />
+          <View style={styles.verifIconBox}>
+            <ShieldCheck size={20} color={COLORS.emerald[400]} />
+          </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.verificationBannerTitle}>Tekshirilgan Haydovchi</Text>
+            <View style={styles.verifHeaderRow}>
+              <Text style={styles.verificationBannerTitle}>Tasdiqlangan Xalqaro Haydovchi</Text>
+              <View style={styles.verifPill}>
+                <CheckCircle2 size={11} color={COLORS.emerald[400]} />
+                <Text style={styles.verifPillText}>Litsenziyalangan</Text>
+              </View>
+            </View>
             <Text style={styles.verificationBannerDesc}>
-              Barcha hujjatlaringiz tasdiqlangan va xalqaro qatnovga ruxsat berilgan
+              Barcha rasmiy hujjatlar tasdiqlangan: O’zbekiston va Qozog’iston qatnoviga to’liq ruxsat
             </Text>
           </View>
-          <ArrowRight size={16} color={COLORS.navy[300]} />
+          <ArrowRight size={16} color="#94A3B8" />
         </TouchableOpacity>
 
-        {/* Stats Grid */}
+        {/* Financial & Performance 2x2 Stats Grid */}
         <View style={styles.statsGrid}>
+          {/* 1. Wallet Balance */}
           <TouchableOpacity
             style={styles.statBox}
-            onPress={() => navigation.navigate('Wallet')}
+            onPress={() => {
+              Haptics.selection();
+              navigation.navigate('Wallet');
+            }}
             activeOpacity={0.8}
           >
-            <View style={styles.statIconWrapper}>
-              <Wallet size={18} color={COLORS.amber[400]} />
+            <View style={styles.statHeaderRow}>
+              <View style={[styles.statIconWrapper, { backgroundColor: 'rgba(245, 158, 11, 0.15)' }]}>
+                <Wallet size={18} color={COLORS.amber[400]} />
+              </View>
+              <Text style={styles.statHint}>Pul yechish ➔</Text>
             </View>
             <Text style={styles.statLabel}>Hamyon balansi</Text>
-            <Text style={styles.statValue}>
-              {driverBalance.toLocaleString('uz-UZ')} UZS
+            <Text style={styles.statValueAmber}>
+              {driverBalance.toLocaleString('uz-UZ')}{' '}
+              <Text style={styles.statCurrency}>UZS</Text>
             </Text>
-            <Text style={styles.statHint}>Pul yechish ➔</Text>
+            <Text style={styles.statSubText}>0% komissiya bilan yechish</Text>
           </TouchableOpacity>
 
+          {/* 2. Today's Earnings */}
           <View style={styles.statBox}>
-            <View style={[styles.statIconWrapper, { backgroundColor: '#1e3a5f' }]}>
-              <TrendingUp size={18} color="#38bdf8" />
+            <View style={styles.statHeaderRow}>
+              <View style={[styles.statIconWrapper, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
+                <TrendingUp size={18} color={COLORS.emerald[400]} />
+              </View>
+              <View style={styles.greenTag}>
+                <Text style={styles.greenTagText}>+15%</Text>
+              </View>
             </View>
-            <Text style={styles.statLabel}>Bugungi daromad</Text>
-            <Text style={styles.statValue}>324,000 UZS</Text>
-            <Text style={styles.statHint}>+15% kechagiga nisbatan</Text>
+            <Text style={styles.statLabel}>Bugungi tushum</Text>
+            <Text style={styles.statValueEmerald}>
+              324,000 <Text style={styles.statCurrency}>UZS</Text>
+            </Text>
+            <Text style={styles.statSubText}>Kechagiga nisbatan o’sish</Text>
           </View>
 
+          {/* 3. Rating */}
           <View style={styles.statBox}>
-            <View style={[styles.statIconWrapper, { backgroundColor: '#3b2f15' }]}>
-              <Star size={18} color="#facc15" fill="#facc15" />
+            <View style={styles.statHeaderRow}>
+              <View style={[styles.statIconWrapper, { backgroundColor: 'rgba(250, 204, 21, 0.15)' }]}>
+                <Star size={18} color="#FACC15" fill="#FACC15" />
+              </View>
+              <View style={styles.ratingBadge}>
+                <Text style={styles.ratingBadgeText}>Top 5%</Text>
+              </View>
             </View>
-            <Text style={styles.statLabel}>Reyting</Text>
+            <Text style={styles.statLabel}>Haftalik reyting</Text>
             <Text style={styles.statValue}>4.95 ★</Text>
-            <Text style={styles.statHint}>128 ta baho</Text>
+            <Text style={styles.statSubText}>128 ta yo’lovchi bahosi</Text>
           </View>
 
+          {/* 4. Total Trips */}
           <View style={styles.statBox}>
-            <View style={[styles.statIconWrapper, { backgroundColor: '#133e29' }]}>
-              <Car size={18} color={COLORS.emerald[400]} />
+            <View style={styles.statHeaderRow}>
+              <View style={[styles.statIconWrapper, { backgroundColor: 'rgba(56, 189, 248, 0.15)' }]}>
+                <Car size={18} color="#38BDF8" />
+              </View>
+              <View style={styles.successRateBadge}>
+                <Text style={styles.successRateText}>100%</Text>
+              </View>
             </View>
             <Text style={styles.statLabel}>Bajarilgan safarlar</Text>
             <Text style={styles.statValue}>185 ta</Text>
-            <Text style={styles.statHint}>100% muvaffaqiyat</Text>
+            <Text style={styles.statSubText}>Bekor qilinmagan qatnov</Text>
           </View>
         </View>
 
-        {/* Next Scheduled Trip */}
+        {/* Next Scheduled Trip Card (Navbatdagi Reys) */}
         <View style={styles.nextTripCard}>
           <View style={styles.nextTripHeader}>
-            <View>
-              <Text style={styles.nextTripTag}>NAVBATDAGI REYS</Text>
+            <View style={styles.nextTripRouteWrap}>
+              <View style={styles.tagRow}>
+                <Text style={styles.nextTripTag}>NAVBATDAGI REYS</Text>
+                <View
+                  style={[
+                    styles.corridorPill,
+                    activeDriverTrip.isInternational ? styles.corridorInternational : styles.corridorLocal,
+                  ]}
+                >
+                  {activeDriverTrip.isInternational && (
+                    <Globe size={11} color={COLORS.amber[400]} style={{ marginRight: 4 }} />
+                  )}
+                  <Text
+                    style={[
+                      styles.corridorPillText,
+                      activeDriverTrip.isInternational ? styles.corridorTextInternational : styles.corridorTextLocal,
+                    ]}
+                  >
+                    {activeDriverTrip.isInternational ? 'Xalqaro (Chegara)' : 'Shaharlararo'}
+                  </Text>
+                </View>
+              </View>
+
               <Text style={styles.nextTripRoute}>
                 {activeDriverTrip.originCity} ➔ {activeDriverTrip.destinationCity}
               </Text>
-            </View>
-            <Badge
-              label={activeDriverTrip.isInternational ? 'Xalqaro' : 'Shaharlararo'}
-              variant={activeDriverTrip.isInternational ? 'blue' : 'emerald'}
-            />
-          </View>
-
-          <View style={styles.nextTripDetails}>
-            <View style={styles.nextTripDetailItem}>
-              <Calendar size={14} color={COLORS.navy[300]} />
-              <Text style={styles.nextTripDetailText}>{activeDriverTrip.departureTime}</Text>
-            </View>
-
-            <View style={styles.nextTripDetailItem}>
-              <Users size={14} color={COLORS.navy[300]} />
-              <Text style={styles.nextTripDetailText}>
-                3 / 4 ta yo’lovchi band qilgan
-              </Text>
-            </View>
-
-            <View style={styles.nextTripDetailItem}>
-              <Car size={14} color={COLORS.navy[300]} />
-              <Text style={styles.nextTripDetailText}>
-                {activeDriverTrip.vehicle.make} {activeDriverTrip.vehicle.model} ({activeDriverTrip.vehicle.licensePlate})
+              <Text style={styles.nextTripAddress}>
+                {activeDriverTrip.originAddress}
               </Text>
             </View>
           </View>
 
+          {/* Trip Details Grid */}
+          <View style={styles.nextTripDetailsGrid}>
+            <View style={styles.tripDetailItem}>
+              <Clock size={14} color={COLORS.amber[400]} />
+              <View>
+                <Text style={styles.tripDetailLabel}>Jo’nash vaqti</Text>
+                <Text style={styles.tripDetailValue}>{activeDriverTrip.departureTime}</Text>
+              </View>
+            </View>
+
+            <View style={styles.tripDetailItem}>
+              <Users size={14} color={COLORS.emerald[400]} />
+              <View>
+                <Text style={styles.tripDetailLabel}>Band qilingan</Text>
+                <Text style={styles.tripDetailValue}>
+                  {bookedCount} / {totalSeats} ta joy ({availableSeats} ta bo’sh)
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.tripDetailItem}>
+              <Car size={14} color="#38BDF8" />
+              <View>
+                <Text style={styles.tripDetailLabel}>Avtomobil</Text>
+                <Text style={styles.tripDetailValue}>
+                  {activeDriverTrip.vehicle.make} {activeDriverTrip.vehicle.model} • {activeDriverTrip.vehicle.licensePlate}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Manage Trip CTA Button */}
           <TouchableOpacity
             style={styles.manageTripBtn}
-            onPress={() => navigation.navigate('ActiveTrip')}
+            onPress={() => {
+              Haptics.medium();
+              navigation.navigate('ActiveTrip');
+            }}
             activeOpacity={0.85}
           >
-            <Text style={styles.manageTripBtnText}>Faol reysni boshqarish (Bortga olish)</Text>
-            <ArrowRight size={16} color={COLORS.white} />
+            <View style={styles.manageTripBtnContent}>
+              <Text style={styles.manageTripBtnText}>Faol reysni boshqarish (Bortga olish)</Text>
+              <Text style={styles.manageTripBtnSubText}>
+                {bookedCount} ta yo’lovchi kodi va bortga qabul qilish
+              </Text>
+            </View>
+            <View style={styles.manageTripArrowCircle}>
+              <ArrowRight size={16} color={COLORS.navy[950]} />
+            </View>
           </TouchableOpacity>
         </View>
 
         {/* Quick Actions Grid */}
         <Text style={styles.sectionHeading}>Tezkor amallar</Text>
-        <View style={styles.actionsRow}>
+        <View style={styles.actionsGrid}>
+          {/* Create Trip */}
           <TouchableOpacity
             style={styles.actionCard}
-            onPress={() => navigation.navigate('CreateTrip')}
+            onPress={() => {
+              Haptics.selection();
+              navigation.navigate('CreateTrip');
+            }}
             activeOpacity={0.85}
           >
-            <PlusCircle size={24} color={COLORS.emerald[400]} />
+            <View style={[styles.actionIconBox, { backgroundColor: 'rgba(245, 158, 11, 0.15)' }]}>
+              <PlusCircle size={22} color={COLORS.amber[400]} />
+            </View>
             <Text style={styles.actionTitle}>Yangi reys e’lon qilish</Text>
-            <Text style={styles.actionDesc}>Shaharlararo yoki xalqaro yo’nalish</Text>
+            <Text style={styles.actionDesc}>Shaharlararo yoki xalqaro chegara yo’nalishi</Text>
+            <View style={styles.actionFooter}>
+              <Text style={styles.actionFooterText}>Reys yaratish</Text>
+              <ArrowRight size={13} color={COLORS.amber[400]} />
+            </View>
           </TouchableOpacity>
 
+          {/* Wallet Payout */}
           <TouchableOpacity
             style={styles.actionCard}
-            onPress={() => navigation.navigate('Wallet')}
+            onPress={() => {
+              Haptics.selection();
+              navigation.navigate('Wallet');
+            }}
             activeOpacity={0.85}
           >
-            <Wallet size={24} color={COLORS.amber[400]} />
+            <View style={[styles.actionIconBox, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
+              <Wallet size={22} color={COLORS.emerald[400]} />
+            </View>
             <Text style={styles.actionTitle}>Hamyon & Pul yechish</Text>
-            <Text style={styles.actionDesc}>0% komissiya bilan Uzcard/Humo</Text>
+            <Text style={styles.actionDesc}>0% komissiya bilan bir zumda Uzcard/Humo/Kaspi</Text>
+            <View style={styles.actionFooter}>
+              <Text style={[styles.actionFooterText, { color: COLORS.emerald[400] }]}>
+                Pul yechish
+              </Text>
+              <ArrowRight size={13} color={COLORS.emerald[400]} />
+            </View>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -208,7 +331,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.navy[950],
+    backgroundColor: '#090D16', // Cockpit Obsidian
   },
   scrollView: {
     flex: 1,
@@ -218,193 +341,405 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   statusCard: {
-    borderRadius: 16,
-    padding: 14,
+    borderRadius: 18,
+    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 14,
-    borderWidth: 1,
+    borderWidth: 1.5,
+    ...SHADOWS.md,
   },
   statusCardOnline: {
-    backgroundColor: COLORS.navy[900],
-    borderColor: COLORS.emerald[600],
+    backgroundColor: '#111827',
+    borderColor: 'rgba(16, 185, 129, 0.4)',
   },
   statusCardOffline: {
-    backgroundColor: COLORS.navy[900],
-    borderColor: COLORS.navy[700],
+    backgroundColor: '#111827',
+    borderColor: '#1F2937',
   },
   statusLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
     flex: 1,
+    marginRight: 10,
   },
   statusIndicatorDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+  },
+  statusTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexWrap: 'wrap',
   },
   statusTitle: {
     fontSize: 14,
     fontWeight: '800',
-    color: COLORS.white,
+    color: '#F8FAFC',
+  },
+  onlineBadge: {
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  onlineBadgeActive: {
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+  },
+  onlineBadgeInactive: {
+    backgroundColor: '#1E293B',
+  },
+  onlineBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+  },
+  onlineBadgeTextActive: {
+    color: COLORS.emerald[400],
+  },
+  onlineBadgeTextInactive: {
+    color: '#94A3B8',
   },
   statusSubtitle: {
     fontSize: 11,
-    color: COLORS.navy[300],
-    marginTop: 2,
+    color: '#94A3B8',
+    marginTop: 4,
+    lineHeight: 15,
   },
   verificationBanner: {
-    backgroundColor: COLORS.navy[900],
-    borderRadius: 14,
-    padding: 12,
+    backgroundColor: '#111827',
+    borderRadius: 16,
+    padding: 14,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: COLORS.emerald[800],
+    borderColor: 'rgba(16, 185, 129, 0.3)',
+    ...SHADOWS.sm,
+  },
+  verifIconBox: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
+  },
+  verifHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexWrap: 'wrap',
   },
   verificationBannerTitle: {
     fontSize: 13,
     fontWeight: '800',
     color: COLORS.emerald[400],
   },
+  verifPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  verifPillText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: COLORS.emerald[400],
+  },
   verificationBannerDesc: {
     fontSize: 11,
-    color: COLORS.navy[300],
+    color: '#94A3B8',
     marginTop: 2,
+    lineHeight: 15,
   },
   statsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
-    marginBottom: 16,
+    gap: 12,
+    marginBottom: 18,
   },
   statBox: {
-    backgroundColor: COLORS.navy[900],
+    width: '48%',
+    backgroundColor: '#111827',
     borderRadius: 16,
     padding: 14,
-    width: '48%',
     borderWidth: 1,
-    borderColor: COLORS.navy[800],
+    borderColor: '#1F2937',
     ...SHADOWS.sm,
   },
+  statHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
   statIconWrapper: {
-    width: 34,
-    height: 34,
-    borderRadius: 10,
-    backgroundColor: COLORS.navy[800],
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
-  },
-  statLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: COLORS.navy[400],
-  },
-  statValue: {
-    fontSize: 16,
-    fontWeight: '900',
-    color: COLORS.white,
-    marginVertical: 4,
   },
   statHint: {
     fontSize: 10,
     fontWeight: '700',
     color: COLORS.amber[400],
   },
+  statLabel: {
+    fontSize: 11,
+    color: '#94A3B8',
+    fontWeight: '600',
+  },
+  statValue: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: '#F8FAFC',
+    marginTop: 2,
+    fontVariant: ['tabular-nums'],
+  },
+  statValueAmber: {
+    fontSize: 17,
+    fontWeight: '900',
+    color: COLORS.amber[400],
+    marginTop: 2,
+    fontVariant: ['tabular-nums'],
+  },
+  statValueEmerald: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: COLORS.emerald[400],
+    marginTop: 2,
+    fontVariant: ['tabular-nums'],
+  },
+  statCurrency: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#94A3B8',
+  },
+  statSubText: {
+    fontSize: 10,
+    color: '#64748B',
+    marginTop: 4,
+  },
+  greenTag: {
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  greenTagText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: COLORS.emerald[400],
+  },
+  ratingBadge: {
+    backgroundColor: 'rgba(250, 204, 21, 0.15)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  ratingBadgeText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#FACC15',
+  },
+  successRateBadge: {
+    backgroundColor: 'rgba(56, 189, 248, 0.15)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  successRateText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#38BDF8',
+  },
   nextTripCard: {
-    backgroundColor: COLORS.navy[900],
-    borderRadius: 18,
+    backgroundColor: '#111827',
+    borderRadius: 20,
     padding: 16,
     borderWidth: 1.5,
-    borderColor: COLORS.navy[700],
+    borderColor: '#1F2937',
     marginBottom: 20,
     ...SHADOWS.md,
   },
   nextTripHeader: {
+    marginBottom: 14,
+  },
+  nextTripRouteWrap: {
+    gap: 4,
+  },
+  tagRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 12,
+    alignItems: 'center',
+    marginBottom: 4,
   },
   nextTripTag: {
     fontSize: 10,
     fontWeight: '800',
     color: COLORS.amber[400],
-    letterSpacing: 0.5,
+    letterSpacing: 0.8,
+  },
+  corridorPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  corridorInternational: {
+    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(245, 158, 11, 0.3)',
+  },
+  corridorLocal: {
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
+  },
+  corridorPillText: {
+    fontSize: 10,
+    fontWeight: '700',
+  },
+  corridorTextInternational: {
+    color: COLORS.amber[400],
+  },
+  corridorTextLocal: {
+    color: COLORS.emerald[400],
   },
   nextTripRoute: {
     fontSize: 18,
     fontWeight: '900',
-    color: COLORS.white,
+    color: '#F8FAFC',
+    letterSpacing: -0.2,
+  },
+  nextTripAddress: {
+    fontSize: 12,
+    color: '#94A3B8',
     marginTop: 2,
   },
-  nextTripDetails: {
-    gap: 8,
-    backgroundColor: COLORS.navy[950],
+  nextTripDetailsGrid: {
+    backgroundColor: '#090D16',
+    borderRadius: 14,
     padding: 12,
-    borderRadius: 12,
+    gap: 10,
+    borderWidth: 1,
+    borderColor: '#1F2937',
     marginBottom: 14,
   },
-  nextTripDetailItem: {
+  tripDetailItem: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
   },
-  nextTripDetailText: {
+  tripDetailLabel: {
+    fontSize: 10,
+    color: '#64748B',
+  },
+  tripDetailValue: {
     fontSize: 12,
-    color: COLORS.navy[200],
-    fontWeight: '600',
+    fontWeight: '700',
+    color: '#F8FAFC',
+    marginTop: 1,
   },
   manageTripBtn: {
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: COLORS.amber[400],
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    borderRadius: 12,
-    gap: 8,
-    ...SHADOWS.sm,
+    justifyContent: 'space-between',
+    ...SHADOWS.md,
+  },
+  manageTripBtnContent: {
+    flex: 1,
   },
   manageTripBtnText: {
-    color: COLORS.white,
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '800',
+    color: COLORS.navy[950],
+  },
+  manageTripBtnSubText: {
+    fontSize: 11,
+    color: 'rgba(2, 6, 23, 0.75)',
+    marginTop: 1,
+    fontWeight: '600',
+  },
+  manageTripArrowCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(2, 6, 23, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 10,
   },
   sectionHeading: {
     fontSize: 14,
     fontWeight: '800',
-    color: COLORS.navy[300],
+    color: '#F8FAFC',
+    marginBottom: 12,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-    marginBottom: 10,
   },
-  actionsRow: {
+  actionsGrid: {
     flexDirection: 'row',
     gap: 12,
   },
   actionCard: {
     flex: 1,
-    backgroundColor: COLORS.navy[900],
-    borderRadius: 16,
+    backgroundColor: '#111827',
+    borderRadius: 18,
     padding: 14,
     borderWidth: 1,
-    borderColor: COLORS.navy[800],
-    gap: 6,
+    borderColor: '#1F2937',
+    justifyContent: 'space-between',
+    minHeight: 140,
+    ...SHADOWS.sm,
+  },
+  actionIconBox: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
   },
   actionTitle: {
     fontSize: 13,
     fontWeight: '800',
-    color: COLORS.white,
-    marginTop: 4,
+    color: '#F8FAFC',
+    lineHeight: 17,
   },
   actionDesc: {
     fontSize: 10,
-    color: COLORS.navy[400],
+    color: '#94A3B8',
+    marginTop: 4,
     lineHeight: 14,
+  },
+  actionFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 12,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#1F2937',
+  },
+  actionFooterText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: COLORS.amber[400],
   },
 });

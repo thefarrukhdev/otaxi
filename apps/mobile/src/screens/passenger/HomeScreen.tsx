@@ -13,8 +13,13 @@ import { Header } from '../../components/Header';
 import { Badge } from '../../components/Badge';
 import { BoardingPassCard } from '../../components/BoardingPassCard';
 import { BorderChecklistModal } from '../../components/BorderChecklistModal';
+import {
+  CorridorQuickSelect,
+  RouteOption,
+} from '../../components/passenger';
+import { Haptics } from '../../components/ui/Haptics';
 import { useApp } from '../../context/AppContext';
-import { POPULAR_ROUTES, getBorderChecklist } from '../../lib/data';
+import { getBorderChecklist } from '../../lib/data';
 import { CountryCode } from '@otaxi/types';
 import {
   Search,
@@ -27,6 +32,9 @@ import {
   ArrowRight,
   Compass,
   FileCheck2,
+  ArrowUpDown,
+  Lock,
+  Headphones,
 } from 'lucide-react-native';
 
 interface HomeScreenProps {
@@ -34,21 +42,44 @@ interface HomeScreenProps {
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const { activeBooking, cancelBooking } = useApp();
+  const { activeBooking, cancelBooking, trips } = useApp();
   const [fromCity, setFromCity] = useState('Toshkent');
   const [toCity, setToCity] = useState('');
+  const [selectedDate, setSelectedDate] = useState<'TODAY' | 'TOMORROW'>('TODAY');
   const [passengersCount, setPassengersCount] = useState(1);
   const [isChecklistVisible, setChecklistVisible] = useState(false);
 
+  // Calculate available trips count
+  const matchingTripsCount = trips.filter((t) => {
+    if (fromCity && !t.originCity.toLowerCase().includes(fromCity.toLowerCase())) {
+      return false;
+    }
+    if (toCity && !t.destinationCity.toLowerCase().includes(toCity.toLowerCase())) {
+      return false;
+    }
+    return t.availableSeats >= passengersCount;
+  }).length;
+
   const handleSearch = () => {
+    Haptics.selection();
     navigation.navigate('TripsList', {
       from: fromCity,
       to: toCity,
       passengers: passengersCount,
+      date: selectedDate,
     });
   };
 
-  const handleSelectPopularRoute = (route: (typeof POPULAR_ROUTES)[0]) => {
+  const handleSwapCities = () => {
+    Haptics.light();
+    if (!toCity) return;
+    const temp = fromCity;
+    setFromCity(toCity);
+    setToCity(temp);
+  };
+
+  const handleSelectCorridor = (route: RouteOption) => {
+    Haptics.selection();
     setFromCity(route.from);
     setToCity(route.to);
     navigation.navigate('TripsList', {
@@ -63,17 +94,28 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     <View style={styles.container}>
       <Header
         title="Shaharlararo va xalqaro safarlar"
-        subtitle="Markaziy Osiyo bo’ylab tekshirilgan haydovchilar bilan xavfsiz sayohat"
+        subtitle="Markaziy Osiyo bo'ylab tekshirilgan haydovchilar bilan xavfsiz qatnov"
       />
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Active Booking Reminder if passenger has one */}
         {activeBooking && (
           <View style={styles.activeBookingSection}>
             <View style={styles.sectionHeaderRow}>
-              <Text style={styles.sectionTitle}>Sizning faol safaringiz</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Bookings')}>
-                <Text style={styles.linkText}>Barchasini ko’rish</Text>
+              <View style={styles.activePill}>
+                <View style={styles.activePulseDot} />
+                <Text style={styles.activePillText}>Sizning faol safaringiz</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Bookings')}
+                style={styles.linkButton}
+              >
+                <Text style={styles.linkText}>Barchasini ko'rish</Text>
+                <ArrowRight size={13} color={COLORS.emerald[700]} />
               </TouchableOpacity>
             </View>
             <BoardingPassCard
@@ -91,6 +133,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               <Sparkles size={14} color={COLORS.emerald[700]} />
               <Text style={styles.searchTypePillText}>Shaharlararo & Xalqaro qatnov</Text>
             </View>
+            <Text style={styles.availableCounterText}>
+              {matchingTripsCount > 0
+                ? `${matchingTripsCount} ta reys topildi`
+                : "Barcha yo'nalishlar"}
+            </Text>
           </View>
 
           {/* From Input */}
@@ -98,7 +145,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <View style={styles.inputIconCircle}>
               <MapPin size={16} color={COLORS.emerald[600]} />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={styles.inputFieldContainer}>
               <Text style={styles.inputLabel}>Qayerdan</Text>
               <TextInput
                 style={styles.textInput}
@@ -108,6 +155,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 placeholderTextColor={COLORS.gray[400]}
               />
             </View>
+            {toCity ? (
+              <TouchableOpacity
+                style={styles.swapButton}
+                onPress={handleSwapCities}
+                activeOpacity={0.7}
+                accessibilityLabel="Shaharlarni almashtirish"
+              >
+                <ArrowUpDown size={16} color={COLORS.gray[600]} />
+              </TouchableOpacity>
+            ) : null}
           </View>
 
           <View style={styles.inputDivider} />
@@ -117,13 +174,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <View style={[styles.inputIconCircle, { backgroundColor: COLORS.blue[50] }]}>
               <Compass size={16} color={COLORS.blue[600]} />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={styles.inputFieldContainer}>
               <Text style={styles.inputLabel}>Qayerga</Text>
               <TextInput
                 style={styles.textInput}
                 value={toCity}
                 onChangeText={setToCity}
-                placeholder="Shahar nomi (Shymkent, Samarqand...)"
+                placeholder="Shahar nomi (Shymkent 🇰🇿, Samarqand...)"
                 placeholderTextColor={COLORS.gray[400]}
               />
             </View>
@@ -131,33 +188,95 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
           <View style={styles.inputDivider} />
 
-          {/* Options row: Date & Passengers count */}
+          {/* Date Selector Row */}
           <View style={styles.optionsRow}>
             <View style={styles.optionBox}>
               <Calendar size={16} color={COLORS.gray[500]} />
-              <View>
-                <Text style={styles.optionLabel}>Jo’nash sanasi</Text>
-                <Text style={styles.optionValue}>Bugun, 15-iyun</Text>
+              <View style={styles.dateSelectorCol}>
+                <Text style={styles.optionLabel}>Jo'nash sanasi</Text>
+                <View style={styles.dateButtonsRow}>
+                  <TouchableOpacity
+                    style={[
+                      styles.dateChip,
+                      selectedDate === 'TODAY' && styles.dateChipActive,
+                    ]}
+                    onPress={() => {
+                      Haptics.light();
+                      setSelectedDate('TODAY');
+                    }}
+                  >
+                    <Text
+                      style={[
+                        styles.dateChipText,
+                        selectedDate === 'TODAY' && styles.dateChipTextActive,
+                      ]}
+                    >
+                      Bugun
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.dateChip,
+                      selectedDate === 'TOMORROW' && styles.dateChipActive,
+                    ]}
+                    onPress={() => {
+                      Haptics.light();
+                      setSelectedDate('TOMORROW');
+                    }}
+                  >
+                    <Text
+                      style={[
+                        styles.dateChipText,
+                        selectedDate === 'TOMORROW' && styles.dateChipTextActive,
+                      ]}
+                    >
+                      Ertaga
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
 
+            {/* Passengers Count Counter */}
             <View style={styles.optionBox}>
               <Users size={16} color={COLORS.gray[500]} />
               <View>
-                <Text style={styles.optionLabel}>Yo’lovchilar</Text>
+                <Text style={styles.optionLabel}>Yo'lovchilar</Text>
                 <View style={styles.passengersCounter}>
                   <TouchableOpacity
-                    onPress={() => setPassengersCount((p) => Math.max(1, p - 1))}
+                    onPress={() => {
+                      Haptics.light();
+                      setPassengersCount((p) => Math.max(1, p - 1));
+                    }}
                     style={styles.counterBtn}
+                    disabled={passengersCount <= 1}
                   >
-                    <Text style={styles.counterBtnText}>-</Text>
+                    <Text
+                      style={[
+                        styles.counterBtnText,
+                        passengersCount <= 1 && styles.counterBtnTextDisabled,
+                      ]}
+                    >
+                      -
+                    </Text>
                   </TouchableOpacity>
                   <Text style={styles.counterValue}>{passengersCount}</Text>
                   <TouchableOpacity
-                    onPress={() => setPassengersCount((p) => Math.min(4, p + 1))}
+                    onPress={() => {
+                      Haptics.light();
+                      setPassengersCount((p) => Math.min(4, p + 1));
+                    }}
                     style={styles.counterBtn}
+                    disabled={passengersCount >= 4}
                   >
-                    <Text style={styles.counterBtnText}>+</Text>
+                    <Text
+                      style={[
+                        styles.counterBtnText,
+                        passengersCount >= 4 && styles.counterBtnTextDisabled,
+                      ]}
+                    >
+                      +
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -165,72 +284,63 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </View>
 
           {/* Search Button */}
-          <TouchableOpacity style={styles.searchButton} onPress={handleSearch} activeOpacity={0.85}>
+          <TouchableOpacity
+            style={styles.searchButton}
+            onPress={handleSearch}
+            activeOpacity={0.88}
+          >
             <Search size={18} color={COLORS.white} />
-            <Text style={styles.searchButtonText}>Reyslarni qidirish</Text>
+            <Text style={styles.searchButtonText}>
+              {matchingTripsCount > 0
+                ? `Reyslarni qidirish (${matchingTripsCount} ta bo'sh reys)`
+                : 'Reyslarni qidirish'}
+            </Text>
           </TouchableOpacity>
         </View>
+
+        {/* Tezkor Koridorlar Karuseli */}
+        <CorridorQuickSelect
+          onSelectRoute={handleSelectCorridor}
+          selectedTo={toCity}
+          selectedFrom={fromCity}
+        />
 
         {/* International Border Guide Quick Banner */}
         <TouchableOpacity
           style={styles.borderBanner}
-          onPress={() => setChecklistVisible(true)}
-          activeOpacity={0.85}
+          onPress={() => {
+            Haptics.selection();
+            setChecklistVisible(true);
+          }}
+          activeOpacity={0.88}
         >
           <View style={styles.borderBannerIconCircle}>
             <Globe size={22} color={COLORS.blue[600]} />
           </View>
-          <View style={{ flex: 1 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <View style={styles.borderBannerContent}>
+            <View style={styles.borderBannerTitleRow}>
               <Text style={styles.borderBannerTitle}>Xalqaro chegara yordamchisi</Text>
-              <Badge label="PRD PAS-11" variant="blue" />
+              <Badge label="Gid 🇰🇿 🇰🇬 🇹🇯" variant="blue" />
             </View>
             <Text style={styles.borderBannerSubtitle}>
-              Qozog’iston, Qirg’iziston va Tojikiston chegaralariga tayyorgarlik chek-listi
+              Qozog'iston, Qirg'iziston va Tojikiston chegaralariga tayyorgarlik chek-listi
             </Text>
           </View>
           <ArrowRight size={18} color={COLORS.blue[600]} />
         </TouchableOpacity>
 
-        {/* Popular Routes Carousel */}
-        <View style={styles.popularSection}>
-          <Text style={styles.sectionTitle}>Mashhur yo’nalishlar</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
-            {POPULAR_ROUTES.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.routeCard}
-                onPress={() => handleSelectPopularRoute(item)}
-                activeOpacity={0.8}
-              >
-                <View style={styles.routeBadgeRow}>
-                  <Badge
-                    label={item.isInternational ? 'Xalqaro' : 'Shaharlararo'}
-                    variant={item.isInternational ? 'blue' : 'emerald'}
-                  />
-                  <Text style={styles.routeTime}>{item.time}</Text>
-                </View>
-                <Text style={styles.routeFromTo}>
-                  {item.from} ➔ {item.to}
-                </Text>
-                <Text style={styles.routePrice}>{item.price} dan</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-
-        {/* Platform Advantages */}
+        {/* Platform Advantages / Mobility Guarantees */}
         <View style={styles.featuresSection}>
-          <Text style={styles.sectionTitle}>Nega aynan OTAXI?</Text>
+          <Text style={styles.sectionTitle}>OTAXI Safar Kafolatlari</Text>
 
           <View style={styles.featureCard}>
             <View style={[styles.featureIcon, { backgroundColor: COLORS.emerald[50] }]}>
               <ShieldCheck size={22} color={COLORS.emerald[600]} />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={styles.featureContent}>
               <Text style={styles.featureTitle}>100% Tekshirilgan haydovchilar</Text>
               <Text style={styles.featureText}>
-                Har bir haydovchining shaxsi, haydovchilik guvohnomasi, avtomobil texpasporti va sug’urtasi qat’iy tekshiriladi.
+                Har bir haydovchining shaxsi, haydovchilik guvohnomasi, avtomobil texpasporti va sug'urtasi qat'iy tekshiriladi.
               </Text>
             </View>
           </View>
@@ -239,10 +349,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <View style={[styles.featureIcon, { backgroundColor: COLORS.blue[50] }]}>
               <FileCheck2 size={22} color={COLORS.blue[600]} />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={styles.featureContent}>
               <Text style={styles.featureTitle}>Chegara qoidalari chek-listi</Text>
               <Text style={styles.featureText}>
-                Xorijiy pasport, vizasiz muddat, bolalar ruxsatnomasi va valyuta me’yorlari to’lovdan oldin to’liq ko’rsatiladi.
+                Xorijiy pasport muddati, 30 kunlik vizasiz rejim, bolalar ruxsatnomasi va valyuta me'yorlari to'lovdan oldin ko'rsatiladi.
               </Text>
             </View>
           </View>
@@ -251,10 +361,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <View style={[styles.featureIcon, { backgroundColor: COLORS.amber[50] }]}>
               <Sparkles size={22} color={COLORS.amber[600]} />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={styles.featureContent}>
               <Text style={styles.featureTitle}>Interaktiv joy tanlash & Kafolat</Text>
               <Text style={styles.featureText}>
-                Old o’rindiq yoki orqa qulay joyni oldindan tanlaysiz. 4 xonali bortga chiqish kodi bilan safaringiz kafolatlangan.
+                Old o'rindiq (VIP) yoki orqa qulay joyni tanlaysiz. 4 xonali bort kodi orqali soxta bronlarning oldi olinadi.
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.featureCard}>
+            <View style={[styles.featureIcon, { backgroundColor: COLORS.navy[100] }]}>
+              <Headphones size={22} color={COLORS.navy[700]} />
+            </View>
+            <View style={styles.featureContent}>
+              <Text style={styles.featureTitle}>24/7 Safar xavfsizligi va qo'llab-quvvatlash</Text>
+              <Text style={styles.featureText}>
+                Tog'li dovonlar va cho'l magistral yo'llarida GPS monitoring va dispetcherlik nazorati.
               </Text>
             </View>
           </View>
@@ -281,7 +403,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
-    paddingBottom: 32,
+    paddingBottom: 36,
   },
   activeBookingSection: {
     marginBottom: 16,
@@ -292,11 +414,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: COLORS.gray[900],
-    marginBottom: 12,
+  activePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: COLORS.emerald[50],
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: COLORS.emerald[200],
+  },
+  activePulseDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: COLORS.emerald[600],
+  },
+  activePillText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: COLORS.emerald[800],
+  },
+  linkButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   linkText: {
     fontSize: 12,
@@ -306,35 +449,46 @@ const styles = StyleSheet.create({
   searchCard: {
     backgroundColor: COLORS.white,
     borderRadius: 20,
-    padding: 16,
     borderWidth: 1.5,
     borderColor: COLORS.gray[200],
+    padding: 18,
     ...SHADOWS.md,
-    marginBottom: 16,
   },
   searchCardHeader: {
-    marginBottom: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 14,
   },
   searchTypePill: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 5,
     backgroundColor: COLORS.emerald[50],
-    paddingHorizontal: 10,
+    paddingHorizontal: 9,
     paddingVertical: 4,
-    borderRadius: 20,
-    alignSelf: 'flex-start',
-    gap: 6,
+    borderRadius: 7,
+    borderWidth: 1,
+    borderColor: COLORS.emerald[200],
   },
   searchTypePillText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: '800',
     color: COLORS.emerald[800],
+  },
+  availableCounterText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: COLORS.gray[500],
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    paddingVertical: 4,
+    paddingVertical: 6,
+  },
+  inputFieldContainer: {
+    flex: 1,
   },
   inputIconCircle: {
     width: 36,
@@ -346,191 +500,211 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 10,
-    color: COLORS.gray[400],
     fontWeight: '700',
+    color: COLORS.gray[400],
     textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 2,
   },
   textInput: {
     fontSize: 15,
     fontWeight: '700',
     color: COLORS.gray[900],
-    paddingVertical: 2,
+    padding: 0,
+  },
+  swapButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: COLORS.gray[100],
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.gray[200],
   },
   inputDivider: {
     height: 1,
     backgroundColor: COLORS.gray[100],
-    marginVertical: 10,
+    marginVertical: 4,
   },
   optionsRow: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
     gap: 12,
-    marginTop: 4,
-    marginBottom: 16,
   },
   optionBox: {
     flex: 1,
-    backgroundColor: COLORS.gray[50],
-    padding: 10,
-    borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 10,
+  },
+  dateSelectorCol: {
+    flex: 1,
+  },
+  optionLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: COLORS.gray[400],
+    textTransform: 'uppercase',
+    marginBottom: 4,
+  },
+  dateButtonsRow: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  dateChip: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    backgroundColor: COLORS.gray[100],
     borderWidth: 1,
     borderColor: COLORS.gray[200],
   },
-  optionLabel: {
-    fontSize: 9,
-    color: COLORS.gray[400],
-    fontWeight: '700',
+  dateChipActive: {
+    backgroundColor: COLORS.emerald[50],
+    borderColor: COLORS.emerald[500],
   },
-  optionValue: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: COLORS.gray[800],
+  dateChipText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: COLORS.gray[600],
+  },
+  dateChipTextActive: {
+    color: COLORS.emerald[800],
+    fontWeight: '800',
   },
   passengersCounter: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    marginTop: 2,
+    backgroundColor: COLORS.gray[100],
+    borderRadius: 8,
+    padding: 2,
+    borderWidth: 1,
+    borderColor: COLORS.gray[200],
   },
   counterBtn: {
-    backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderColor: COLORS.gray[300],
-    borderRadius: 4,
-    width: 20,
-    height: 20,
+    width: 26,
+    height: 26,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: COLORS.white,
+    borderRadius: 6,
   },
   counterBtnText: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '800',
     color: COLORS.gray[800],
   },
+  counterBtnTextDisabled: {
+    color: COLORS.gray[300],
+  },
   counterValue: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '800',
-    color: COLORS.emerald[800],
+    color: COLORS.gray[900],
+    paddingHorizontal: 10,
+    fontVariant: ['tabular-nums'],
   },
   searchButton: {
-    backgroundColor: COLORS.emerald[600],
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
+    backgroundColor: COLORS.emerald[600],
     paddingVertical: 14,
     borderRadius: 14,
-    gap: 8,
-    ...SHADOWS.md,
+    marginTop: 10,
+    ...SHADOWS.sm,
   },
   searchButtonText: {
-    color: COLORS.white,
     fontSize: 15,
     fontWeight: '800',
+    color: COLORS.white,
+    letterSpacing: -0.2,
   },
   borderBanner: {
-    backgroundColor: '#f0f7ff',
-    borderRadius: 16,
-    padding: 14,
-    borderWidth: 1.5,
-    borderColor: COLORS.blue[200],
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#EFF6FF',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#BFDBFE',
+    padding: 14,
     gap: 12,
-    marginBottom: 20,
+    marginVertical: 10,
     ...SHADOWS.sm,
   },
   borderBannerIconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     backgroundColor: COLORS.white,
     alignItems: 'center',
     justifyContent: 'center',
-    ...SHADOWS.sm,
+    borderWidth: 1,
+    borderColor: '#DBEAFE',
+  },
+  borderBannerContent: {
+    flex: 1,
+  },
+  borderBannerTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 2,
   },
   borderBannerTitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '800',
-    color: COLORS.blue[900],
+    color: '#1E3A8A',
   },
   borderBannerSubtitle: {
     fontSize: 11,
-    color: COLORS.blue[700],
-    marginTop: 2,
-    lineHeight: 16,
-  },
-  popularSection: {
-    marginBottom: 20,
-  },
-  horizontalScroll: {
-    marginHorizontal: -16,
-    paddingHorizontal: 16,
-  },
-  routeCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: 14,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: COLORS.gray[200],
-    width: 170,
-    marginRight: 10,
-    ...SHADOWS.sm,
-  },
-  routeBadgeRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  routeTime: {
-    fontSize: 10,
-    color: COLORS.gray[500],
-    fontWeight: '600',
-  },
-  routeFromTo: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: COLORS.gray[900],
-    marginBottom: 4,
-  },
-  routePrice: {
-    fontSize: 13,
-    fontWeight: '800',
-    color: COLORS.emerald[700],
+    color: '#3B82F6',
+    lineHeight: 15,
   },
   featuresSection: {
-    marginTop: 8,
+    marginTop: 14,
+    gap: 10,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: COLORS.gray[900],
+    marginBottom: 2,
   },
   featureCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: 14,
-    padding: 14,
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-    marginBottom: 10,
-    borderWidth: 1,
+    backgroundColor: COLORS.white,
+    borderRadius: 16,
+    borderWidth: 1.5,
     borderColor: COLORS.gray[200],
+    padding: 14,
+    alignItems: 'center',
+    gap: 12,
     ...SHADOWS.sm,
   },
   featureIcon: {
-    width: 42,
-    height: 42,
-    borderRadius: 12,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  featureContent: {
+    flex: 1,
   },
   featureTitle: {
     fontSize: 13,
     fontWeight: '800',
     color: COLORS.gray[900],
-    marginBottom: 4,
+    marginBottom: 2,
   },
   featureText: {
     fontSize: 11,
-    color: COLORS.gray[600],
+    color: COLORS.gray[500],
     lineHeight: 16,
   },
 });

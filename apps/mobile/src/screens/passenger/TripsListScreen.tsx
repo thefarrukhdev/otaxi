@@ -1,30 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   View,
   Text,
   FlatList,
-  ScrollView,
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  RefreshControl,
 } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
-import { Badge } from '../../components/Badge';
+import { TripCard } from '../../components/passenger/TripCard';
+import { Haptics } from '../../components/ui/Haptics';
 import { useApp } from '../../context/AppContext';
 import { DetailedTrip } from '../../types';
 import {
   Search,
   Filter,
-  Star,
   ShieldCheck,
-  Clock,
-  MapPin,
-  Car,
-  ChevronRight,
-  Luggage,
+  ArrowUpDown,
+  X,
+  Compass,
   Wind,
-  CheckCircle,
+  Luggage,
+  Sparkles,
 } from 'lucide-react-native';
 
 interface TripsListScreenProps {
@@ -32,212 +31,358 @@ interface TripsListScreenProps {
   route: any;
 }
 
-export const TripsListScreen: React.FC<TripsListScreenProps> = ({ navigation, route }) => {
+type FilterCategory = 'ALL' | 'INTERNATIONAL' | 'DOMESTIC';
+type SortOption = 'CHEAPEST' | 'FASTEST' | 'RATING';
+
+export const TripsListScreen: React.FC<TripsListScreenProps> = ({
+  navigation,
+  route,
+}) => {
   const { trips } = useApp();
   const initialFrom = route.params?.from || '';
   const initialTo = route.params?.to || '';
+  const initialInternational = route.params?.isInternational;
 
-  const [activeTab, setActiveTab] = useState<'ALL' | 'INTERNATIONAL' | 'INTERCITY'>('ALL');
+  const [filterCategory, setFilterCategory] = useState<FilterCategory>(
+    initialInternational ? 'INTERNATIONAL' : 'ALL'
+  );
   const [onlyVerified, setOnlyVerified] = useState(false);
+  const [onlyAC, setOnlyAC] = useState(false);
+  const [onlyLuggage, setOnlyLuggage] = useState(false);
+  const [sortOption, setSortOption] = useState<SortOption>('CHEAPEST');
   const [searchQuery, setSearchQuery] = useState(initialTo || '');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Filter trips
-  const filteredTrips = trips.filter((trip) => {
-    if (activeTab === 'INTERNATIONAL' && !trip.isInternational) return false;
-    if (activeTab === 'INTERCITY' && trip.isInternational) return false;
-    if (onlyVerified && !trip.driver.isVerified) return false;
+  // Category counts
+  const categoryCounts = useMemo(() => {
+    const all = trips.length;
+    const intl = trips.filter((t) => t.isInternational).length;
+    const dom = trips.filter((t) => !t.isInternational).length;
+    return { all, intl, dom };
+  }, [trips]);
 
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      const matchDest = trip.destinationCity.toLowerCase().includes(q);
-      const matchOrigin = trip.originCity.toLowerCase().includes(q);
-      if (!matchDest && !matchOrigin) return false;
+  // Filtered and sorted trips
+  const processedTrips = useMemo(() => {
+    let list = [...trips];
+
+    // Category filter
+    if (filterCategory === 'INTERNATIONAL') {
+      list = list.filter((t) => t.isInternational);
+    } else if (filterCategory === 'DOMESTIC') {
+      list = list.filter((t) => !t.isInternational);
     }
 
-    return true;
-  });
+    // Verified driver filter
+    if (onlyVerified) {
+      list = list.filter((t) => t.driver.isVerified);
+    }
 
-  const renderTripItem = ({ item }: { item: DetailedTrip }) => {
-    const departureDate = new Date(item.departureTime);
-    const arrivalDate = new Date(item.estimatedArrivalTime);
+    // AC filter
+    if (onlyAC) {
+      list = list.filter((t) => t.vehicle.hasAirConditioner);
+    }
 
-    return (
-      <TouchableOpacity
-        style={styles.tripCard}
-        onPress={() => navigation.navigate('TripDetails', { tripId: item.id })}
-        activeOpacity={0.85}
-      >
-        {/* Top Badges */}
-        <View style={styles.cardTopRow}>
-          <View style={{ flexDirection: 'row', gap: 6 }}>
-            {item.isInternational ? (
-              <Badge label="Xalqaro reys" variant="blue" />
-            ) : (
-              <Badge label="Shaharlararo" variant="emerald" />
-            )}
-            {item.driver.isVerified && (
-              <Badge
-                label="Tekshirilgan"
-                variant="emerald"
-                icon={<ShieldCheck size={11} color={COLORS.emerald[700]} />}
-              />
-            )}
-          </View>
-          <Text style={styles.seatsBadgeText}>{item.availableSeats} ta bo'sh joy</Text>
-        </View>
+    // Luggage filter
+    if (onlyLuggage) {
+      list = list.filter((t) => t.allowLuggage);
+    }
 
-        {/* Timeline Row */}
-        <View style={styles.timelineRow}>
-          <View style={styles.timeCol}>
-            <Text style={styles.timeBig}>
-              {departureDate.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}
-            </Text>
-            <Text style={styles.cityText}>{item.originCity}</Text>
-            <Text style={styles.addressText} numberOfLines={1}>
-              {item.originAddress}
-            </Text>
-          </View>
+    // Search query filter (destination or origin)
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      list = list.filter(
+        (t) =>
+          t.destinationCity.toLowerCase().includes(q) ||
+          t.originCity.toLowerCase().includes(q) ||
+          t.destinationAddress.toLowerCase().includes(q) ||
+          t.originAddress.toLowerCase().includes(q)
+      );
+    }
 
-          <View style={styles.timelineMiddle}>
-            <Text style={styles.durationText}>
-              {Math.floor(item.durationMinutes / 60)}s {item.durationMinutes % 60}d
-            </Text>
-            <View style={styles.timelineLine}>
-              <View style={styles.timelineDot} />
-              <View style={styles.timelineLineBar} />
-              <View style={[styles.timelineDot, styles.timelineDotEnd]} />
-            </View>
-            {item.stops.length > 0 && (
-              <Text style={styles.stopsCount}>{item.stops.length} ta oraliq to’xtash</Text>
-            )}
-          </View>
+    // Sorting
+    if (sortOption === 'CHEAPEST') {
+      list.sort((a, b) => a.pricePerSeat - b.pricePerSeat);
+    } else if (sortOption === 'FASTEST') {
+      list.sort((a, b) => a.durationMinutes - b.durationMinutes);
+    } else if (sortOption === 'RATING') {
+      list.sort((a, b) => b.driver.rating - a.driver.rating);
+    }
 
-          <View style={[styles.timeCol, { alignItems: 'flex-end' }]}>
-            <Text style={styles.timeBig}>
-              {arrivalDate.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}
-            </Text>
-            <Text style={styles.cityText}>{item.destinationCity}</Text>
-            <Text style={styles.addressText} numberOfLines={1}>
-              {item.destinationAddress}
-            </Text>
-          </View>
-        </View>
+    return list;
+  }, [
+    trips,
+    filterCategory,
+    onlyVerified,
+    onlyAC,
+    onlyLuggage,
+    searchQuery,
+    sortOption,
+  ]);
 
-        {/* Divider */}
-        <View style={styles.cardDivider} />
+  const handleSelectTrip = useCallback(
+    (tripId: string) => {
+      Haptics.selection();
+      navigation.navigate('TripDetails', { tripId });
+    },
+    [navigation]
+  );
 
-        {/* Driver & Price Footer */}
-        <View style={styles.cardFooter}>
-          <View style={styles.driverCol}>
-            <View style={styles.driverAvatar}>
-              <Text style={styles.avatarText}>{item.driver.fullName.slice(0, 2)}</Text>
-            </View>
-            <View>
-              <Text style={styles.driverName}>{item.driver.fullName}</Text>
-              <View style={styles.ratingRow}>
-                <Star size={12} color="#eab308" fill="#eab308" />
-                <Text style={styles.ratingText}>{item.driver.rating.toFixed(2)}</Text>
-                <Text style={styles.tripsCountText}>• {item.driver.totalTrips} safar</Text>
-              </View>
-            </View>
-          </View>
+  const handleRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 600);
+  }, []);
 
-          <View style={styles.priceCol}>
-            <Text style={styles.priceAmount}>
-              {item.pricePerSeat.toLocaleString('uz-UZ')} UZS
-            </Text>
-            <Text style={styles.perSeatLabel}>1 o'rindiq uchun</Text>
-          </View>
-        </View>
-
-        {/* Amenities Bar */}
-        <View style={styles.amenitiesBar}>
-          <Text style={styles.vehicleName}>
-            {item.vehicle.make} {item.vehicle.model} ({item.vehicle.year})
-          </Text>
-          <View style={styles.amenitiesIcons}>
-            {item.vehicle.hasAirConditioner && (
-              <View style={styles.amenityChip}>
-                <Wind size={12} color={COLORS.emerald[700]} />
-                <Text style={styles.amenityChipText}>Konditsioner</Text>
-              </View>
-            )}
-            {item.allowLuggage && (
-              <View style={styles.amenityChip}>
-                <Luggage size={12} color={COLORS.emerald[700]} />
-                <Text style={styles.amenityChipText}>Yukxona</Text>
-              </View>
-            )}
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
+  const handleResetFilters = () => {
+    Haptics.light();
+    setFilterCategory('ALL');
+    setOnlyVerified(false);
+    setOnlyAC(false);
+    setOnlyLuggage(false);
+    setSearchQuery('');
+    setSortOption('CHEAPEST');
   };
+
+  const keyExtractor = useCallback((item: DetailedTrip) => item.id, []);
+
+  const renderTripItem = useCallback(
+    ({ item }: { item: DetailedTrip }) => (
+      <TripCard trip={item} onPress={() => handleSelectTrip(item.id)} />
+    ),
+    [handleSelectTrip]
+  );
 
   return (
     <View style={styles.container}>
-      <Header title="Mavjud reyslar" subtitle={`${filteredTrips.length} ta safar topildi`} />
+      <Header
+        title="Mavjud reyslar"
+        subtitle={
+          initialFrom && initialTo
+            ? `${initialFrom} ➔ ${initialTo}`
+            : 'Markaziy Osiyo bo\'yicha barcha faol reyslar'
+        }
+      />
 
-      {/* Filter Tabs */}
-      <View style={styles.filterTabsWrapper}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterTabsRow}>
-          <TouchableOpacity
-            style={[styles.tabChip, activeTab === 'ALL' && styles.tabChipActive]}
-            onPress={() => setActiveTab('ALL')}
-          >
-            <Text style={[styles.tabChipText, activeTab === 'ALL' && styles.tabChipTextActive]}>
-              Barcha reyslar
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.tabChip, activeTab === 'INTERNATIONAL' && styles.tabChipActive]}
-            onPress={() => setActiveTab('INTERNATIONAL')}
-          >
-            <Text
-              style={[
-                styles.tabChipText,
-                activeTab === 'INTERNATIONAL' && styles.tabChipTextActive,
-              ]}
+      {/* Search & Filter Top Bar */}
+      <View style={styles.searchContainer}>
+        <View style={styles.searchBar}>
+          <Search size={16} color={COLORS.gray[400]} />
+          <TextInput
+            style={styles.searchInput}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Shahar yoki bekat bo'yicha qidirish..."
+            placeholderTextColor={COLORS.gray[400]}
+          />
+          {searchQuery ? (
+            <TouchableOpacity
+              onPress={() => setSearchQuery('')}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
-              Xalqaro (Chegara orqali)
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.tabChip, activeTab === 'INTERCITY' && styles.tabChipActive]}
-            onPress={() => setActiveTab('INTERCITY')}
-          >
-            <Text
-              style={[styles.tabChipText, activeTab === 'INTERCITY' && styles.tabChipTextActive]}
-            >
-              Shaharlararo
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.tabChip, onlyVerified && styles.tabChipActive]}
-            onPress={() => setOnlyVerified(!onlyVerified)}
-          >
-            <Text style={[styles.tabChipText, onlyVerified && styles.tabChipTextActive]}>
-              Faqat tekshirilgan ★
-            </Text>
-          </TouchableOpacity>
-        </ScrollView>
+              <X size={16} color={COLORS.gray[400]} />
+            </TouchableOpacity>
+          ) : null}
+        </View>
       </View>
 
-      {/* Trips FlatList */}
+      {/* "Barchasi | Xalqaro 🇰🇿 | Shaharlararo" Filter Tabs */}
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[
+            styles.tabBtn,
+            filterCategory === 'ALL' && styles.tabBtnActive,
+          ]}
+          onPress={() => {
+            Haptics.selection();
+            setFilterCategory('ALL');
+          }}
+          activeOpacity={0.8}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              filterCategory === 'ALL' && styles.tabTextActive,
+            ]}
+          >
+            Barchasi ({categoryCounts.all})
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.tabBtn,
+            filterCategory === 'INTERNATIONAL' && styles.tabBtnActive,
+          ]}
+          onPress={() => {
+            Haptics.selection();
+            setFilterCategory('INTERNATIONAL');
+          }}
+          activeOpacity={0.8}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              filterCategory === 'INTERNATIONAL' && styles.tabTextActive,
+            ]}
+          >
+            Xalqaro 🇰🇿 ({categoryCounts.intl})
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.tabBtn,
+            filterCategory === 'DOMESTIC' && styles.tabBtnActive,
+          ]}
+          onPress={() => {
+            Haptics.selection();
+            setFilterCategory('DOMESTIC');
+          }}
+          activeOpacity={0.8}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              filterCategory === 'DOMESTIC' && styles.tabTextActive,
+            ]}
+          >
+            Shaharlararo ({categoryCounts.dom})
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Quick Filter Chips & Sort Row */}
+      <View style={styles.chipsRow}>
+        <TouchableOpacity
+          style={[
+            styles.filterChip,
+            onlyVerified && styles.filterChipActive,
+          ]}
+          onPress={() => {
+            Haptics.light();
+            setOnlyVerified(!onlyVerified);
+          }}
+        >
+          <ShieldCheck
+            size={13}
+            color={onlyVerified ? COLORS.emerald[700] : COLORS.gray[500]}
+          />
+          <Text
+            style={[
+              styles.filterChipText,
+              onlyVerified && styles.filterChipTextActive,
+            ]}
+          >
+            Tekshirilgan ★
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.filterChip, onlyAC && styles.filterChipActive]}
+          onPress={() => {
+            Haptics.light();
+            setOnlyAC(!onlyAC);
+          }}
+        >
+          <Wind
+            size={13}
+            color={onlyAC ? COLORS.emerald[700] : COLORS.gray[500]}
+          />
+          <Text
+            style={[
+              styles.filterChipText,
+              onlyAC && styles.filterChipTextActive,
+            ]}
+          >
+            Konditsioner
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.filterChip,
+            onlyLuggage && styles.filterChipActive,
+          ]}
+          onPress={() => {
+            Haptics.light();
+            setOnlyLuggage(!onlyLuggage);
+          }}
+        >
+          <Luggage
+            size={13}
+            color={onlyLuggage ? COLORS.emerald[700] : COLORS.gray[500]}
+          />
+          <Text
+            style={[
+              styles.filterChipText,
+              onlyLuggage && styles.filterChipTextActive,
+            ]}
+          >
+            Yukxona
+          </Text>
+        </TouchableOpacity>
+
+        {/* Sort Switcher */}
+        <TouchableOpacity
+          style={styles.sortBtn}
+          onPress={() => {
+            Haptics.light();
+            setSortOption((prev) =>
+              prev === 'CHEAPEST'
+                ? 'FASTEST'
+                : prev === 'FASTEST'
+                ? 'RATING'
+                : 'CHEAPEST'
+            );
+          }}
+        >
+          <ArrowUpDown size={12} color={COLORS.emerald[700]} />
+          <Text style={styles.sortBtnText}>
+            {sortOption === 'CHEAPEST'
+              ? 'Arzonroq'
+              : sortOption === 'FASTEST'
+              ? 'Tezroq'
+              : 'Reyting'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Optimized FlatList */}
       <FlatList
-        data={filteredTrips}
-        keyExtractor={(item) => item.id}
+        data={processedTrips}
         renderItem={renderTripItem}
+        keyExtractor={keyExtractor}
         contentContainerStyle={styles.listContent}
+        removeClippedSubviews={true}
+        initialNumToRender={5}
+        maxToRenderPerBatch={8}
+        windowSize={10}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            colors={[COLORS.emerald[600]]}
+            tintColor={COLORS.emerald[600]}
+          />
+        }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
+            <View style={styles.emptyIconCircle}>
+              <Compass size={44} color={COLORS.gray[300]} />
+            </View>
             <Text style={styles.emptyTitle}>Reyslar topilmadi</Text>
-            <Text style={styles.emptySubtitle}>
-              Tanlangan shartlar bo’yicha reyslar mavjud emas. Filtrlarni o’zgartirib ko’ring.
+            <Text style={styles.emptyDescription}>
+              Tanlangan filtrlar yoki qidiruv so'rovi bo'yicha hozircha bo'sh reyslar yo'q.
             </Text>
+            <TouchableOpacity
+              style={styles.resetFiltersBtn}
+              onPress={handleResetFilters}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.resetFiltersBtnText}>Filtrlarni tozalash</Text>
+            </TouchableOpacity>
           </View>
         }
       />
@@ -250,229 +395,152 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.gray[50],
   },
-  filterTabsWrapper: {
-    backgroundColor: COLORS.white,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray[200],
-  },
-  filterTabsRow: {
+  searchContainer: {
     paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 6,
   },
-  tabChip: {
-    backgroundColor: COLORS.gray[100],
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    marginRight: 8,
-    borderWidth: 1,
-    borderColor: COLORS.gray[200],
-  },
-  tabChipActive: {
-    backgroundColor: COLORS.emerald[600],
-    borderColor: COLORS.emerald[700],
-  },
-  tabChipText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: COLORS.gray[700],
-  },
-  tabChipTextActive: {
-    color: COLORS.white,
-  },
-  listContent: {
-    padding: 16,
-    paddingBottom: 40,
-  },
-  tripCard: {
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: COLORS.white,
-    borderRadius: 18,
-    padding: 16,
-    marginBottom: 14,
+    borderRadius: 12,
     borderWidth: 1.5,
     borderColor: COLORS.gray[200],
-    ...SHADOWS.md,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    gap: 8,
+    ...SHADOWS.sm,
   },
-  cardTopRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  seatsBadgeText: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: COLORS.emerald[700],
-  },
-  timelineRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  timeCol: {
+  searchInput: {
     flex: 1,
-  },
-  timeBig: {
-    fontSize: 18,
-    fontWeight: '900',
-    color: COLORS.gray[900],
-  },
-  cityText: {
     fontSize: 14,
-    fontWeight: '800',
-    color: COLORS.gray[800],
-    marginTop: 2,
-  },
-  addressText: {
-    fontSize: 11,
-    color: COLORS.gray[500],
-    marginTop: 2,
-  },
-  timelineMiddle: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 8,
-  },
-  durationText: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: COLORS.gray[500],
-    marginBottom: 4,
-  },
-  timelineLine: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-  },
-  timelineDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: COLORS.emerald[600],
-  },
-  timelineDotEnd: {
-    backgroundColor: COLORS.blue[600],
-  },
-  timelineLineBar: {
-    flex: 1,
-    height: 2,
-    backgroundColor: COLORS.gray[300],
-  },
-  stopsCount: {
-    fontSize: 9,
-    fontWeight: '600',
-    color: COLORS.blue[600],
-    marginTop: 4,
-  },
-  cardDivider: {
-    height: 1,
-    backgroundColor: COLORS.gray[100],
-    marginVertical: 10,
-  },
-  cardFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  driverCol: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    flex: 1,
-  },
-  driverAvatar: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: COLORS.emerald[600],
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: {
-    color: COLORS.white,
-    fontWeight: '800',
-    fontSize: 13,
-  },
-  driverName: {
-    fontSize: 13,
-    fontWeight: '700',
     color: COLORS.gray[900],
+    fontWeight: '600',
+    padding: 0,
   },
-  ratingRow: {
+  tabContainer: {
     flexDirection: 'row',
+    backgroundColor: COLORS.gray[200],
+    marginHorizontal: 16,
+    marginTop: 6,
+    marginBottom: 8,
+    borderRadius: 12,
+    padding: 3,
+  },
+  tabBtn: {
+    flex: 1,
+    paddingVertical: 8,
     alignItems: 'center',
-    gap: 4,
-    marginTop: 2,
+    borderRadius: 9,
   },
-  ratingText: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: COLORS.gray[700],
+  tabBtnActive: {
+    backgroundColor: COLORS.white,
+    ...SHADOWS.sm,
   },
-  tripsCountText: {
-    fontSize: 10,
-    color: COLORS.gray[400],
-  },
-  priceCol: {
-    alignItems: 'flex-end',
-  },
-  priceAmount: {
-    fontSize: 16,
-    fontWeight: '900',
-    color: COLORS.emerald[700],
-  },
-  perSeatLabel: {
-    fontSize: 10,
-    color: COLORS.gray[400],
-    marginTop: 1,
-  },
-  amenitiesBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: COLORS.gray[50],
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  vehicleName: {
-    fontSize: 11,
+  tabText: {
+    fontSize: 12,
     fontWeight: '700',
     color: COLORS.gray[600],
   },
-  amenitiesIcons: {
-    flexDirection: 'row',
-    gap: 6,
-  },
-  amenityChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.emerald[50],
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-    gap: 4,
-  },
-  amenityChipText: {
-    fontSize: 10,
-    fontWeight: '700',
+  tabTextActive: {
     color: COLORS.emerald[800],
   },
-  emptyContainer: {
-    padding: 32,
+  chipsRow: {
+    flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+    gap: 6,
+    flexWrap: 'wrap',
+  },
+  filterChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: COLORS.white,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: COLORS.gray[200],
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+  },
+  filterChipActive: {
+    backgroundColor: COLORS.emerald[50],
+    borderColor: COLORS.emerald[300],
+  },
+  filterChipText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: COLORS.gray[600],
+  },
+  filterChipTextActive: {
+    color: COLORS.emerald[800],
+    fontWeight: '700',
+  },
+  sortBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: COLORS.emerald[50],
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: COLORS.emerald[200],
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    marginLeft: 'auto',
+  },
+  sortBtnText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: COLORS.emerald[800],
+  },
+  listContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+    paddingTop: 4,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 48,
+    paddingHorizontal: 24,
+  },
+  emptyIconCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: COLORS.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+    borderWidth: 1.5,
+    borderColor: COLORS.gray[200],
+    ...SHADOWS.sm,
   },
   emptyTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '800',
     color: COLORS.gray[800],
+    marginBottom: 6,
   },
-  emptySubtitle: {
-    fontSize: 12,
+  emptyDescription: {
+    fontSize: 13,
     color: COLORS.gray[500],
     textAlign: 'center',
-    marginTop: 6,
+    lineHeight: 18,
+    marginBottom: 20,
+  },
+  resetFiltersBtn: {
+    backgroundColor: COLORS.emerald[600],
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 10,
+    ...SHADOWS.sm,
+  },
+  resetFiltersBtnText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: COLORS.white,
   },
 });

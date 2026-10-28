@@ -11,78 +11,110 @@ import {
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
 import { Badge } from '../../components/Badge';
-import { PassengerCodeVerifyModal } from '../../components/PassengerCodeVerifyModal';
+import { PassengerManifestCard } from '../../components/driver/PassengerManifestCard';
+import { PassengerCodeVerifyModal } from '../../components/driver/PassengerCodeVerifyModal';
 import { useApp } from '../../context/AppContext';
+import { Haptics } from '../../components/ui/Haptics';
+import { ManifestPassenger } from '../../types';
 import {
   Car,
   Users,
-  CheckCircle,
+  CheckCircle2,
   AlertCircle,
   Phone,
   Play,
   Flag,
   ShieldAlert,
   KeyRound,
-  UserCheck,
-  CheckCheck,
+  ShieldCheck,
+  Globe,
+  Radio,
+  Clock,
+  Wallet,
+  ArrowRight,
+  Compass,
 } from 'lucide-react-native';
 
-export const ActiveTripScreen: React.FC = () => {
-  const { activeDriverTrip, updateTripStatus } = useApp();
+export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation }) => {
+  const { activeDriverTrip, updateTripStatus, driverBalance } = useApp();
   const [isVerifyModalVisible, setVerifyModalVisible] = useState(false);
+  const [selectedPassengerForVerify, setSelectedPassengerForVerify] = useState<
+    ManifestPassenger | undefined
+  >(undefined);
 
   const boardedCount = activeDriverTrip.passengers.filter((p) => p.isBoarded).length;
   const totalPassengers = activeDriverTrip.passengers.length;
+  const allBoarded = totalPassengers > 0 && boardedCount === totalPassengers;
 
   const handleCallPassenger = (phone: string, name: string) => {
-    Linking.openURL(`tel:${phone}`).catch(() => {
+    Haptics.light();
+    const cleanPhone = phone.replace(/\s+/g, '');
+    Linking.openURL(`tel:${cleanPhone}`).catch(() => {
       Alert.alert('Qo’ng’iroq', `${name} raqami: ${phone}`);
     });
   };
 
+  const handleOpenVerifyModal = (passenger?: ManifestPassenger) => {
+    setSelectedPassengerForVerify(passenger);
+    setVerifyModalVisible(true);
+  };
+
   const handleNextStatus = () => {
+    Haptics.medium();
+
     if (activeDriverTrip.status === 'SCHEDULED') {
-      if (boardedCount < totalPassengers) {
+      if (!allBoarded) {
         Alert.alert(
-          'Barcha yo’lovchilar bortda emas',
+          'Barcha yo’lovchilar bortda emas!',
           `${totalPassengers} tadan faqat ${boardedCount} ta yo’lovchi bortga qabul qilindi. Shunga qaramay safarni boshlaysizmi?`,
           [
             { text: 'Kutish', style: 'cancel' },
-            { text: 'Safarni boshlash', onPress: () => updateTripStatus('DEPARTED') },
+            {
+              text: 'Safarni boshlash',
+              onPress: () => {
+                updateTripStatus('DEPARTED');
+                Haptics.success();
+                Alert.alert('Safar boshlandi', 'Oq yo’l! Magistral xavfsizlik qoidalariga rioya qiling.');
+              },
+            },
           ]
         );
       } else {
         updateTripStatus('DEPARTED');
-        Alert.alert('Safar boshlandi', 'Oq yo’l! Xavfsizlik qoidalariga rioya qiling.');
+        Haptics.success();
+        Alert.alert('Safar boshlandi', 'Barcha yo’lovchilar bortda! Oq yo’l!');
       }
     } else if (activeDriverTrip.status === 'DEPARTED') {
       if (activeDriverTrip.isInternational) {
         updateTripStatus('AT_BORDER');
+        Haptics.medium();
         Alert.alert(
-          'Chegara punkti',
+          'Davlat chegarasi punkti',
           'G’ishtko’prik chegara punktiga yetib kelindi. Yo’lovchilar pasport va bojxona nazoratidan o’tishini kuting.'
         );
       } else {
-        handleCompleteTrip();
+        promptCompleteTrip();
       }
     } else if (activeDriverTrip.status === 'AT_BORDER') {
-      handleCompleteTrip();
+      promptCompleteTrip();
     }
   };
 
-  const handleCompleteTrip = () => {
+  const promptCompleteTrip = () => {
+    Haptics.medium();
     Alert.alert(
       'Safarni yakunlash',
-      'Safar muvaffaqiyatli yakunlandimi? Safar tushumi (324,000 UZS) hamyoningizga avtomatik tarzda o’tkaziladi.',
+      'Manzilga yetib kelindimi? Safar tushumi (324,000 UZS sof foyda) hamyoningizga bir zumda o’tkaziladi.',
       [
         { text: 'Bekor qilish', style: 'cancel' },
         {
           text: 'Ha, yakunlash',
           onPress: () => {
             updateTripStatus('COMPLETED');
+            Haptics.success();
             Alert.alert(
-              'Safar yakunlandi!',
-              '324,000 UZS daromad hamyoningizga muvaffaqiyatli tushirildi (10% komissiya yechildi).'
+              'Safar muvaffaqiyatli yakunlandi! 🎉',
+              '324,000 UZS daromad hamyoningizga muvaffaqiyatli tushirildi. Yangi reys e’lon qilishingiz mumkin.'
             );
           },
         },
@@ -90,214 +122,284 @@ export const ActiveTripScreen: React.FC = () => {
     );
   };
 
-  const getStatusLabel = () => {
-    switch (activeDriverTrip.status) {
+  const steps = [
+    { key: 'SCHEDULED', title: 'Kutilmoqda', subtitle: 'Bortga olish', icon: Users },
+    { key: 'DEPARTED', title: 'Yo’lga chiqildi', subtitle: 'Magistralda', icon: Car },
+    { key: 'AT_BORDER', title: 'Chegarada', subtitle: 'Bojxona posti', icon: ShieldCheck },
+    { key: 'COMPLETED', title: 'Yakunlandi', subtitle: 'Manzilda', icon: CheckCircle2 },
+  ];
+
+  const getStepIndex = (status: string) => {
+    switch (status) {
       case 'SCHEDULED':
-        return 'Kutilmoqda (Bortga olish)';
+        return 0;
       case 'DEPARTED':
-        return 'Safarga chiqildi (Yo’lda)';
+        return 1;
       case 'AT_BORDER':
-        return 'Davlat chegarasida';
+        return 2;
       case 'COMPLETED':
-        return 'Safar muvaffaqiyatli yakunlandi';
+        return 3;
       default:
-        return activeDriverTrip.status;
+        return 0;
     }
   };
+
+  const currentStepIdx = getStepIndex(activeDriverTrip.status);
 
   return (
     <View style={styles.container}>
       <Header
         title={`${activeDriverTrip.originCity} ➔ ${activeDriverTrip.destinationCity}`}
-        subtitle={getStatusLabel()}
+        subtitle={
+          activeDriverTrip.status === 'SCHEDULED'
+            ? 'Bortga olish va kodlarni tekshirish'
+            : activeDriverTrip.status === 'DEPARTED'
+            ? 'Magistral yo’lda harakatlanmoqda'
+            : activeDriverTrip.status === 'AT_BORDER'
+            ? 'Davlat chegara postida'
+            : 'Safar muvaffaqiyatli yakunlandi'
+        }
       />
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* Trip Stepper Header Card */}
-        <View style={styles.tripCard}>
-          <View style={styles.tripCardTop}>
-            <View>
-              <Text style={styles.tripRoute}>
-                {activeDriverTrip.originCity} ➔ {activeDriverTrip.destinationCity}
-              </Text>
-              <Text style={styles.departureTime}>
-                Jo’nash vaqti: {activeDriverTrip.departureTime}
+        {/* Status Stepper Card */}
+        <View style={styles.stepperCard}>
+          <View style={styles.stepperHeader}>
+            <Text style={styles.stepperTitle}>SAFAR HOLATI STEYPERI</Text>
+            <View
+              style={[
+                styles.tripStatusBadge,
+                activeDriverTrip.status === 'COMPLETED'
+                  ? styles.tripStatusBadgeCompleted
+                  : styles.tripStatusBadgeActive,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.tripStatusBadgeText,
+                  activeDriverTrip.status === 'COMPLETED'
+                    ? styles.tripStatusTextCompleted
+                    : styles.tripStatusTextActive,
+                ]}
+              >
+                {activeDriverTrip.status === 'SCHEDULED' && 'Kutilmoqda'}
+                {activeDriverTrip.status === 'DEPARTED' && 'Safarga chiqildi'}
+                {activeDriverTrip.status === 'AT_BORDER' && 'Chegara postida'}
+                {activeDriverTrip.status === 'COMPLETED' && 'Yakunlandi'}
               </Text>
             </View>
-            <Badge
-              label={activeDriverTrip.status}
-              variant={activeDriverTrip.status === 'COMPLETED' ? 'emerald' : 'amber'}
-            />
           </View>
 
-          {/* Stepper dots */}
-          <View style={styles.stepperRow}>
-            {['SCHEDULED', 'DEPARTED', 'AT_BORDER', 'COMPLETED'].map((st, idx) => {
-              const orderMap = { SCHEDULED: 0, DEPARTED: 1, AT_BORDER: 2, COMPLETED: 3 };
-              const currentOrder = orderMap[activeDriverTrip.status];
-              const thisOrder = orderMap[st as keyof typeof orderMap];
-              const isPastOrCurrent = currentOrder >= thisOrder;
+          {/* Stepper Progress Visual Track */}
+          <View style={styles.stepperVisualRow}>
+            {steps.map((st, idx) => {
+              const isPast = idx < currentStepIdx;
+              const isCurrent = idx === currentStepIdx;
+              const IconComp = st.icon;
 
               return (
-                <View key={st} style={styles.stepCol}>
-                  <View
-                    style={[
-                      styles.stepCircle,
-                      isPastOrCurrent && styles.stepCircleDone,
-                    ]}
-                  >
-                    <Text
+                <React.Fragment key={st.key}>
+                  <View style={styles.stepNode}>
+                    <View
                       style={[
-                        styles.stepNum,
-                        isPastOrCurrent && styles.stepNumDone,
+                        styles.stepCircle,
+                        isPast && styles.stepCircleDone,
+                        isCurrent && styles.stepCircleCurrent,
                       ]}
                     >
-                      {idx + 1}
+                      <IconComp
+                        size={14}
+                        color={
+                          isCurrent
+                            ? COLORS.navy[950]
+                            : isPast
+                            ? '#FFFFFF'
+                            : '#64748B'
+                        }
+                      />
+                    </View>
+                    <Text
+                      style={[
+                        styles.stepNodeTitle,
+                        (isPast || isCurrent) && styles.stepNodeTitleActive,
+                      ]}
+                    >
+                      {st.title}
                     </Text>
+                    <Text style={styles.stepNodeSub}>{st.subtitle}</Text>
                   </View>
-                  <Text style={styles.stepName}>
-                    {idx === 0
-                      ? 'Yig’ilish'
-                      : idx === 1
-                      ? 'Yo’lda'
-                      : idx === 2
-                      ? 'Chegara'
-                      : 'Yakun'}
-                  </Text>
-                </View>
+
+                  {idx < steps.length - 1 && (
+                    <View
+                      style={[
+                        styles.stepConnector,
+                        idx < currentStepIdx && styles.stepConnectorDone,
+                      ]}
+                    />
+                  )}
+                </React.Fragment>
               );
             })}
           </View>
         </View>
 
-        {/* Boarding Action CTA */}
-        <TouchableOpacity
-          style={styles.verifyCtaBtn}
-          onPress={() => setVerifyModalVisible(true)}
-          activeOpacity={0.85}
-        >
-          <View style={styles.verifyCtaIcon}>
-            <KeyRound size={22} color={COLORS.emerald[700]} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.verifyCtaTitle}>Yo’lovchi kodini tekshirish</Text>
-            <Text style={styles.verifyCtaSubtitle}>
-              Yo'lovchining 4 xonali bortga chiqish kodini kiritib tasdiqlang
-            </Text>
-          </View>
-          <UserCheck size={20} color={COLORS.emerald[400]} />
-        </TouchableOpacity>
-
-        {/* Passenger Manifest */}
-        <View style={styles.manifestSection}>
-          <View style={styles.manifestHeader}>
-            <Text style={styles.manifestTitle}>Yo’lovchilar ro’yxati (Manifest)</Text>
-            <Text style={styles.manifestProgress}>
-              {boardedCount} / {totalPassengers} bortda
-            </Text>
-          </View>
-
-          {activeDriverTrip.passengers.map((passenger) => (
-            <View
-              key={passenger.id}
-              style={[
-                styles.passengerCard,
-                passenger.isBoarded && styles.passengerCardBoarded,
-              ]}
-            >
-              <View style={styles.passengerTopRow}>
-                <View style={styles.seatBadge}>
-                  <Text style={styles.seatBadgeText}>Joy #{passenger.seatNumber}</Text>
-                </View>
-                <View style={{ flex: 1, marginLeft: 10 }}>
-                  <Text style={styles.passengerName}>{passenger.name}</Text>
-                  <Text style={styles.passengerPhone}>{passenger.phone}</Text>
-                </View>
-                <Badge
-                  label={passenger.isBoarded ? 'Bortda' : 'Kutilmoqda'}
-                  variant={passenger.isBoarded ? 'emerald' : 'amber'}
-                  icon={
-                    passenger.isBoarded ? (
-                      <CheckCheck size={12} color={COLORS.emerald[700]} />
-                    ) : (
-                      <Users size={12} color={COLORS.amber[700]} />
-                    )
-                  }
-                />
-              </View>
-
-              <View style={styles.passengerMetaRow}>
-                <View style={styles.codePill}>
-                  <Text style={styles.codePillLabel}>Kodi:</Text>
-                  <Text style={styles.codePillVal}>#{passenger.verificationCode}</Text>
-                </View>
-
-                {passenger.passportNumber && (
-                  <View style={styles.passportPill}>
-                    <Text style={styles.passportPillText}>
-                      Pasport: {passenger.passportNumber}
-                    </Text>
+        {/* Route Summary Info Card */}
+        <View style={styles.routeCard}>
+          <View style={styles.routeHeaderRow}>
+            <View>
+              <View style={styles.routeBadgeRow}>
+                {activeDriverTrip.isInternational && (
+                  <View style={styles.internationalTag}>
+                    <Globe size={11} color={COLORS.amber[400]} />
+                    <Text style={styles.internationalTagText}>Xalqaro Chegara Reysi</Text>
                   </View>
                 )}
-
-                <TouchableOpacity
-                  style={styles.callIconBtn}
-                  onPress={() => handleCallPassenger(passenger.phone, passenger.name)}
-                >
-                  <Phone size={14} color={COLORS.emerald[400]} />
-                  <Text style={styles.callIconText}>Qo'ng'iroq</Text>
-                </TouchableOpacity>
+                <Text style={styles.departureTimeText}>
+                  Jo’nash: {activeDriverTrip.departureTime}
+                </Text>
               </View>
+
+              <Text style={styles.routeTitle}>
+                {activeDriverTrip.originCity} ➔ {activeDriverTrip.destinationCity}
+              </Text>
+              <Text style={styles.routeAddress}>
+                {activeDriverTrip.originAddress}
+              </Text>
             </View>
-          ))}
+          </View>
+
+          <View style={styles.vehicleMetaRow}>
+            <Car size={14} color={COLORS.amber[400]} />
+            <Text style={styles.vehicleMetaText}>
+              {activeDriverTrip.vehicle.make} {activeDriverTrip.vehicle.model} • Davlat raqami:{' '}
+              <Text style={styles.plateText}>{activeDriverTrip.vehicle.licensePlate}</Text>
+            </Text>
+          </View>
         </View>
 
-        {/* Trip Control Buttons */}
-        {activeDriverTrip.status !== 'COMPLETED' && (
+        {/* Low Connectivity / Mountain Pass Alert */}
+        <View style={styles.corridorOfflineBanner}>
+          <Radio size={15} color={COLORS.amber[400]} />
+          <Text style={styles.corridorOfflineText}>
+            Tungi magistral / Tog’ dovoni rejimi: GPS telemetriya qurilmada xavfsiz oflayn xotiraga yozilmoqda.
+          </Text>
+        </View>
+
+        {/* Passenger Manifest Component */}
+        <PassengerManifestCard
+          passengers={activeDriverTrip.passengers}
+          onVerifyCodePress={handleOpenVerifyModal}
+          onCallPassenger={handleCallPassenger}
+        />
+
+        {/* Main Progression Action Button */}
+        {activeDriverTrip.status !== 'COMPLETED' ? (
           <TouchableOpacity
-            style={styles.nextStatusBtn}
+            style={[
+              styles.primaryActionBtn,
+              activeDriverTrip.status === 'SCHEDULED'
+                ? styles.primaryActionBtnScheduled
+                : styles.primaryActionBtnDeparted,
+            ]}
             onPress={handleNextStatus}
             activeOpacity={0.85}
           >
             {activeDriverTrip.status === 'SCHEDULED' && (
               <>
-                <Play size={18} color={COLORS.white} />
-                <Text style={styles.nextStatusBtnText}>Safarni boshlash</Text>
-              </>
-            )}
-            {activeDriverTrip.status === 'DEPARTED' && (
-              <>
-                <ShieldAlert size={18} color={COLORS.white} />
-                <Text style={styles.nextStatusBtnText}>
-                  {activeDriverTrip.isInternational
-                    ? 'Chegara punktiga yetib kelindi'
-                    : 'Safarni yakunlash'}
+                <Play size={18} color={COLORS.navy[950]} />
+                <Text style={styles.primaryActionBtnText}>
+                  Safarga chiqish (Barcha yo’lovchilar bilan)
                 </Text>
               </>
             )}
+
+            {activeDriverTrip.status === 'DEPARTED' && (
+              <>
+                {activeDriverTrip.isInternational ? (
+                  <>
+                    <ShieldCheck size={18} color={COLORS.navy[950]} />
+                    <Text style={styles.primaryActionBtnText}>
+                      Chegara punktiga yetib kelindi (Bojxona)
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <Flag size={18} color={COLORS.navy[950]} />
+                    <Text style={styles.primaryActionBtnText}>
+                      Safarni yakunlash va daromadni olish
+                    </Text>
+                  </>
+                )}
+              </>
+            )}
+
             {activeDriverTrip.status === 'AT_BORDER' && (
               <>
-                <Flag size={18} color={COLORS.white} />
-                <Text style={styles.nextStatusBtnText}>Safarni yakunlash</Text>
+                <Flag size={18} color={COLORS.navy[950]} />
+                <Text style={styles.primaryActionBtnText}>
+                  Chegaradan o’tildi va safarni yakunlash
+                </Text>
               </>
             )}
           </TouchableOpacity>
+        ) : (
+          <View style={styles.completedTripCard}>
+            <View style={styles.completedHeader}>
+              <CheckCircle2 size={24} color={COLORS.emerald[400]} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.completedTitle}>Safar muvaffaqiyatli yakunlangan!</Text>
+                <Text style={styles.completedDesc}>
+                  324,000 UZS sof tushum haydovchi hamyoningizga o’tkazildi.
+                </Text>
+              </View>
+            </View>
+
+            {navigation && (
+              <TouchableOpacity
+                style={styles.viewWalletBtn}
+                onPress={() => {
+                  Haptics.selection();
+                  navigation.navigate('Wallet');
+                }}
+                activeOpacity={0.85}
+              >
+                <Wallet size={16} color={COLORS.amber[400]} />
+                <Text style={styles.viewWalletBtnText}>Hamyon va balansni ko’rish</Text>
+                <ArrowRight size={14} color={COLORS.amber[400]} />
+              </TouchableOpacity>
+            )}
+          </View>
         )}
 
-        {/* SOS Emergency */}
+        {/* SOS Emergency Dispatcher */}
         <TouchableOpacity
           style={styles.sosButton}
-          onPress={() => Alert.alert('SOS', 'OTAXI Favqulodda dispetcherlik markazi: 112 / +998 71 200 00 00')}
+          onPress={() => {
+            Haptics.warning();
+            Alert.alert(
+              'OTAXI Favqulodda Dispetcherlik Markazi',
+              'Tezkor yordam kerakmi?\n\nDispetcher: +998 71 200 00 00\nFavqulodda xizmat: 112\n\nGPS joylashuvingiz navbatchi guruhga uzatildi.',
+              [
+                { text: 'Yopish', style: 'cancel' },
+                {
+                  text: 'Qo’ng’iroq qilish',
+                  onPress: () => Linking.openURL('tel:112'),
+                },
+              ]
+            );
+          }}
+          activeOpacity={0.8}
         >
-          <ShieldAlert size={16} color={COLORS.red[400]} />
-          <Text style={styles.sosButtonText}>Favqulodda SOS dispetcher</Text>
+          <ShieldAlert size={16} color="#EF4444" />
+          <Text style={styles.sosButtonText}>Favqulodda SOS dispetcherlik xizmati</Text>
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Code Verify Modal */}
+      {/* 4-digit Code Verify Modal */}
       <PassengerCodeVerifyModal
         visible={isVerifyModalVisible}
         onClose={() => setVerifyModalVisible(false)}
+        preselectedCode={selectedPassengerForVerify?.verificationCode}
       />
     </View>
   );
@@ -306,7 +408,7 @@ export const ActiveTripScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.navy[950],
+    backgroundColor: '#090D16', // Cockpit Obsidian
   },
   scrollView: {
     flex: 1,
@@ -315,235 +417,264 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingBottom: 40,
   },
-  tripCard: {
-    backgroundColor: COLORS.navy[900],
-    borderRadius: 18,
+  stepperCard: {
+    backgroundColor: '#111827', // Card Graphite
+    borderRadius: 20,
     padding: 16,
     borderWidth: 1.5,
-    borderColor: COLORS.navy[700],
+    borderColor: '#1F2937',
     marginBottom: 14,
     ...SHADOWS.md,
   },
-  tripCardTop: {
+  stepperHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     marginBottom: 16,
   },
-  tripRoute: {
-    fontSize: 18,
-    fontWeight: '900',
-    color: COLORS.white,
+  stepperTitle: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#94A3B8',
+    letterSpacing: 0.8,
   },
-  departureTime: {
-    fontSize: 12,
-    color: COLORS.navy[300],
-    marginTop: 2,
+  tripStatusBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 1,
   },
-  stepperRow: {
+  tripStatusBadgeActive: {
+    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    borderColor: 'rgba(245, 158, 11, 0.3)',
+  },
+  tripStatusBadgeCompleted: {
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    borderColor: 'rgba(16, 185, 129, 0.3)',
+  },
+  tripStatusBadgeText: {
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  tripStatusTextActive: {
+    color: COLORS.amber[400],
+  },
+  tripStatusTextCompleted: {
+    color: COLORS.emerald[400],
+  },
+  stepperVisualRow: {
     flexDirection: 'row',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
+    paddingHorizontal: 2,
   },
-  stepCol: {
+  stepNode: {
     alignItems: 'center',
-    gap: 4,
+    width: 68,
   },
   stepCircle: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: COLORS.navy[800],
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#1E293B',
+    borderWidth: 1.5,
+    borderColor: '#334155',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 6,
   },
   stepCircleDone: {
     backgroundColor: COLORS.emerald[600],
+    borderColor: COLORS.emerald[500],
   },
-  stepNum: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: COLORS.navy[400],
+  stepCircleCurrent: {
+    backgroundColor: COLORS.amber[400],
+    borderColor: COLORS.amber[300],
+    ...SHADOWS.sm,
   },
-  stepNumDone: {
-    color: COLORS.white,
-  },
-  stepName: {
+  stepNodeTitle: {
     fontSize: 10,
-    fontWeight: '600',
-    color: COLORS.navy[300],
+    fontWeight: '700',
+    color: '#64748B',
+    textAlign: 'center',
   },
-  verifyCtaBtn: {
-    backgroundColor: '#0a3322',
+  stepNodeTitleActive: {
+    color: '#F8FAFC',
+    fontWeight: '800',
+  },
+  stepNodeSub: {
+    fontSize: 9,
+    color: '#94A3B8',
+    marginTop: 1,
+    textAlign: 'center',
+  },
+  stepConnector: {
+    flex: 1,
+    height: 2,
+    backgroundColor: '#1E293B',
+    marginTop: 15,
+  },
+  stepConnectorDone: {
+    backgroundColor: COLORS.emerald[600],
+  },
+  routeCard: {
+    backgroundColor: '#111827',
+    borderRadius: 18,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#1F2937',
+    marginBottom: 12,
+    ...SHADOWS.sm,
+  },
+  routeHeaderRow: {
+    marginBottom: 10,
+  },
+  routeBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 6,
+    flexWrap: 'wrap',
+  },
+  internationalTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(245, 158, 11, 0.3)',
+  },
+  internationalTagText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: COLORS.amber[400],
+  },
+  departureTimeText: {
+    fontSize: 11,
+    color: '#94A3B8',
+  },
+  routeTitle: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: '#F8FAFC',
+    letterSpacing: -0.2,
+  },
+  routeAddress: {
+    fontSize: 12,
+    color: '#94A3B8',
+    marginTop: 2,
+  },
+  vehicleMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#1F2937',
+  },
+  vehicleMetaText: {
+    fontSize: 12,
+    color: '#94A3B8',
+  },
+  plateText: {
+    fontWeight: '800',
+    color: '#F8FAFC',
+  },
+  corridorOfflineBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(245, 158, 11, 0.25)',
+    marginBottom: 14,
+  },
+  corridorOfflineText: {
+    flex: 1,
+    fontSize: 11,
+    color: '#E2E8F0',
+    lineHeight: 16,
+  },
+  primaryActionBtn: {
     borderRadius: 16,
-    padding: 14,
+    paddingVertical: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    marginBottom: 14,
+    ...SHADOWS.md,
+  },
+  primaryActionBtnScheduled: {
+    backgroundColor: COLORS.amber[400],
+  },
+  primaryActionBtnDeparted: {
+    backgroundColor: COLORS.amber[400],
+  },
+  primaryActionBtnText: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: COLORS.navy[950],
+  },
+  completedTripCard: {
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    borderRadius: 18,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
+    marginBottom: 14,
+  },
+  completedHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    borderWidth: 1.5,
-    borderColor: COLORS.emerald[600],
-    marginBottom: 18,
-    ...SHADOWS.md,
+    marginBottom: 12,
   },
-  verifyCtaIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: COLORS.emerald[100],
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  verifyCtaTitle: {
+  completedTitle: {
     fontSize: 15,
     fontWeight: '800',
-    color: COLORS.white,
+    color: COLORS.emerald[400],
   },
-  verifyCtaSubtitle: {
-    fontSize: 11,
-    color: COLORS.emerald[300],
+  completedDesc: {
+    fontSize: 12,
+    color: '#94A3B8',
     marginTop: 2,
   },
-  manifestSection: {
-    marginBottom: 20,
-  },
-  manifestHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  manifestTitle: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: COLORS.navy[200],
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  manifestProgress: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: COLORS.emerald[400],
-  },
-  passengerCard: {
-    backgroundColor: COLORS.navy[900],
-    borderRadius: 16,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: COLORS.navy[800],
-    marginBottom: 10,
-  },
-  passengerCardBoarded: {
-    borderColor: COLORS.emerald[700],
-    backgroundColor: '#0d2218',
-  },
-  passengerTopRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  seatBadge: {
-    backgroundColor: COLORS.navy[800],
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  seatBadgeText: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: COLORS.amber[400],
-  },
-  passengerName: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: COLORS.white,
-  },
-  passengerPhone: {
-    fontSize: 11,
-    color: COLORS.navy[400],
-    marginTop: 1,
-  },
-  passengerMetaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginTop: 10,
-    paddingTop: 8,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.navy[800],
-  },
-  codePill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.navy[800],
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    gap: 4,
-  },
-  codePillLabel: {
-    fontSize: 10,
-    color: COLORS.navy[400],
-    fontWeight: '600',
-  },
-  codePillVal: {
-    fontSize: 12,
-    fontWeight: '900',
-    color: COLORS.amber[400],
-  },
-  passportPill: {
-    backgroundColor: COLORS.navy[800],
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  passportPillText: {
-    fontSize: 10,
-    color: COLORS.navy[300],
-    fontWeight: '600',
-  },
-  callIconBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 'auto',
-    backgroundColor: COLORS.navy[800],
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
-    gap: 4,
-  },
-  callIconText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: COLORS.emerald[400],
-  },
-  nextStatusBtn: {
-    backgroundColor: COLORS.emerald[600],
+  viewWalletBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 14,
-    borderRadius: 14,
     gap: 8,
-    marginBottom: 12,
-    ...SHADOWS.md,
+    backgroundColor: '#111827',
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#1F2937',
   },
-  nextStatusBtnText: {
-    color: COLORS.white,
-    fontSize: 15,
+  viewWalletBtnText: {
+    fontSize: 13,
     fontWeight: '800',
+    color: COLORS.amber[400],
   },
   sosButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#3b1010',
-    borderWidth: 1,
-    borderColor: COLORS.red[800],
+    gap: 8,
+    backgroundColor: '#1A0A0A',
+    borderRadius: 14,
     paddingVertical: 12,
-    borderRadius: 12,
-    gap: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.35)',
   },
   sosButtonText: {
-    color: COLORS.red[400],
     fontSize: 12,
     fontWeight: '800',
+    color: '#EF4444',
   },
 });

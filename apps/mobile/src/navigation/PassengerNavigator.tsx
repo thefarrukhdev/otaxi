@@ -13,10 +13,17 @@ import { Search, Compass, Ticket, ShieldCheck, User } from 'lucide-react-native'
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-const TripsStack = () => (
+const HomeTripsStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="HomeScreen" component={HomeScreen} />
     <Stack.Screen name="TripsList" component={TripsListScreen} />
+    <Stack.Screen name="TripDetails" component={TripDetailsScreen} />
+  </Stack.Navigator>
+);
+
+const DirectTripsStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="TripsListMain" component={TripsListScreen} />
     <Stack.Screen name="TripDetails" component={TripDetailsScreen} />
   </Stack.Navigator>
 );
@@ -43,7 +50,7 @@ export const PassengerNavigator: React.FC = () => {
     >
       <Tab.Screen
         name="Home"
-        component={TripsStack}
+        component={HomeTripsStack}
         options={{
           tabBarLabel: 'Qidiruv',
           tabBarIcon: ({ color, size }) => <Search size={size} color={color} />,
@@ -51,7 +58,7 @@ export const PassengerNavigator: React.FC = () => {
       />
       <Tab.Screen
         name="Trips"
-        component={TripsListScreen}
+        component={DirectTripsStack}
         options={{
           tabBarLabel: 'Reyslar',
           tabBarIcon: ({ color, size }) => <Compass size={size} color={color} />,
