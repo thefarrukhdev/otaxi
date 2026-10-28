@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   seatTopPillowSelected: {
-    backgroundColor: COLORS.emerald[400],
+    backgroundColor: '#64748B',
   },
   seatTopPillowOccupied: {
     backgroundColor: COLORS.gray[300],
@@ -281,11 +281,11 @@ const styles = StyleSheet.create({
   },
   seatAvailable: {
     backgroundColor: COLORS.white,
-    borderColor: COLORS.emerald[300],
+    borderColor: '#CBD5E1',
   },
   seatSelected: {
-    backgroundColor: COLORS.emerald[600],
-    borderColor: COLORS.emerald[700],
+    backgroundColor: '#090D16',
+    borderColor: '#090D16',
   },
   seatOccupied: {
     backgroundColor: COLORS.gray[100],
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: COLORS.emerald[700],
+    backgroundColor: '#1E293B',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -356,23 +356,23 @@ const styles = StyleSheet.create({
     color: COLORS.gray[400],
   },
   priceTag: {
-    backgroundColor: COLORS.emerald[50],
+    backgroundColor: '#F8FAFC',
     paddingHorizontal: 6,
     paddingVertical: 3,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: COLORS.emerald[200],
+    borderColor: '#E2E8F0',
     width: '100%',
     alignItems: 'center',
   },
   priceTagSelected: {
-    backgroundColor: COLORS.emerald[700],
-    borderColor: COLORS.emerald[800],
+    backgroundColor: '#1E293B',
+    borderColor: '#334155',
   },
   priceText: {
     fontSize: 9,
     fontWeight: '800',
-    color: COLORS.emerald[800],
+    color: '#090D16',
     fontVariant: ['tabular-nums'],
   },
   priceTextSelected: {

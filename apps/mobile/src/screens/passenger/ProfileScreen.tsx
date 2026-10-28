@@ -77,11 +77,11 @@ export const ProfileScreen: React.FC = () => {
           <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Text style={styles.userName}>Farrukh Bek</Text>
-              <ShieldCheck size={16} color={COLORS.emerald[600]} />
+              <ShieldCheck size={16} color="#090D16" />
             </View>
             <Text style={styles.userPhone}>+998 90 999 88 11</Text>
             <View style={{ marginTop: 4 }}>
-              <Badge label={t.common.verifiedDriver.replace(' ★', '')} variant="success" size="sm" />
+              <Badge label={t.common.verifiedDriver.replace(' ★', '')} variant="neutral" size="sm" />
             </View>
           </View>
         </Card>
@@ -119,7 +119,7 @@ export const ProfileScreen: React.FC = () => {
             activeOpacity={0.7}
           >
             <View style={styles.menuIconCircle}>
-              <Globe size={18} color={COLORS.emerald[700]} />
+              <Globe size={18} color="#090D16" />
             </View>
             <Text style={styles.menuTitle}>{t.profile.language}</Text>
             <View style={styles.langBadgeContainer}>
@@ -133,7 +133,7 @@ export const ProfileScreen: React.FC = () => {
 
           <TouchableOpacity style={styles.menuItem} onPress={handleSupport} activeOpacity={0.7}>
             <View style={styles.menuIconCircle}>
-              <Headphones size={18} color={COLORS.emerald[700]} />
+              <Headphones size={18} color="#090D16" />
             </View>
             <Text style={styles.menuTitle}>{t.profile.support}</Text>
             <ChevronRight size={16} color={COLORS.gray[400]} />
@@ -143,7 +143,7 @@ export const ProfileScreen: React.FC = () => {
 
           <TouchableOpacity style={styles.menuItem} onPress={() => Haptics.selection()} activeOpacity={0.7}>
             <View style={styles.menuIconCircle}>
-              <FileText size={18} color={COLORS.emerald[700]} />
+              <FileText size={18} color="#090D16" />
             </View>
             <Text style={styles.menuTitle}>{t.profile.privacy}</Text>
             <ChevronRight size={16} color={COLORS.gray[400]} />
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#090D16',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: COLORS.emerald[50],
+    backgroundColor: '#F1F5F9',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -388,8 +388,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   langItemSelected: {
-    borderColor: COLORS.emerald[600],
-    backgroundColor: COLORS.emerald[50],
+    borderColor: '#090D16',
+    backgroundColor: '#F8FAFC',
   },
   langItemFlag: {
     fontSize: 26,
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
     color: COLORS.gray[900],
   },
   langItemLabelSelected: {
-    color: COLORS.emerald[800],
+    color: '#090D16',
   },
   langItemSub: {
     fontSize: 12,
@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     borderRadius: 11,
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#090D16',
     alignItems: 'center',
     justifyContent: 'center',
   },

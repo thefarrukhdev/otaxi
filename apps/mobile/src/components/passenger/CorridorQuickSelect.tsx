@@ -170,9 +170,9 @@ const styles = StyleSheet.create({
   priceText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#059669',
+    color: '#090D16',
   },
   priceTextSelected: {
-    color: '#34D399',
+    color: '#CBD5E1',
   },
 });

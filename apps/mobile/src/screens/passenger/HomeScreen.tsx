@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#059669',
+    backgroundColor: '#090D16',
   },
   routeLine: {
     width: 1.5,
@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#F59E0B',
+    backgroundColor: '#475569',
   },
   inputsCol: {
     flex: 1,
@@ -546,8 +546,8 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#059669',
+    fontWeight: '700',
+    color: '#090D16',
   },
   tripsList: {
     gap: 8,
@@ -620,7 +620,7 @@ const styles = StyleSheet.create({
   priceNumber: {
     fontSize: 14,
     fontWeight: '900',
-    color: '#059669',
+    color: '#090D16',
   },
   priceCurrency: {
     fontSize: 9,

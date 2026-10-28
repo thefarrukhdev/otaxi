@@ -108,12 +108,12 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#059669',
+    backgroundColor: '#090D16',
   },
   statusLabel: {
     fontSize: 10,
     fontWeight: '800',
-    color: '#059669',
+    color: '#090D16',
     letterSpacing: 0.5,
   },
   flag: {

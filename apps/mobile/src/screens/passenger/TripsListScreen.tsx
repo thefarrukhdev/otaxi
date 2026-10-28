@@ -363,8 +363,8 @@ export const TripsListScreen: React.FC<TripsListScreenProps> = ({
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={handleRefresh}
-            colors={[COLORS.emerald[600]]}
-            tintColor={COLORS.emerald[600]}
+            colors={['#090D16']}
+            tintColor="#090D16"
           />
         }
         ListEmptyComponent={
@@ -444,7 +444,8 @@ const styles = StyleSheet.create({
     color: COLORS.gray[600],
   },
   tabTextActive: {
-    color: COLORS.emerald[800],
+    color: '#090D16',
+    fontWeight: '800',
   },
   chipsRow: {
     flexDirection: 'row',
@@ -461,13 +462,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: COLORS.gray[200],
+    borderColor: '#E2E8F0',
     paddingHorizontal: 8,
     paddingVertical: 5,
   },
   filterChipActive: {
-    backgroundColor: COLORS.emerald[50],
-    borderColor: COLORS.emerald[300],
+    backgroundColor: '#090D16',
+    borderColor: '#090D16',
   },
   filterChipText: {
     fontSize: 11,
@@ -475,17 +476,17 @@ const styles = StyleSheet.create({
     color: COLORS.gray[600],
   },
   filterChipTextActive: {
-    color: COLORS.emerald[800],
+    color: '#FFFFFF',
     fontWeight: '700',
   },
   sortBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: COLORS.emerald[50],
+    backgroundColor: '#F1F5F9',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: COLORS.emerald[200],
+    borderColor: '#E2E8F0',
     paddingHorizontal: 8,
     paddingVertical: 5,
     marginLeft: 'auto',
@@ -493,7 +494,7 @@ const styles = StyleSheet.create({
   sortBtnText: {
     fontSize: 11,
     fontWeight: '800',
-    color: COLORS.emerald[800],
+    color: '#090D16',
   },
   listContent: {
     paddingHorizontal: 16,
@@ -532,7 +533,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   resetFiltersBtn: {
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#090D16',
     paddingHorizontal: 18,
     paddingVertical: 10,
     borderRadius: 10,

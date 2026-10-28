@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
   },
   directPillText: {
     fontSize: 10,
-    color: COLORS.emerald[700],
+    color: '#475569',
     fontWeight: '600',
   },
   driverSection: {
@@ -376,14 +376,14 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: COLORS.emerald[100],
+    backgroundColor: '#F1F5F9',
     alignItems: 'center',
     justifyContent: 'center',
   },
   driverAvatarText: {
     fontSize: 13,
     fontWeight: '800',
-    color: COLORS.emerald[800],
+    color: '#090D16',
   },
   driverDetails: {
     flex: 1,
@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
   ratingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
+    gap: 2,
     marginTop: 2,
   },
   ratingText: {
@@ -458,9 +458,9 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   priceValue: {
-    fontSize: 19,
+    fontSize: 18,
     fontWeight: '900',
-    color: COLORS.emerald[700],
+    color: '#090D16',
     fontVariant: ['tabular-nums'],
     letterSpacing: -0.3,
   },
@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#090D16',
     paddingHorizontal: 15,
     paddingVertical: 9,
     borderRadius: 10,

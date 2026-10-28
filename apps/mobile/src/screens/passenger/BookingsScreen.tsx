@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   tabBtnActive: {
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#090D16',
     ...SHADOWS.sm,
   },
   tabBtnInner: {

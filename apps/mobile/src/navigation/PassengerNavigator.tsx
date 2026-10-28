@@ -34,8 +34,8 @@ export const PassengerNavigator: React.FC = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: COLORS.emerald[600],
-        tabBarInactiveTintColor: COLORS.gray[400],
+        tabBarActiveTintColor: '#090D16',
+        tabBarInactiveTintColor: '#94A3B8',
         tabBarStyle: {
           backgroundColor: COLORS.white,
           borderTopColor: '#F1F5F9',

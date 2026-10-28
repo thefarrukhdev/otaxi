@@ -82,19 +82,19 @@ export const COLORS = {
 export const THEME = {
   passenger: {
     isDark: false,
-    background: '#F8FAFC',
+    background: '#FFFFFF',
     surface: '#FFFFFF',
-    surfaceSubtle: '#F1F5F9',
+    surfaceSubtle: '#F8FAFC',
     card: '#FFFFFF',
-    text: '#0F172A',
+    text: '#090D16',
     textMuted: '#64748B',
     textSubtle: '#94A3B8',
-    primary: '#059669', // Emerald Oasis
-    primaryLight: '#D1FAE5',
-    primaryDark: '#064E3B',
-    accent: '#F43F5E',
+    primary: '#090D16', // Pure Monochrome Obsidian
+    primaryLight: '#F1F5F9',
+    primaryDark: '#000000',
+    accent: '#090D16',
     border: '#E2E8F0',
-    borderFocus: '#059669',
+    borderFocus: '#090D16',
   },
   driver: {
     isDark: true,

@@ -552,7 +552,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
                 size={18}
                 color={
                   paymentProvider === PaymentProvider.PAYME
-                    ? COLORS.emerald[700]
+                    ? '#FFFFFF'
                     : COLORS.gray[500]
                 }
               />
@@ -582,7 +582,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
                 size={18}
                 color={
                   paymentProvider === PaymentProvider.CLICK
-                    ? COLORS.emerald[700]
+                    ? '#FFFFFF'
                     : COLORS.gray[500]
                 }
               />
@@ -612,7 +612,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
                 size={18}
                 color={
                   paymentProvider === PaymentProvider.UZUM
-                    ? COLORS.emerald[700]
+                    ? '#FFFFFF'
                     : COLORS.gray[500]
                 }
               />
@@ -642,7 +642,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
                 size={18}
                 color={
                   paymentProvider === PaymentProvider.CASH
-                    ? COLORS.emerald[700]
+                    ? '#FFFFFF'
                     : COLORS.gray[500]
                 }
               />
@@ -1071,8 +1071,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   paymentOptionActive: {
-    backgroundColor: COLORS.emerald[50],
-    borderColor: COLORS.emerald[600],
+    backgroundColor: '#090D16',
+    borderColor: '#090D16',
   },
   paymentOptionText: {
     fontSize: 12,
@@ -1080,7 +1080,7 @@ const styles = StyleSheet.create({
     color: COLORS.gray[700],
   },
   paymentOptionTextActive: {
-    color: COLORS.emerald[800],
+    color: '#FFFFFF',
   },
   bottomBar: {
     flexDirection: 'row',
@@ -1104,7 +1104,7 @@ const styles = StyleSheet.create({
   bottomPriceAmount: {
     fontSize: 20,
     fontWeight: '900',
-    color: COLORS.emerald[700],
+    color: '#090D16',
     fontVariant: ['tabular-nums'],
     letterSpacing: -0.3,
   },
@@ -1116,7 +1116,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#090D16',
     paddingHorizontal: 20,
     paddingVertical: 13,
     borderRadius: 12,
