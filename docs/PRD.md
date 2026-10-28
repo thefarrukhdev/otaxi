@@ -3,9 +3,9 @@
 | Maydon | Qiymat |
 |---|---|
 | Mahsulot | OTAXI — shaharlararo va xalqaro safarlar uchun bron platformasi |
-| Hujjat versiyasi | 1.0 (qoralama) |
-| Sana | 2026-10-27 |
-| Holat | Draft — ko'rib chiqish va tasdiqlashga tayyor |
+| Hujjat versiyasi | 1.1 (Tasdiqlangan Arxitektura) |
+| Sana | 2026-10-28 |
+| Holat | Tasdiqlangan — ishlab chiqish bosqichida |
 | Hujjat egasi | Product Owner (aniqlanadi) |
 | Auditoriya | Founder, dasturchilar, dizaynerlar, QA, biznes tomon |
 
@@ -44,11 +44,14 @@
 
 **OTAXI** — Markaziy Osiyo shaharlari va mamlakatlari o'rtasida (Uzbekiston, Qozog'iston, Qirg'iziston) tekshirilgan haydovchilar bilan **shaharlararo va xalqaro safarlarni** bron qilish platformasi.
 
-Platforma uch qismdan iborat:
+Platforma quyidagi asosiy qismlardan iborat:
 
-1. **Yo'lovchi ilovasi** — yo'nalish qidirish, joy bron qilish, to'lov, safar kuzatuvi, chegara hujjatlari chek-listi.
-2. **Haydovchi ilovasi** — ro'yxatdan o'tish, hujjat tekshiruvi (verifikatsiya), reys yaratish/qabul qilish, daromad va hamyon.
-3. **Admin panel (CRM/ERP)** — haydovchi moderatsiyasi, buyurtmalar, jonli treking, moliya, mijozlar bilan ishlash, tariflar, promokodlar, xodimlar va audit.
+1. **Yagona Mobil Ilova (`apps/mobile` — React Native + Expo SDK 52 for iOS & Android)**:
+   - **Yo'lovchi rejimi** — yo'nalish qidirish, joy bron qilish, to'lov, xalqaro chegara chek-listi, safar kuzatuvi, 4 xonali bortga chiqish kodi.
+   - **Haydovchi rejimi** — ro'yxatdan o'tish, hujjat verifikatsiyasi, reys yaratish, yo'lovchilar manifesti va bortga olish kodi tekshiruvi, fonda GPS treking, daromad va hamyon.
+2. **Admin panel (`apps/web-admin` — Next.js 15 App Router, Tailwind CSS)** — haydovchi moderatsiyasi, buyurtmalar, xalqaro chegara chek-listlari CMS, moliya va audit jurnali.
+3. **Backend API (`apps/backend` — NestJS 10, PostgreSQL + PostGIS, Prisma, Redis, WebSocket)** — yuqori yuklamaga chidamli yagona API motori.
+4. **Yagona domen modellari (`packages/types`)** — barcha mijozlar uchun umumiy TypeScript shartnomalari.
 
 **Qiymat taklifi:** "Shaharlararo safarni taksi chaqirgandek oson, ishonchli va oldindan rejalashtirilgan qilish — xalqaro yo'nalishlarda chegara tayyorgarligi bilan."
 
@@ -608,20 +611,22 @@ Standartlar: sahifalash, filtrlash, yagona xato formati (`code`, `message`, `det
 
 ---
 
-## 20. Ochiq savollar
+## 20. Arxitektura Qarorlari va Holatlar
 
-1. **Biznes shakli:** OTAXI vositachi (marketplace) bo'ladimi yoki o'zi tashuvchi? (huquqiy va soliq oqibatlari)
-2. **Naqd to'lov:** MVP'da ruxsat etiladimi? (komissiya yig'ish murakkablashadi)
-3. **Dastlabki yo'nalishlar:** qaysi 3–5 ichki va 1 xalqaro yo'nalish?
-4. **Ilova tuzilishi:** yo'lovchi va haydovchi uchun bitta ilovami yoki ikkita alohida ilovami?
-5. **Telegram Mini App:** MVP'da yo'lovchi uchun foydalanamizmi?
-6. **Narxlash:** haydovchi o'zi narx qo'yadimi yoki platforma tarifi (diapazon) belgilaydimi?
-7. **Komissiya foizi** va haydovchi to'lovi (payout) chastotasi.
-8. **Verifikatsiya:** faqat qo'lda moderatsiyami yoki tashqi xizmat (masalan, hujjatni avtomatik tekshirish) ham?
-9. **Xalqaro reyslarda yo'lovchi hujjatlari** (pasport) platformada saqlanadimi yoki faqat chek-list ko'rsatiladimi?
-10. **Brend va nom:** "OTAXI" nomi va domen/savdo belgisi tekshirilganmi?
-11. **Byudjet va jamoa tarkibi.**
-12. **Qo'llab-quvvatlash:** ish vaqti (24/7 yoki cheklangan) va tillari.
+1. **Biznes shakli:** OTAXI vositachi (marketplace) — haydovchi va yo'lovchini bog'lovchi axborot-texnologiya platformasi.
+2. **Naqd to'lov:** MVP'da asosan karta to'lovlari (Payme, Click, Uzum) orqali komissiya avtomatik ushlab qolinadi; naqd to'lov varianti haydovchining depozit balansi mavjud bo'lgandagina ruxsat beriladi.
+3. **Dastlabki yo'nalishlar:** 
+   - Ichki: Toshkent ↔ Samarqand, Toshkent ↔ Farg'ona vodiysi, Toshkent ↔ Buxoro.
+   - Xalqaro: Toshkent ↔ Chimkent (Qozog'iston) va Toshkent ↔ Bishkek (Qirg'iziston).
+4. **Ilova tuzilishi:** **[TASDIQLANDI / YECHILDI]** — inDrive modeli asosida yagona mobil ilova (`apps/mobile` — React Native + Expo). Ilova ichida bitta tugma orqali "Yo'lovchi" va "Haydovchi" rejimlari almashadi.
+5. **Veb ilovalar va Mobil strategiya:** **[TASDIQLANDI / YECHILDI]** — Yo'lovchi va haydovchi uchun vaqtni tejash va bozor talabiga to'liq javob berish uchun to'g'ridan-to'g'ri haqiqiy iOS va Android native mobil ilova yaratildi. Kompaniya boshqaruvi va moderatsiyasi uchun esa desktop Web-Admin CRM saqlab qolindi.
+6. **Narxlash:** Haydovchi o'zi narx qo'yadi (tavsiya etilgan bozor koridori ichida).
+7. **Komissiya foizi:** 10% platforma komissiyasi, 90% haydovchi daromadi. Payout — haydovchi istalgan vaqtda hamyonidan kartasiga pul yechish so'rovini bera oladi.
+8. **Verifikatsiya:** Admin panel orqali qo'lda moderatsiya (prava, texpasport, sug'urta, selfi va mashina rasmlarini kattalashtirib tekshirish).
+9. **Xalqaro reyslarda yo'lovchi hujjatlari:** Chegara chek-listi interaktiv modali orqali tekshiriladi; xalqaro bron paytida xorijiy pasport raqami xavfsiz kiritiladi.
+10. **Brend va nom:** "OTAXI" — Markaziy Osiyo xalqaro mobility brendi.
+11. **Jamoa tarkibi:** Farrukh (Frontend Lead: Mobile App & Web Admin), Ravshan (Backend Lead: NestJS, PostGIS, Redis).
+12. **Qo'llab-quvvatlash:** 24/7 Telegram bot, in-app chat va telefon qo'ng'iroqlari.
 
 ---
 
