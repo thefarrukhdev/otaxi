@@ -77,7 +77,7 @@ export const ProfileScreen: React.FC = () => {
           <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Text style={styles.userName}>Farrukh Bek</Text>
-              <ShieldCheck size={16} color="#090D16" />
+              <ShieldCheck size={16} color="#FF8800" />
             </View>
             <Text style={styles.userPhone}>+998 90 999 88 11</Text>
             <View style={{ marginTop: 4 }}>
@@ -97,7 +97,7 @@ export const ProfileScreen: React.FC = () => {
           style={styles.switchModeCard}
         >
           <View style={styles.switchIconBox}>
-            <Car size={24} color={COLORS.amber[500]} />
+            <Car size={24} color="#FF8800" />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.switchTitle}>{t.common.switchToDriver}</Text>
@@ -105,7 +105,7 @@ export const ProfileScreen: React.FC = () => {
               Shaharlararo yoki xalqaro reys e’lon qiling va barqaror daromad oling.
             </Text>
           </View>
-          <ChevronRight size={18} color={COLORS.gray[400]} />
+          <ChevronRight size={18} color="#FF8800" />
         </Card>
 
         {/* Settings Group */}
@@ -119,34 +119,34 @@ export const ProfileScreen: React.FC = () => {
             activeOpacity={0.7}
           >
             <View style={styles.menuIconCircle}>
-              <Globe size={18} color="#090D16" />
+              <Globe size={18} color="#FF8800" />
             </View>
             <Text style={styles.menuTitle}>{t.profile.language}</Text>
             <View style={styles.langBadgeContainer}>
               <Text style={styles.flagIcon}>{currentLangObj.flag}</Text>
               <Text style={styles.menuValue}>{currentLangObj.label}</Text>
             </View>
-            <ChevronRight size={16} color={COLORS.gray[400]} />
+            <ChevronRight size={16} color="#94A3B8" />
           </TouchableOpacity>
 
           <View style={styles.menuDivider} />
 
           <TouchableOpacity style={styles.menuItem} onPress={handleSupport} activeOpacity={0.7}>
             <View style={styles.menuIconCircle}>
-              <Headphones size={18} color="#090D16" />
+              <Headphones size={18} color="#FF8800" />
             </View>
             <Text style={styles.menuTitle}>{t.profile.support}</Text>
-            <ChevronRight size={16} color={COLORS.gray[400]} />
+            <ChevronRight size={16} color="#94A3B8" />
           </TouchableOpacity>
 
           <View style={styles.menuDivider} />
 
           <TouchableOpacity style={styles.menuItem} onPress={() => Haptics.selection()} activeOpacity={0.7}>
             <View style={styles.menuIconCircle}>
-              <FileText size={18} color="#090D16" />
+              <FileText size={18} color="#FF8800" />
             </View>
             <Text style={styles.menuTitle}>{t.profile.privacy}</Text>
-            <ChevronRight size={16} color={COLORS.gray[400]} />
+            <ChevronRight size={16} color="#94A3B8" />
           </TouchableOpacity>
         </Card>
 
@@ -157,9 +157,9 @@ export const ProfileScreen: React.FC = () => {
           size="md"
           fullWidth
           onPress={handleLogout}
-          leftIcon={<LogOut size={16} color={COLORS.red[600]} />}
+          leftIcon={<LogOut size={16} color={COLORS.red[500]} />}
           style={styles.logoutBtn}
-          textStyle={{ color: COLORS.red[600] }}
+          textStyle={{ color: COLORS.red[500] }}
         />
       </ScrollView>
 
@@ -182,7 +182,7 @@ export const ProfileScreen: React.FC = () => {
                 style={styles.closeBtn}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
-                <X size={20} color={COLORS.gray[500]} />
+                <X size={20} color="#94A3B8" />
               </TouchableOpacity>
             </View>
 
@@ -205,7 +205,7 @@ export const ProfileScreen: React.FC = () => {
                     </View>
                     {isSelected && (
                       <View style={styles.checkCircle}>
-                        <Check size={14} color={COLORS.white} />
+                        <Check size={14} color="#0C0D11" strokeWidth={3} />
                       </View>
                     )}
                   </TouchableOpacity>
@@ -222,7 +222,7 @@ export const ProfileScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.gray[50],
+    backgroundColor: '#0C0D11',
   },
   scrollView: {
     flex: 1,
@@ -242,23 +242,23 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: '#090D16',
+    backgroundColor: '#FF8800',
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarText: {
     fontSize: 18,
-    fontWeight: '800',
-    color: COLORS.white,
+    fontWeight: '900',
+    color: '#0C0D11',
   },
   userName: {
     fontSize: 16,
     fontWeight: '800',
-    color: COLORS.gray[900],
+    color: '#FFFFFF',
   },
   userPhone: {
     fontSize: 13,
-    color: COLORS.gray[500],
+    color: '#94A3B8',
     marginTop: 2,
   },
   switchModeCard: {
@@ -267,25 +267,25 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 12,
     marginBottom: 12,
-    backgroundColor: COLORS.navy[900],
-    borderColor: COLORS.navy[800],
+    backgroundColor: '#15171E',
+    borderColor: '#272B35',
   },
   switchIconBox: {
     width: 44,
     height: 44,
     borderRadius: 12,
-    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    backgroundColor: 'rgba(255, 136, 0, 0.15)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   switchTitle: {
     fontSize: 15,
     fontWeight: '800',
-    color: COLORS.amber[400],
+    color: '#FF8800',
   },
   switchSubtitle: {
     fontSize: 11,
-    color: COLORS.navy[300],
+    color: '#94A3B8',
     marginTop: 2,
     lineHeight: 15,
   },
@@ -303,52 +303,57 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: '#1D2029',
     alignItems: 'center',
     justifyContent: 'center',
   },
   menuTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.gray[800],
+    color: '#FFFFFF',
     flex: 1,
   },
   langBadgeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: COLORS.gray[100],
+    backgroundColor: '#1D2029',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#272B35',
   },
   flagIcon: {
     fontSize: 14,
   },
   menuValue: {
     fontSize: 12,
-    color: COLORS.gray[700],
+    color: '#94A3B8',
     fontWeight: '600',
   },
   menuDivider: {
     height: 1,
-    backgroundColor: COLORS.gray[100],
+    backgroundColor: '#272B35',
     marginHorizontal: 12,
   },
   logoutBtn: {
-    borderColor: COLORS.red[200],
+    borderColor: 'rgba(239, 68, 68, 0.3)',
+    backgroundColor: 'rgba(239, 68, 68, 0.08)',
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: COLORS.white,
+    backgroundColor: '#15171E',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 20,
     paddingBottom: 36,
+    borderTopWidth: 1,
+    borderTopColor: '#272B35',
   },
   modalHeader: {
     flexDirection: 'row',
@@ -359,18 +364,18 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: '800',
-    color: COLORS.gray[900],
+    color: '#FFFFFF',
   },
   modalSubtitle: {
     fontSize: 12,
-    color: COLORS.gray[500],
+    color: '#94A3B8',
     marginTop: 2,
   },
   closeBtn: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: COLORS.gray[100],
+    backgroundColor: '#1D2029',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -383,13 +388,13 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderColor: COLORS.gray[200],
-    backgroundColor: COLORS.gray[50],
+    borderColor: '#272B35',
+    backgroundColor: '#0C0D11',
     gap: 12,
   },
   langItemSelected: {
-    borderColor: '#090D16',
-    backgroundColor: '#F8FAFC',
+    borderColor: '#FF8800',
+    backgroundColor: '#1D2029',
   },
   langItemFlag: {
     fontSize: 26,
@@ -397,21 +402,21 @@ const styles = StyleSheet.create({
   langItemLabel: {
     fontSize: 15,
     fontWeight: '700',
-    color: COLORS.gray[900],
+    color: '#FFFFFF',
   },
   langItemLabelSelected: {
-    color: '#090D16',
+    color: '#FF8800',
   },
   langItemSub: {
     fontSize: 12,
-    color: COLORS.gray[500],
+    color: '#94A3B8',
     marginTop: 2,
   },
   checkCircle: {
     width: 22,
     height: 22,
     borderRadius: 11,
-    backgroundColor: '#090D16',
+    backgroundColor: '#FF8800',
     alignItems: 'center',
     justifyContent: 'center',
   },

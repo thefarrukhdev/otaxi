@@ -26,8 +26,8 @@ export const useTheme = () => {
   }, [isDriver]);
 
   const statusBarStyle = useMemo(() => {
-    return isDriver ? ('light-content' as const) : ('dark-content' as const);
-  }, [isDriver]);
+    return 'light-content' as const;
+  }, []);
 
   /**
    * Turli xil biznes statuslar (Reys, Bron, Verifikatsiya) uchun

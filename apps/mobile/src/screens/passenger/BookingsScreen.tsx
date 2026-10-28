@@ -94,7 +94,7 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ navigation }) =>
           <View style={styles.tabBtnInner}>
             <Ticket
               size={15}
-              color={activeTab === 'ACTIVE' ? COLORS.white : COLORS.gray[500]}
+              color={activeTab === 'ACTIVE' ? '#0C0D11' : '#94A3B8'}
             />
             <Text
               style={[
@@ -118,7 +118,7 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ navigation }) =>
           <View style={styles.tabBtnInner}>
             <History
               size={15}
-              color={activeTab === 'HISTORY' ? COLORS.white : COLORS.gray[500]}
+              color={activeTab === 'HISTORY' ? '#0C0D11' : '#94A3B8'}
             />
             <Text
               style={[
@@ -140,15 +140,15 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ navigation }) =>
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={handleRefresh}
-            colors={[COLORS.emerald[600]]}
-            tintColor={COLORS.emerald[600]}
+            colors={['#FF8800']}
+            tintColor="#FF8800"
           />
         }
       >
         {displayedList.length === 0 ? (
           <View style={styles.emptyBox}>
             <View style={styles.emptyIconCircle}>
-              <Ticket size={44} color={COLORS.gray[300]} />
+              <Ticket size={44} color="#64748B" />
             </View>
             <Text style={styles.emptyTitle}>
               {activeTab === 'ACTIVE'
@@ -166,7 +166,7 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ navigation }) =>
                 onPress={() => navigation.navigate('Home')}
                 activeOpacity={0.85}
               >
-                <Compass size={16} color={COLORS.white} />
+                <Compass size={16} color="#0C0D11" strokeWidth={2.5} />
                 <Text style={styles.findTripsBtnText}>Reyslarni qidirish</Text>
               </TouchableOpacity>
             )}
@@ -201,19 +201,18 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ navigation }) =>
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.gray[50],
+    backgroundColor: '#0C0D11',
   },
   tabContainer: {
     flexDirection: 'row',
-    backgroundColor: COLORS.white,
+    backgroundColor: '#15171E',
     padding: 4,
     marginHorizontal: 16,
     marginTop: 12,
     marginBottom: 6,
     borderRadius: 14,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray[200],
-    ...SHADOWS.sm,
+    borderWidth: 1,
+    borderColor: '#272B35',
   },
   tabBtn: {
     flex: 1,
@@ -222,8 +221,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   tabBtnActive: {
-    backgroundColor: '#090D16',
-    ...SHADOWS.sm,
+    backgroundColor: '#FF8800',
   },
   tabBtnInner: {
     flexDirection: 'row',
@@ -233,10 +231,11 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 12,
     fontWeight: '700',
-    color: COLORS.gray[600],
+    color: '#94A3B8',
   },
   tabTextActive: {
-    color: COLORS.white,
+    color: '#0C0D11',
+    fontWeight: '900',
   },
   scrollView: {
     flex: 1,
@@ -254,24 +253,23 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#15171E',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray[200],
-    ...SHADOWS.sm,
+    borderWidth: 1,
+    borderColor: '#272B35',
   },
   emptyTitle: {
     fontSize: 16,
     fontWeight: '800',
-    color: COLORS.gray[800],
+    color: '#FFFFFF',
     marginBottom: 6,
     textAlign: 'center',
   },
   emptyDesc: {
     fontSize: 13,
-    color: COLORS.gray[500],
+    color: '#94A3B8',
     textAlign: 'center',
     lineHeight: 18,
     marginBottom: 20,
@@ -280,15 +278,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#FF8800',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 12,
-    ...SHADOWS.sm,
   },
   findTripsBtnText: {
     fontSize: 13,
-    fontWeight: '800',
-    color: COLORS.white,
+    fontWeight: '900',
+    color: '#0C0D11',
   },
 });

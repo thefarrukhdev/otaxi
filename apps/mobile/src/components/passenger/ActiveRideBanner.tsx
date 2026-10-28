@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Linking, Alert } from 'react-native';
 import { PassengerBooking } from '../../types';
 import { Haptics } from '../ui/Haptics';
-import { Phone, ChevronRight, QrCode } from 'lucide-react-native';
+import { Phone, ChevronRight } from 'lucide-react-native';
 
 export interface ActiveRideBannerProps {
   booking: PassengerBooking;
@@ -63,7 +63,7 @@ export const ActiveRideBanner: React.FC<ActiveRideBannerProps> = React.memo(
                 style={styles.iconCircle}
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               >
-                <Phone size={13} color="#0F172A" />
+                <Phone size={13} color="#FF8800" />
               </TouchableOpacity>
               <ChevronRight size={18} color="#94A3B8" />
             </View>
@@ -78,17 +78,17 @@ ActiveRideBanner.displayName = 'ActiveRideBanner';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#15171E',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: '#272B35',
     padding: 14,
     marginBottom: 16,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 6,
-    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 3,
   },
   contentRow: {
     flexDirection: 'row',
@@ -101,19 +101,19 @@ const styles = StyleSheet.create({
   statusRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: 6,
     marginBottom: 4,
   },
   pulseDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#090D16',
+    backgroundColor: '#FF8800',
   },
   statusLabel: {
     fontSize: 10,
     fontWeight: '800',
-    color: '#090D16',
+    color: '#FF8800',
     letterSpacing: 0.5,
   },
   flag: {
@@ -122,13 +122,13 @@ const styles = StyleSheet.create({
   routeText: {
     fontSize: 15,
     fontWeight: '800',
-    color: '#0F172A',
+    color: '#FFFFFF',
     letterSpacing: -0.2,
     marginBottom: 2,
   },
   subText: {
     fontSize: 12,
-    color: '#64748B',
+    color: '#94A3B8',
     fontWeight: '500',
   },
   rightSection: {
@@ -136,9 +136,9 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   pinTag: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: 'rgba(255, 136, 0, 0.12)',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: 'rgba(255, 136, 0, 0.35)',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
@@ -147,13 +147,13 @@ const styles = StyleSheet.create({
   pinLabel: {
     fontSize: 8,
     fontWeight: '800',
-    color: '#64748B',
+    color: '#FFA033',
     letterSpacing: 0.4,
   },
   pinValue: {
     fontSize: 13,
     fontWeight: '900',
-    color: '#0F172A',
+    color: '#FF8800',
     fontFamily: 'monospace',
     letterSpacing: 1,
   },
@@ -166,7 +166,9 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: '#1E212B',
+    borderWidth: 1,
+    borderColor: '#2A2E3B',
     alignItems: 'center',
     justifyContent: 'center',
   },

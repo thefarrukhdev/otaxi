@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { Haptics } from '../ui/Haptics';
-import { ArrowRight } from 'lucide-react-native';
 
 export interface RouteOption {
   from: string;
@@ -135,8 +134,8 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 14,
-    fontWeight: '700',
-    color: '#0F172A',
+    fontWeight: '800',
+    color: '#FFFFFF',
     marginBottom: 10,
     letterSpacing: -0.2,
   },
@@ -148,31 +147,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#15171E',
     paddingHorizontal: 12,
     paddingVertical: 9,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: '#272B35',
   },
   pillSelected: {
-    backgroundColor: '#0F172A',
-    borderColor: '#0F172A',
+    backgroundColor: '#FF8800',
+    borderColor: '#FF8800',
   },
   routeText: {
     fontSize: 13,
-    fontWeight: '600',
-    color: '#334155',
+    fontWeight: '700',
+    color: '#E2E8F0',
   },
   routeTextSelected: {
-    color: '#FFFFFF',
+    color: '#0C0D11',
   },
   priceText: {
     fontSize: 12,
-    fontWeight: '700',
-    color: '#090D16',
+    fontWeight: '800',
+    color: '#FF8800',
   },
   priceTextSelected: {
-    color: '#CBD5E1',
+    color: '#0C0D11',
   },
 });

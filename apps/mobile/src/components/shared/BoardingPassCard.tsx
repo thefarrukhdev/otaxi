@@ -92,7 +92,7 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
             <Badge
               label={isConfirmed ? 'Tasdiqlangan' : booking.status}
               variant={isConfirmed ? 'success' : 'neutral'}
-              icon={<CheckCircle size={12} color={COLORS.emerald[700]} />}
+              icon={<CheckCircle size={12} color="#FF8800" />}
             />
             {isInternational && (
               <Badge label="Xalqaro" variant="international" flag="KZ" />
@@ -114,7 +114,7 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
             </View>
 
             <View style={styles.qrBadge}>
-              <QrCode size={28} color="#0F172A" />
+              <QrCode size={28} color="#FF8800" />
               <Text style={styles.qrBadgeText}>QR KOD</Text>
             </View>
           </View>
@@ -134,7 +134,7 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
         {/* Trip Meta Grid */}
         <View style={styles.detailsGrid}>
           <View style={styles.detailItem}>
-            <Calendar size={15} color={COLORS.gray[400]} />
+            <Calendar size={15} color="#94A3B8" />
             <View style={{ flex: 1 }}>
               <Text style={styles.detailLabel}>Jo’nash vaqti</Text>
               <Text style={styles.detailValue}>
@@ -151,7 +151,7 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
           </View>
 
           <View style={styles.detailItem}>
-            <Car size={15} color={COLORS.gray[400]} />
+            <Car size={15} color="#94A3B8" />
             <View style={{ flex: 1 }}>
               <Text style={styles.detailLabel}>Avtomobil</Text>
               <Text style={styles.detailValue}>
@@ -164,7 +164,7 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
 
         <View style={styles.detailsGrid}>
           <View style={styles.detailItem}>
-            <MapPin size={15} color={COLORS.gray[400]} />
+            <MapPin size={15} color="#94A3B8" />
             <View style={{ flex: 1 }}>
               <Text style={styles.detailLabel}>Qayerdan</Text>
               <Text style={styles.detailValue} numberOfLines={1}>
@@ -174,7 +174,7 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
           </View>
 
           <View style={styles.detailItem}>
-            <ShieldCheck size={15} color={COLORS.emerald[600]} />
+            <ShieldCheck size={15} color="#FF8800" />
             <View style={{ flex: 1 }}>
               <Text style={styles.detailLabel}>Band o’rindiqlar</Text>
               <Text style={styles.detailValue}>
@@ -192,7 +192,7 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
               onPress={handleCallDriver}
               activeOpacity={0.8}
             >
-              <Phone size={14} color="#0F172A" />
+              <Phone size={14} color="#FF8800" />
               <Text style={styles.callButtonText}>Haydovchiga qo‘ng‘iroq</Text>
             </TouchableOpacity>
 
@@ -202,7 +202,7 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
                 onPress={onOpenChecklist}
                 activeOpacity={0.8}
               >
-                <FileCheck2 size={14} color={COLORS.white} />
+                <FileCheck2 size={14} color="#0C0D11" strokeWidth={2.5} />
                 <Text style={styles.guideButtonText}>Chegara gidi</Text>
               </TouchableOpacity>
             )}
@@ -223,26 +223,26 @@ BoardingPassCard.displayName = 'BoardingPassCard';
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: COLORS.white,
+    backgroundColor: '#15171E',
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: '#272B35',
     overflow: 'hidden',
     marginBottom: 16,
-    shadowColor: '#0F172A',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.06,
-    shadowRadius: 12,
-    elevation: 3,
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 4,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#1D2029',
     borderBottomWidth: 1,
-    borderBottomColor: '#E2E8F0',
+    borderBottomColor: '#272B35',
   },
   headerLeft: {
     flex: 1,
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
   airportCode: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#0F172A',
+    color: '#FFFFFF',
     letterSpacing: 0.5,
   },
   flightArrowContainer: {
@@ -267,17 +267,17 @@ const styles = StyleSheet.create({
   flightLine: {
     width: 24,
     height: 2,
-    backgroundColor: COLORS.emerald[500],
+    backgroundColor: '#FF8800',
     borderRadius: 1,
   },
   flightArrowText: {
     fontSize: 12,
-    color: COLORS.emerald[600],
+    color: '#FF8800',
     fontWeight: '800',
   },
   tripRoute: {
     fontSize: 12,
-    color: '#64748B',
+    color: '#94A3B8',
     fontWeight: '600',
   },
   headerRight: {
@@ -286,13 +286,13 @@ const styles = StyleSheet.create({
   },
   codeSection: {
     padding: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#15171E',
     alignItems: 'center',
   },
   codeLabel: {
     fontSize: 10,
     fontWeight: '800',
-    color: '#64748B',
+    color: '#94A3B8',
     letterSpacing: 0.6,
     marginBottom: 10,
   },
@@ -307,19 +307,19 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   digitBox: {
-    width: 42,
-    height: 48,
+    width: 44,
+    height: 50,
     borderRadius: 10,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#0C0D11',
     borderWidth: 1.5,
-    borderColor: '#CBD5E1',
+    borderColor: '#272B35',
     alignItems: 'center',
     justifyContent: 'center',
   },
   digitText: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '900',
-    color: '#0F172A',
+    color: '#FF8800',
     fontFamily: 'monospace',
   },
   qrBadge: {
@@ -328,19 +328,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: '#1D2029',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: '#272B35',
   },
   qrBadgeText: {
     fontSize: 8,
     fontWeight: '800',
-    color: '#475569',
+    color: '#94A3B8',
     marginTop: 2,
   },
   codeHint: {
     fontSize: 11,
-    color: '#64748B',
+    color: '#94A3B8',
     textAlign: 'center',
     marginTop: 2,
   },
@@ -356,26 +356,26 @@ const styles = StyleSheet.create({
     height: 20,
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#0C0D11',
     borderWidth: 1,
     borderLeftWidth: 0,
-    borderColor: '#E2E8F0',
+    borderColor: '#272B35',
   },
   rightCutout: {
     width: 14,
     height: 20,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#0C0D11',
     borderWidth: 1,
     borderRightWidth: 0,
-    borderColor: '#E2E8F0',
+    borderColor: '#272B35',
   },
   dashedLine: {
     flex: 1,
     height: 1,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: '#272B35',
     borderStyle: 'dashed',
     marginHorizontal: 8,
   },
@@ -399,25 +399,27 @@ const styles = StyleSheet.create({
   detailValue: {
     fontSize: 12.5,
     fontWeight: '700',
-    color: '#0F172A',
+    color: '#FFFFFF',
     marginTop: 1,
   },
   plateText: {
     fontSize: 10,
     fontWeight: '800',
-    color: COLORS.emerald[700],
-    backgroundColor: COLORS.emerald[50],
+    color: '#FF8800',
+    backgroundColor: 'rgba(255, 136, 0, 0.12)',
     paddingHorizontal: 5,
     paddingVertical: 1,
     borderRadius: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 136, 0, 0.3)',
     alignSelf: 'flex-start',
     marginTop: 2,
   },
   cardActionsContainer: {
     padding: 14,
     borderTopWidth: 1,
-    borderTopColor: '#F1F5F9',
-    backgroundColor: '#FAFAFA',
+    borderTopColor: '#1E222A',
+    backgroundColor: '#12141A',
   },
   actionButtonsRow: {
     flexDirection: 'row',
@@ -429,16 +431,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    height: 40,
+    height: 42,
     borderRadius: 10,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1.2,
-    borderColor: '#CBD5E1',
+    backgroundColor: '#1D2029',
+    borderWidth: 1,
+    borderColor: '#272B35',
   },
   callButtonText: {
     fontSize: 12.5,
     fontWeight: '700',
-    color: '#0F172A',
+    color: '#FFFFFF',
   },
   guideButton: {
     flex: 1,
@@ -446,14 +448,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    height: 40,
+    height: 42,
     borderRadius: 10,
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#FF8800',
   },
   guideButtonText: {
     fontSize: 12.5,
-    fontWeight: '700',
-    color: COLORS.white,
+    fontWeight: '800',
+    color: '#0C0D11',
   },
   cancelLink: {
     alignSelf: 'center',
@@ -463,6 +465,6 @@ const styles = StyleSheet.create({
   cancelLinkText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#DC2626',
+    color: '#F87171',
   },
 });

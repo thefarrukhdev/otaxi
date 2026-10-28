@@ -34,20 +34,15 @@ export const PassengerNavigator: React.FC = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#090D16',
-        tabBarInactiveTintColor: '#94A3B8',
+        tabBarActiveTintColor: '#FF8800',
+        tabBarInactiveTintColor: '#64748B',
         tabBarStyle: {
-          backgroundColor: COLORS.white,
-          borderTopColor: '#F1F5F9',
+          backgroundColor: '#0C0D11',
+          borderTopColor: '#1E222A',
           borderTopWidth: 1,
           height: 68,
           paddingTop: 8,
           paddingBottom: 10,
-          elevation: 8,
-          shadowColor: '#0F172A',
-          shadowOffset: { width: 0, height: -3 },
-          shadowOpacity: 0.05,
-          shadowRadius: 8,
         },
         tabBarLabelStyle: {
           fontSize: 11,

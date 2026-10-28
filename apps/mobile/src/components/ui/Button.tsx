@@ -81,32 +81,32 @@ export const Button: React.FC<ButtonProps> = React.memo(
         case 'amber':
           return {
             container: {
-              backgroundColor: COLORS.amber[500],
-              borderColor: COLORS.amber[600],
+              backgroundColor: '#FF8800',
+              borderColor: '#FF8800',
               borderWidth: 1,
             },
-            text: { color: COLORS.navy[950], fontWeight: '700' },
-            spinnerColor: COLORS.navy[950],
+            text: { color: '#0C0D11', fontWeight: '800' },
+            spinnerColor: '#0C0D11',
           };
         case 'secondary':
           return {
             container: {
-              backgroundColor: COLORS.navy[800],
-              borderColor: COLORS.navy[700],
+              backgroundColor: '#1D2029',
+              borderColor: '#272B35',
               borderWidth: 1,
             },
-            text: { color: COLORS.white, fontWeight: '600' },
+            text: { color: COLORS.white, fontWeight: '700' },
             spinnerColor: COLORS.white,
           };
         case 'outline':
           return {
             container: {
-              backgroundColor: COLORS.transparent,
-              borderColor: COLORS.gray[300],
+              backgroundColor: '#15171E',
+              borderColor: '#272B35',
               borderWidth: 1.5,
             },
-            text: { color: COLORS.gray[800], fontWeight: '600' },
-            spinnerColor: COLORS.gray[700],
+            text: { color: COLORS.white, fontWeight: '700' },
+            spinnerColor: COLORS.white,
           };
         case 'ghost':
           return {
@@ -114,8 +114,8 @@ export const Button: React.FC<ButtonProps> = React.memo(
               backgroundColor: COLORS.transparent,
               borderWidth: 0,
             },
-            text: { color: COLORS.emerald[600], fontWeight: '600' },
-            spinnerColor: COLORS.emerald[600],
+            text: { color: '#FF8800', fontWeight: '700' },
+            spinnerColor: '#FF8800',
           };
         case 'danger':
           return {
@@ -131,12 +131,12 @@ export const Button: React.FC<ButtonProps> = React.memo(
         default:
           return {
             container: {
-              backgroundColor: COLORS.emerald[600],
-              borderColor: COLORS.emerald[700],
+              backgroundColor: '#FF8800',
+              borderColor: '#FF8800',
               borderWidth: 1,
             },
-            text: { color: COLORS.white, fontWeight: '700' },
-            spinnerColor: COLORS.white,
+            text: { color: '#0C0D11', fontWeight: '800' },
+            spinnerColor: '#0C0D11',
           };
       }
     };

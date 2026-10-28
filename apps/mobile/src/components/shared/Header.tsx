@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../../context/AppContext';
 import { COLORS } from '../../lib/theme';
 import { Haptics } from '../ui/Haptics';
-import { ChevronLeft, Bell, Car, ArrowLeftRight, User } from 'lucide-react-native';
+import { ChevronLeft, Bell, Car, User, Compass, ArrowLeftRight } from 'lucide-react-native';
 
 export interface HeaderProps {
   title?: string;
@@ -47,11 +47,10 @@ export const Header: React.FC<HeaderProps> = React.memo(
         style={[
           styles.container,
           { paddingTop: Math.max(insets.top, 12) + 6 },
-          isDriver ? styles.driverContainer : styles.passengerContainer,
         ]}
       >
         <View style={styles.topRow}>
-          {/* Brand Left Section */}
+          {/* Brand Left Section: (O) TAXI in User's Style */}
           <View style={styles.brandRow}>
             {showBackButton ? (
               <TouchableOpacity
@@ -60,12 +59,18 @@ export const Header: React.FC<HeaderProps> = React.memo(
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 activeOpacity={0.7}
               >
-                <ChevronLeft size={24} color={isDriver ? COLORS.white : '#0F172A'} />
+                <ChevronLeft size={24} color="#FFFFFF" />
               </TouchableOpacity>
             ) : null}
 
             <View style={styles.logoGroup}>
-              <Text style={[styles.brandText, isDriver && styles.brandTextDriver]}>OTAXI</Text>
+              {/* Orange Steering Wheel Icon as seen in screenshot */}
+              <View style={styles.logoIcon}>
+                <View style={styles.logoIconInner}>
+                  <Compass size={13} color="#FF8800" strokeWidth={2.8} />
+                </View>
+              </View>
+              <Text style={styles.brandWord}>TAXI</Text>
             </View>
           </View>
 
@@ -73,32 +78,29 @@ export const Header: React.FC<HeaderProps> = React.memo(
           <View style={styles.actionsRow}>
             {showNotification && (
               <TouchableOpacity
-                style={[styles.iconButton, isDriver && styles.iconButtonDriver]}
+                style={styles.iconButton}
                 onPress={onNotificationPress}
                 activeOpacity={0.7}
               >
-                <Bell size={18} color={isDriver ? COLORS.amber[400] : '#475569'} />
+                <Bell size={18} color="#94A3B8" />
               </TouchableOpacity>
             )}
 
             {showModeToggle && (
               <TouchableOpacity
-                style={[
-                  styles.modePill,
-                  isDriver ? styles.modePillDriver : styles.modePillPassenger,
-                ]}
+                style={styles.modePill}
                 onPress={handleToggleMode}
                 activeOpacity={0.8}
               >
                 {isDriver ? (
                   <>
-                    <User size={12} color={COLORS.amber[400]} />
-                    <Text style={styles.modeTextDriver}>Yo‘lovchi</Text>
+                    <User size={12} color="#FF8800" />
+                    <Text style={styles.modeTextActive}>Yo‘lovchi</Text>
                   </>
                 ) : (
                   <>
-                    <Car size={13} color="#0F172A" />
-                    <Text style={styles.modeTextPassenger}>Haydovchi</Text>
+                    <Car size={13} color="#FF8800" />
+                    <Text style={styles.modeTextActive}>Haydovchi</Text>
                   </>
                 )}
               </TouchableOpacity>
@@ -111,16 +113,8 @@ export const Header: React.FC<HeaderProps> = React.memo(
         {/* Title & Subtitle */}
         {(title || subtitle) && (
           <View style={styles.titleSection}>
-            {title && (
-              <Text style={[styles.titleText, isDriver && styles.titleTextDriver]}>
-                {title}
-              </Text>
-            )}
-            {subtitle && (
-              <Text style={[styles.subtitleText, isDriver && styles.subtitleTextDriver]}>
-                {subtitle}
-              </Text>
-            )}
+            {title && <Text style={styles.titleText}>{title}</Text>}
+            {subtitle && <Text style={styles.subtitleText}>{subtitle}</Text>}
           </View>
         )}
       </View>
@@ -133,22 +127,16 @@ Header.displayName = 'Header';
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 18,
-    paddingBottom: 8,
-    backgroundColor: '#FFFFFF',
-  },
-  passengerContainer: {
-    backgroundColor: '#FFFFFF',
-  },
-  driverContainer: {
-    backgroundColor: '#090D16',
+    paddingBottom: 10,
+    backgroundColor: '#0C0D11',
     borderBottomWidth: 1,
-    borderBottomColor: '#1F2937',
+    borderBottomColor: '#1A1C24',
   },
   topRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: 40,
+    height: 42,
   },
   brandRow: {
     flexDirection: 'row',
@@ -162,15 +150,27 @@ const styles = StyleSheet.create({
   logoGroup: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 7,
   },
-  brandText: {
-    fontSize: 22,
+  logoIcon: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: 'rgba(255, 136, 0, 0.15)',
+    borderWidth: 1.5,
+    borderColor: '#FF8800',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoIconInner: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  brandWord: {
+    fontSize: 21,
     fontWeight: '900',
-    color: '#0F172A',
-    letterSpacing: -0.8,
-  },
-  brandTextDriver: {
-    color: COLORS.white,
+    color: '#FFFFFF',
+    letterSpacing: 1.2,
   },
   actionsRow: {
     flexDirection: 'row',
@@ -180,63 +180,44 @@ const styles = StyleSheet.create({
   modePill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    height: 32,
-    paddingHorizontal: 11,
-    borderRadius: 16,
-    backgroundColor: '#F8FAFC',
+    gap: 6,
+    height: 34,
+    paddingHorizontal: 12,
+    borderRadius: 17,
+    backgroundColor: '#15171E',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: '#272B35',
   },
-  modePillPassenger: {
-    backgroundColor: '#F8FAFC',
-    borderColor: '#E2E8F0',
-  },
-  modePillDriver: {
-    backgroundColor: '#1E293B',
-    borderColor: '#334155',
-  },
-  modeTextPassenger: {
+  modeTextActive: {
     fontSize: 12,
-    fontWeight: '700',
-    color: '#0F172A',
-  },
-  modeTextDriver: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: COLORS.amber[400],
+    fontWeight: '800',
+    color: '#FFFFFF',
+    letterSpacing: 0.2,
   },
   iconButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#F8FAFC',
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: '#15171E',
+    borderWidth: 1,
+    borderColor: '#272B35',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  iconButtonDriver: {
-    backgroundColor: '#1E293B',
-  },
   titleSection: {
-    marginTop: 8,
+    marginTop: 10,
     marginBottom: 4,
   },
   titleText: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#0F172A',
-    letterSpacing: -0.4,
-  },
-  titleTextDriver: {
-    color: COLORS.white,
+    color: '#FFFFFF',
+    letterSpacing: -0.3,
   },
   subtitleText: {
     fontSize: 12,
-    color: '#64748B',
+    color: '#94A3B8',
     marginTop: 2,
     lineHeight: 16,
-  },
-  subtitleTextDriver: {
-    color: '#94A3B8',
   },
 });

@@ -54,51 +54,51 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         case 'warning':
         case 'amber':
           return {
-            bg: COLORS.amber[50],
-            border: COLORS.amber[200],
-            text: COLORS.amber[800],
-            dot: COLORS.amber[500],
+            bg: 'rgba(255, 136, 0, 0.15)',
+            border: 'rgba(255, 136, 0, 0.4)',
+            text: '#FF8800',
+            dot: '#FF8800',
           };
         case 'info':
         case 'blue':
           return {
-            bg: COLORS.blue[50],
-            border: COLORS.blue[200],
-            text: COLORS.blue[700],
-            dot: COLORS.blue[500],
+            bg: 'rgba(59, 130, 246, 0.15)',
+            border: 'rgba(59, 130, 246, 0.35)',
+            text: '#93C5FD',
+            dot: '#60A5FA',
           };
         case 'danger':
         case 'red':
           return {
-            bg: COLORS.red[50],
-            border: COLORS.red[200],
-            text: COLORS.red[700],
-            dot: COLORS.red[500],
+            bg: 'rgba(239, 68, 68, 0.15)',
+            border: 'rgba(239, 68, 68, 0.35)',
+            text: '#F87171',
+            dot: '#EF4444',
           };
         case 'international':
         case 'purple':
           return {
-            bg: '#F5F3FF',
-            border: '#DDD6FE',
-            text: '#6D28D9',
-            dot: '#8B5CF6',
+            bg: 'rgba(139, 92, 246, 0.15)',
+            border: 'rgba(139, 92, 246, 0.35)',
+            text: '#C4B5FD',
+            dot: '#A78BFA',
           };
         case 'neutral':
         case 'gray':
           return {
-            bg: COLORS.gray[100],
-            border: COLORS.gray[200],
-            text: COLORS.gray[700],
-            dot: COLORS.gray[400],
+            bg: '#1D2029',
+            border: '#272B35',
+            text: '#94A3B8',
+            dot: '#64748B',
           };
         case 'success':
         case 'emerald':
         default:
           return {
-            bg: COLORS.emerald[50],
-            border: COLORS.emerald[200],
-            text: COLORS.emerald[800],
-            dot: COLORS.emerald[500],
+            bg: 'rgba(255, 136, 0, 0.12)',
+            border: 'rgba(255, 136, 0, 0.35)',
+            text: '#FF8800',
+            dot: '#FF8800',
           };
       }
     };

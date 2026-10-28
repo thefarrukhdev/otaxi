@@ -314,7 +314,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
           borderName={trip.isInternational ? "G'isht-Ko'prik / Chernyayevka" : undefined}
           borderWaitMinutes={trip.isInternational ? 25 : undefined}
           progressPercent={0}
-          themeMode="light"
+          themeMode="dark"
           estimatedDurationMinutes={trip.durationMinutes}
           onPressBorder={() => {
             if (trip.isInternational) {
@@ -682,7 +682,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
           activeOpacity={0.88}
         >
           <Text style={styles.bookButtonText}>Joyni band qilish</Text>
-          <ArrowRight size={16} color={COLORS.white} />
+          <ArrowRight size={16} color="#0C0D11" strokeWidth={2.8} />
         </TouchableOpacity>
       </View>
 
@@ -702,7 +702,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.gray[50],
+    backgroundColor: '#0C0D11',
   },
   scrollView: {
     flex: 1,
@@ -715,41 +715,41 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#FEF3C7',
+    backgroundColor: 'rgba(255, 136, 0, 0.12)',
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: 'rgba(255, 136, 0, 0.35)',
     marginBottom: 12,
   },
   timerBannerUrgent: {
-    backgroundColor: '#FEE2E2',
-    borderColor: '#FECACA',
+    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+    borderColor: 'rgba(239, 68, 68, 0.35)',
   },
   timerText: {
     fontSize: 12,
-    color: COLORS.amber[900],
+    color: '#FFA033',
     fontWeight: '600',
     flex: 1,
   },
   timerTextUrgent: {
-    color: COLORS.red[700],
+    color: '#F87171',
   },
   timerBold: {
     fontWeight: '800',
     fontVariant: ['tabular-nums'],
+    color: '#FF8800',
   },
   borderAlertCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: '#15171E',
     borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: '#BFDBFE',
+    borderWidth: 1,
+    borderColor: '#272B35',
     padding: 14,
     marginBottom: 14,
-    ...SHADOWS.sm,
   },
   borderAlertLeft: {
     flex: 1,
@@ -761,9 +761,11 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#1D2029',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#272B35',
   },
   borderAlertBadgeRow: {
     flexDirection: 'row',
@@ -774,31 +776,30 @@ const styles = StyleSheet.create({
   borderAlertTitle: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1E3A8A',
+    color: '#FFFFFF',
   },
   borderAlertSubtitle: {
     fontSize: 11,
-    color: '#3B82F6',
+    color: '#94A3B8',
   },
   borderProgressHint: {
     fontSize: 10,
     fontWeight: '700',
-    color: COLORS.emerald[700],
+    color: '#FF8800',
     marginTop: 3,
   },
   sectionCard: {
-    backgroundColor: COLORS.white,
+    backgroundColor: '#15171E',
     borderRadius: 18,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray[200],
+    borderWidth: 1,
+    borderColor: '#272B35',
     padding: 16,
     marginBottom: 14,
-    ...SHADOWS.sm,
   },
   sectionHeading: {
     fontSize: 15,
     fontWeight: '800',
-    color: COLORS.gray[900],
+    color: '#FFFFFF',
     marginBottom: 12,
   },
   timelineRow: {
@@ -812,19 +813,19 @@ const styles = StyleSheet.create({
   },
   timelineTime: {
     fontSize: 20,
-    fontWeight: '800',
-    color: COLORS.gray[900],
+    fontWeight: '900',
+    color: '#FFFFFF',
     fontVariant: ['tabular-nums'],
   },
   timelineCity: {
     fontSize: 14,
-    fontWeight: '700',
-    color: COLORS.gray[800],
+    fontWeight: '800',
+    color: '#FFFFFF',
     marginTop: 2,
   },
   timelineAddress: {
     fontSize: 11,
-    color: COLORS.gray[500],
+    color: '#94A3B8',
     marginTop: 1,
   },
   timelineMiddle: {
@@ -835,7 +836,7 @@ const styles = StyleSheet.create({
   durationBadgeText: {
     fontSize: 10,
     fontWeight: '700',
-    color: COLORS.gray[500],
+    color: '#94A3B8',
     marginBottom: 4,
   },
   timelineBarContainer: {
@@ -847,33 +848,33 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#FF8800',
   },
   timelineDotEnd: {
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#FF8800',
   },
   timelineBar: {
     flex: 1,
-    height: 2,
-    backgroundColor: COLORS.gray[300],
+    height: 1.5,
+    backgroundColor: '#272B35',
   },
   routeDirectText: {
     fontSize: 10,
-    color: COLORS.emerald[700],
-    fontWeight: '600',
+    color: '#FF8800',
+    fontWeight: '700',
     marginTop: 4,
   },
   stopsContainer: {
     marginTop: 10,
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: COLORS.gray[100],
+    borderTopColor: '#1E222A',
     gap: 6,
   },
   stopsHeader: {
     fontSize: 11,
     fontWeight: '700',
-    color: COLORS.gray[500],
+    color: '#64748B',
     textTransform: 'uppercase',
   },
   stopItem: {
@@ -885,37 +886,37 @@ const styles = StyleSheet.create({
     width: 5,
     height: 5,
     borderRadius: 2.5,
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#FF8800',
   },
   stopText: {
     fontSize: 12,
     fontWeight: '600',
-    color: COLORS.gray[700],
+    color: '#CBD5E1',
     flex: 1,
   },
   stopTime: {
     fontSize: 11,
-    color: COLORS.gray[400],
+    color: '#94A3B8',
     fontVariant: ['tabular-nums'],
   },
   selectedSeatsSummary: {
     marginTop: 12,
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: COLORS.gray[100],
+    borderTopColor: '#1E222A',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   selectedSeatsLabel: {
     fontSize: 12,
-    color: COLORS.gray[500],
+    color: '#94A3B8',
     fontWeight: '600',
   },
   selectedSeatsList: {
     fontSize: 13,
     fontWeight: '800',
-    color: COLORS.emerald[700],
+    color: '#FF8800',
   },
   driverRow: {
     flexDirection: 'row',
@@ -927,7 +928,7 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: COLORS.gray[200],
+    backgroundColor: '#1D2029',
   },
   driverMainInfo: {
     flex: 1,
@@ -942,7 +943,7 @@ const styles = StyleSheet.create({
   driverName: {
     fontSize: 14,
     fontWeight: '800',
-    color: COLORS.gray[900],
+    color: '#FFFFFF',
   },
   driverMetaRow: {
     flexDirection: 'row',
@@ -953,26 +954,26 @@ const styles = StyleSheet.create({
   driverRating: {
     fontSize: 12,
     fontWeight: '800',
-    color: COLORS.gray[800],
+    color: '#FF8800',
   },
   driverTrips: {
     fontSize: 12,
-    color: COLORS.gray[500],
+    color: '#94A3B8',
   },
   driverYear: {
     fontSize: 12,
-    color: COLORS.gray[400],
+    color: '#64748B',
   },
   driverLanguages: {
     fontSize: 11,
-    color: COLORS.gray[500],
+    color: '#94A3B8',
   },
   vehicleBox: {
-    backgroundColor: COLORS.gray[50],
+    backgroundColor: '#11141B',
     borderRadius: 12,
     padding: 12,
     borderWidth: 1,
-    borderColor: COLORS.gray[200],
+    borderColor: '#272B35',
   },
   vehicleHeader: {
     flexDirection: 'row',
@@ -983,21 +984,21 @@ const styles = StyleSheet.create({
   vehicleName: {
     fontSize: 13,
     fontWeight: '700',
-    color: COLORS.gray[800],
+    color: '#FFFFFF',
     flex: 1,
   },
   plateBadge: {
-    backgroundColor: COLORS.white,
+    backgroundColor: '#1D2029',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: COLORS.gray[300],
+    borderColor: '#272B35',
   },
   plateText: {
     fontSize: 11,
     fontWeight: '800',
-    color: COLORS.gray[800],
+    color: '#FF8800',
   },
   amenitiesGrid: {
     flexDirection: 'row',
@@ -1011,7 +1012,7 @@ const styles = StyleSheet.create({
   },
   amenityText: {
     fontSize: 11,
-    color: COLORS.gray[600],
+    color: '#94A3B8',
     fontWeight: '600',
   },
   formGroup: {
@@ -1026,21 +1027,21 @@ const styles = StyleSheet.create({
   formLabel: {
     fontSize: 11,
     fontWeight: '700',
-    color: COLORS.gray[700],
+    color: '#CBD5E1',
     marginBottom: 4,
   },
   requiredHint: {
     fontSize: 10,
-    color: COLORS.red[600],
+    color: '#F87171',
     fontWeight: '600',
   },
   formInputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.gray[50],
+    backgroundColor: '#0C0D11',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: COLORS.gray[200],
+    borderColor: '#272B35',
     paddingHorizontal: 12,
     paddingVertical: 9,
     gap: 8,
@@ -1048,7 +1049,7 @@ const styles = StyleSheet.create({
   formInput: {
     flex: 1,
     fontSize: 14,
-    color: COLORS.gray[900],
+    color: '#FFFFFF',
     fontWeight: '600',
     padding: 0,
   },
@@ -1064,70 +1065,75 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    backgroundColor: COLORS.gray[50],
+    backgroundColor: '#0C0D11',
     borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray[200],
+    borderWidth: 1,
+    borderColor: '#272B35',
     paddingVertical: 10,
   },
   paymentOptionActive: {
-    backgroundColor: '#090D16',
-    borderColor: '#090D16',
+    backgroundColor: '#FF8800',
+    borderColor: '#FF8800',
   },
   paymentOptionText: {
     fontSize: 12,
     fontWeight: '700',
-    color: COLORS.gray[700],
+    color: '#94A3B8',
   },
   paymentOptionTextActive: {
-    color: '#FFFFFF',
+    color: '#0C0D11',
+    fontWeight: '900',
   },
   bottomBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: COLORS.white,
+    backgroundColor: '#15171E',
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderTopWidth: 1,
-    borderTopColor: COLORS.gray[200],
-    ...SHADOWS.lg,
+    borderTopColor: '#272B35',
   },
   bottomPriceCol: {
     flex: 1,
   },
   bottomPriceLabel: {
     fontSize: 11,
-    color: COLORS.gray[500],
+    color: '#64748B',
     fontWeight: '600',
   },
   bottomPriceAmount: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#090D16',
+    color: '#FF8800',
     fontVariant: ['tabular-nums'],
     letterSpacing: -0.3,
   },
   bottomPriceCurrency: {
     fontSize: 13,
     fontWeight: '700',
+    color: '#FF9E2C',
   },
   bookButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: '#090D16',
+    backgroundColor: '#FF8800',
     paddingHorizontal: 20,
     paddingVertical: 13,
     borderRadius: 12,
-    ...SHADOWS.sm,
+    shadowColor: '#FF8800',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.35,
+    shadowRadius: 6,
+    elevation: 4,
   },
   bookButtonDisabled: {
-    backgroundColor: COLORS.gray[300],
+    backgroundColor: '#272B35',
   },
   bookButtonText: {
     fontSize: 14,
-    fontWeight: '800',
-    color: COLORS.white,
+    fontWeight: '900',
+    color: '#0C0D11',
   },
 });

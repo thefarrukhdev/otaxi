@@ -363,20 +363,20 @@ export const RouteMap: React.FC<RouteMapProps> = React.memo(
 
     // Theme color palette
     const themeColors = {
-      cardBg: isDark ? '#0F172A' : '#FFFFFF',
-      cardBorder: isDark ? '#1E293B' : '#E2E8F0',
-      canvasBg: isDark ? '#090D16' : '#F8FAFC',
-      roadCasing: isDark ? '#1E293B' : '#E2E8F0',
-      roadBed: isDark ? '#090D16' : '#FFFFFF',
+      cardBg: isDark ? '#15171E' : '#FFFFFF',
+      cardBorder: isDark ? '#272B35' : '#E2E8F0',
+      canvasBg: isDark ? '#0C0D11' : '#F8FAFC',
+      roadCasing: isDark ? '#272B35' : '#E2E8F0',
+      roadBed: isDark ? '#15171E' : '#FFFFFF',
       roadDivider: isDark ? '#334155' : '#CBD5E1',
-      roadActive: isDark ? '#F59E0B' : '#059669',
-      roadActiveGlow: isDark ? 'rgba(245, 158, 11, 0.3)' : 'rgba(5, 150, 105, 0.25)',
-      textPrimary: isDark ? '#F8FAFC' : '#0F172A',
+      roadActive: '#FF8800',
+      roadActiveGlow: 'rgba(255, 136, 0, 0.35)',
+      textPrimary: isDark ? '#FFFFFF' : '#0F172A',
       textSecondary: isDark ? '#94A3B8' : '#64748B',
       textMuted: isDark ? '#64748B' : '#94A3B8',
-      hudBg: isDark ? '#111827' : '#F1F5F9',
-      hudBorder: isDark ? '#1F2937' : '#E2E8F0',
-      radarColor: isDark ? '#F59E0B' : '#059669',
+      hudBg: isDark ? '#12141A' : '#F1F5F9',
+      hudBorder: isDark ? '#272B35' : '#E2E8F0',
+      radarColor: '#FF8800',
     };
 
     const handleBorderPress = () => {

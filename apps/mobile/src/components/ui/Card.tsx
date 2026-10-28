@@ -37,34 +37,32 @@ export const Card: React.FC<CardProps> = React.memo(
     const { isDriver, palette } = useTheme();
 
     const getVariantStyles = (): ViewStyle => {
-      const isDark = isDriver;
-
       switch (variant) {
         case 'elevated':
           return {
-            backgroundColor: isDark ? COLORS.navy[900] : COLORS.white,
-            borderColor: isDark ? COLORS.navy[800] : COLORS.gray[100],
+            backgroundColor: '#1D2029',
+            borderColor: '#272B35',
             borderWidth: 1,
-            ...(isDark ? SHADOWS.sm : SHADOWS.md),
+            ...SHADOWS.sm,
           };
         case 'outlined':
           return {
-            backgroundColor: isDark ? COLORS.navy[900] : COLORS.white,
-            borderColor: isDark ? COLORS.navy[700] : COLORS.gray[200],
+            backgroundColor: '#15171E',
+            borderColor: '#272B35',
             borderWidth: 1.5,
           };
         case 'glass':
           return {
-            backgroundColor: isDark ? 'rgba(17, 24, 39, 0.85)' : 'rgba(255, 255, 255, 0.92)',
-            borderColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
+            backgroundColor: 'rgba(21, 23, 30, 0.85)',
+            borderColor: 'rgba(255, 255, 255, 0.08)',
             borderWidth: 1,
             backdropFilter: 'blur(10px)',
           } as ViewStyle;
         case 'surface':
         default:
           return {
-            backgroundColor: isDark ? palette.surface : palette.surface,
-            borderColor: palette.border,
+            backgroundColor: '#15171E',
+            borderColor: '#272B35',
             borderWidth: 1,
             ...SHADOWS.sm,
           };

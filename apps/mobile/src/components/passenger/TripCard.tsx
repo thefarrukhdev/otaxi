@@ -99,16 +99,16 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
 
           {trip.driver.isVerified && (
             <Badge
-              label="Tekshirilgan haydovchi ★"
+              label="Tekshirilgan ★"
               variant="success"
-              icon={<ShieldCheck size={12} color={COLORS.emerald[700]} />}
+              icon={<ShieldCheck size={12} color="#FF8800" />}
             />
           )}
         </View>
 
         <View style={[styles.seatsPill, isLowSeats && styles.seatsPillWarning]}>
           <Text style={[styles.seatsText, isLowSeats && styles.seatsTextWarning]}>
-            {isLowSeats ? "Oxirgi 1 ta bo'sh joy!" : `${trip.availableSeats} ta bo'sh o'rindiq`}
+            {isLowSeats ? "Oxirgi 1 ta joy!" : `${trip.availableSeats} ta bo'sh joy`}
           </Text>
         </View>
       </View>
@@ -125,7 +125,7 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
 
         <View style={styles.timelineMiddle}>
           <View style={styles.durationBadge}>
-            <Clock size={11} color={COLORS.gray[500]} />
+            <Clock size={11} color="#94A3B8" />
             <Text style={styles.durationText}>{durationStr}</Text>
           </View>
           <View style={styles.timelineLine}>
@@ -171,12 +171,12 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
               {trip.driver.fullName}
             </Text>
             <View style={styles.ratingRow}>
-              <Star size={13} color={COLORS.amber[500]} fill={COLORS.amber[500]} />
+              <Star size={13} color="#FF8800" fill="#FF8800" />
               <Text style={styles.ratingText}>
                 {trip.driver.rating.toFixed(2)}★
               </Text>
               <Text style={styles.reviewsCount}>
-                ({trip.driver.totalTrips} ta safar)
+                ({trip.driver.totalTrips})
               </Text>
             </View>
           </View>
@@ -184,7 +184,7 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
 
         <View style={styles.vehicleInfo}>
           <View style={styles.carModelRow}>
-            <Car size={13} color={COLORS.gray[600]} />
+            <Car size={13} color="#94A3B8" />
             <Text style={styles.carModelText} numberOfLines={1}>
               {trip.vehicle.make} {trip.vehicle.model}
             </Text>
@@ -192,21 +192,21 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
           <View style={styles.amenitiesIcons}>
             {trip.vehicle.hasAirConditioner && (
               <View style={styles.amenityChip}>
-                <Wind size={11} color={COLORS.emerald[700]} />
+                <Wind size={11} color="#FF8800" />
                 <Text style={styles.amenityChipText}>Konditsioner</Text>
               </View>
             )}
             {trip.allowLuggage && (
               <View style={styles.amenityChip}>
-                <Luggage size={11} color={COLORS.gray[600]} />
+                <Luggage size={11} color="#94A3B8" />
                 <Text style={styles.amenityChipText}>Yukxona</Text>
               </View>
             )}
             {trip.vehicle.hasPhoneCharging && (
-              <BatteryCharging size={13} color={COLORS.blue[600]} />
+              <BatteryCharging size={13} color="#60A5FA" />
             )}
             {trip.vehicle.noSmoking && (
-              <CigaretteOff size={13} color={COLORS.gray[500]} />
+              <CigaretteOff size={13} color="#64748B" />
             )}
           </View>
         </View>
@@ -215,7 +215,7 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
       {/* Bottom Price & Call To Action */}
       <View style={styles.footerRow}>
         <View>
-          <Text style={styles.priceLabel}>1 ta o'rindiq narxi:</Text>
+          <Text style={styles.priceLabel}>1 ta o'rindiq:</Text>
           <Text style={styles.priceValue}>
             {trip.pricePerSeat.toLocaleString('uz-UZ')}{' '}
             <Text style={styles.priceCurrency}>{trip.currency}</Text>
@@ -224,7 +224,7 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
 
         <View style={styles.bookButtonFake}>
           <Text style={styles.bookButtonText}>Tanlash</Text>
-          <ChevronRight size={16} color={COLORS.white} />
+          <ChevronRight size={16} color="#0C0D11" strokeWidth={2.8} />
         </View>
       </View>
     </TouchableOpacity>
@@ -235,13 +235,17 @@ TripCard.displayName = 'TripCard';
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: COLORS.white,
+    backgroundColor: '#15171E',
     borderRadius: 18,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray[200],
+    borderWidth: 1,
+    borderColor: '#272B35',
     padding: 16,
     marginBottom: 12,
-    ...SHADOWS.sm,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 3,
   },
   topRow: {
     flexDirection: 'row',
@@ -258,24 +262,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   seatsPill: {
-    backgroundColor: COLORS.emerald[50],
+    backgroundColor: 'rgba(255, 136, 0, 0.12)',
     paddingHorizontal: 9,
     paddingVertical: 4,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: COLORS.emerald[200],
+    borderColor: 'rgba(255, 136, 0, 0.35)',
   },
   seatsPillWarning: {
-    backgroundColor: COLORS.red[50],
-    borderColor: COLORS.red[200],
+    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+    borderColor: 'rgba(239, 68, 68, 0.35)',
   },
   seatsText: {
     fontSize: 11,
-    fontWeight: '700',
-    color: COLORS.emerald[800],
+    fontWeight: '800',
+    color: '#FF8800',
   },
   seatsTextWarning: {
-    color: COLORS.red[600],
+    color: '#F87171',
   },
   timelineRow: {
     flexDirection: 'row',
@@ -284,27 +288,27 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray[100],
+    borderBottomColor: '#1E222A',
   },
   timePoint: {
     flex: 1,
   },
   timeText: {
     fontSize: 22,
-    fontWeight: '800',
-    color: COLORS.gray[900],
+    fontWeight: '900',
+    color: '#FFFFFF',
     fontVariant: ['tabular-nums'],
     letterSpacing: -0.5,
   },
   cityName: {
     fontSize: 14,
-    fontWeight: '700',
-    color: COLORS.gray[800],
+    fontWeight: '800',
+    color: '#FFFFFF',
     marginTop: 2,
   },
   addressName: {
     fontSize: 11,
-    color: COLORS.gray[400],
+    color: '#94A3B8',
     marginTop: 2,
   },
   timelineMiddle: {
@@ -317,11 +321,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     marginBottom: 5,
+    backgroundColor: '#1D2029',
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#272B35',
   },
   durationText: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '700',
-    color: COLORS.gray[600],
+    color: '#94A3B8',
   },
   timelineLine: {
     flexDirection: 'row',
@@ -332,25 +342,25 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#FF8800',
   },
   lineDash: {
     flex: 1,
-    height: 2,
-    backgroundColor: COLORS.gray[300],
+    height: 1.5,
+    backgroundColor: '#272B35',
   },
   lineDotRight: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: COLORS.emerald[600],
+    backgroundColor: '#FF8800',
   },
   directPill: {
     marginTop: 4,
   },
   directPillText: {
     fontSize: 10,
-    color: '#475569',
+    color: '#64748B',
     fontWeight: '600',
   },
   driverSection: {
@@ -370,44 +380,46 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: COLORS.gray[200],
+    backgroundColor: '#1D2029',
   },
   driverAvatarFallback: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: '#252934',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#272B35',
   },
   driverAvatarText: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#090D16',
+    color: '#FF8800',
   },
   driverDetails: {
     flex: 1,
   },
   driverName: {
     fontSize: 13,
-    fontWeight: '700',
-    color: COLORS.gray[900],
+    fontWeight: '800',
+    color: '#FFFFFF',
   },
   ratingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 2,
+    gap: 3,
     marginTop: 2,
   },
   ratingText: {
     fontSize: 11,
     fontWeight: '800',
-    color: COLORS.gray[800],
+    color: '#FF8800',
     fontVariant: ['tabular-nums'],
   },
   reviewsCount: {
     fontSize: 11,
-    color: COLORS.gray[400],
+    color: '#64748B',
     marginLeft: 2,
   },
   vehicleInfo: {
@@ -422,7 +434,7 @@ const styles = StyleSheet.create({
   carModelText: {
     fontSize: 12,
     fontWeight: '700',
-    color: COLORS.gray[700],
+    color: '#CBD5E1',
   },
   amenitiesIcons: {
     flexDirection: 'row',
@@ -433,14 +445,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    backgroundColor: COLORS.gray[100],
+    backgroundColor: '#1D2029',
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#272B35',
   },
   amenityChipText: {
     fontSize: 9,
-    color: COLORS.gray[600],
+    color: '#94A3B8',
     fontWeight: '600',
   },
   footerRow: {
@@ -449,38 +463,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: COLORS.gray[100],
+    borderTopColor: '#1E222A',
   },
   priceLabel: {
     fontSize: 10,
-    color: COLORS.gray[500],
-    fontWeight: '600',
+    color: '#64748B',
+    fontWeight: '700',
     textTransform: 'uppercase',
   },
   priceValue: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#090D16',
+    color: '#FF8800',
     fontVariant: ['tabular-nums'],
     letterSpacing: -0.3,
   },
   priceCurrency: {
     fontSize: 12,
     fontWeight: '700',
+    color: '#FF9E2C',
   },
   bookButtonFake: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#090D16',
+    backgroundColor: '#FF8800',
     paddingHorizontal: 15,
     paddingVertical: 9,
     borderRadius: 10,
-    ...SHADOWS.sm,
+    shadowColor: '#FF8800',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 3,
   },
   bookButtonText: {
     fontSize: 13,
-    fontWeight: '700',
-    color: COLORS.white,
+    fontWeight: '900',
+    color: '#0C0D11',
   },
 });

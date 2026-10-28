@@ -68,7 +68,7 @@ export const BorderChecklistModal: React.FC<BorderChecklistModalProps> = React.m
           <View style={styles.header}>
             <View style={styles.headerLeft}>
               <View style={styles.iconCircle}>
-                <ShieldCheck size={22} color={COLORS.emerald[600]} />
+                <ShieldCheck size={22} color="#FF8800" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.headerTitle} numberOfLines={1}>
@@ -80,7 +80,7 @@ export const BorderChecklistModal: React.FC<BorderChecklistModalProps> = React.m
               </View>
             </View>
             <TouchableOpacity style={styles.closeBtn} onPress={onClose} activeOpacity={0.7}>
-              <X size={20} color={COLORS.gray[500]} />
+              <X size={20} color="#94A3B8" />
             </TouchableOpacity>
           </View>
 
@@ -203,7 +203,7 @@ BorderChecklistModal.displayName = 'BorderChecklistModal';
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#0C0D11',
   },
   header: {
     flexDirection: 'row',
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray[200],
+    borderBottomColor: '#272B35',
   },
   headerLeft: {
     flexDirection: 'row',
@@ -225,24 +225,26 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: COLORS.emerald[50],
+    backgroundColor: '#1D2029',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#272B35',
   },
   headerTitle: {
     fontSize: 16,
     fontWeight: '800',
-    color: COLORS.gray[900],
+    color: '#FFFFFF',
   },
   headerSubtitle: {
     fontSize: 12,
-    color: COLORS.gray[500],
+    color: '#94A3B8',
     marginTop: 2,
   },
   closeBtn: {
     padding: 6,
     borderRadius: 20,
-    backgroundColor: COLORS.gray[100],
+    backgroundColor: '#1D2029',
   },
   progressCard: {
     flexDirection: 'row',
@@ -251,9 +253,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 12,
     borderRadius: 14,
-    backgroundColor: COLORS.gray[50],
+    backgroundColor: '#15171E',
     borderWidth: 1,
-    borderColor: COLORS.gray[200],
+    borderColor: '#272B35',
     gap: 14,
   },
   progressInfo: {
@@ -262,12 +264,12 @@ const styles = StyleSheet.create({
   progressTitle: {
     fontSize: 14,
     fontWeight: '700',
-    color: COLORS.gray[900],
+    color: '#FFFFFF',
     marginBottom: 4,
   },
   progressSubtitle: {
     fontSize: 12,
-    color: COLORS.gray[600],
+    color: '#94A3B8',
     lineHeight: 16,
   },
   scrollView: {
@@ -280,18 +282,18 @@ const styles = StyleSheet.create({
   noticeBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.amber[50],
+    backgroundColor: 'rgba(255, 136, 0, 0.12)',
     padding: 12,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: COLORS.amber[200],
+    borderColor: 'rgba(255, 136, 0, 0.35)',
     gap: 10,
     marginBottom: 16,
   },
   noticeText: {
     flex: 1,
     fontSize: 12,
-    color: COLORS.amber[900],
+    color: '#FFA033',
     lineHeight: 17,
   },
   itemsList: {
@@ -301,15 +303,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 14,
     borderRadius: 12,
-    backgroundColor: COLORS.white,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray[200],
+    backgroundColor: '#15171E',
+    borderWidth: 1,
+    borderColor: '#272B35',
     alignItems: 'flex-start',
     gap: 12,
   },
   itemCardChecked: {
-    backgroundColor: COLORS.emerald[50],
-    borderColor: COLORS.emerald[300],
+    backgroundColor: '#1D2029',
+    borderColor: 'rgba(255, 136, 0, 0.4)',
   },
   checkboxWrapper: {
     marginTop: 1,
@@ -327,33 +329,33 @@ const styles = StyleSheet.create({
   itemIndexText: {
     fontSize: 12,
     fontWeight: '800',
-    color: COLORS.gray[400],
+    color: '#64748B',
   },
   itemTitle: {
     fontSize: 14,
     fontWeight: '700',
-    color: COLORS.gray[900],
+    color: '#FFFFFF',
     flex: 1,
   },
   itemTitleChecked: {
-    color: COLORS.emerald[900],
+    color: '#FF8800',
   },
   requiredBadge: {
-    backgroundColor: COLORS.red[50],
+    backgroundColor: 'rgba(239, 68, 68, 0.15)',
     paddingHorizontal: 6,
     paddingVertical: 1,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: COLORS.red[200],
+    borderColor: 'rgba(239, 68, 68, 0.35)',
   },
   requiredBadgeText: {
     fontSize: 10,
     fontWeight: '700',
-    color: COLORS.red[600],
+    color: '#F87171',
   },
   itemDescription: {
     fontSize: 12,
-    color: COLORS.gray[600],
+    color: '#94A3B8',
     lineHeight: 17,
   },
   ackBox: {
@@ -362,22 +364,22 @@ const styles = StyleSheet.create({
     padding: 12,
     marginTop: 16,
     borderRadius: 10,
-    backgroundColor: COLORS.gray[50],
+    backgroundColor: '#15171E',
     borderWidth: 1,
-    borderColor: COLORS.gray[200],
+    borderColor: '#272B35',
     gap: 10,
   },
   ackText: {
     flex: 1,
     fontSize: 12,
     fontWeight: '600',
-    color: COLORS.gray[700],
+    color: '#CBD5E1',
     lineHeight: 16,
   },
   bottomBar: {
     padding: 16,
     borderTopWidth: 1,
-    borderTopColor: COLORS.gray[200],
-    backgroundColor: COLORS.white,
+    borderTopColor: '#272B35',
+    backgroundColor: '#15171E',
   },
 });

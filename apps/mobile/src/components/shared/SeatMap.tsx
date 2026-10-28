@@ -147,15 +147,15 @@ export const SeatMap: React.FC<SeatMapProps> = React.memo(
         {/* Legend */}
         <View style={styles.legendContainer}>
           <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: COLORS.emerald[50], borderColor: COLORS.emerald[400] }]} />
+            <View style={[styles.legendDot, { backgroundColor: '#1A1D26', borderColor: '#2A303F' }]} />
             <Text style={styles.legendText}>Bo’sh joy</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: COLORS.emerald[600], borderColor: COLORS.emerald[700] }]} />
+            <View style={[styles.legendDot, { backgroundColor: '#FF8800', borderColor: '#FF8800' }]} />
             <Text style={styles.legendText}>Tanlangan</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: COLORS.gray[200], borderColor: COLORS.gray[300] }]} />
+            <View style={[styles.legendDot, { backgroundColor: '#15171E', borderColor: '#272B35' }]} />
             <Text style={styles.legendText}>Band qilingan</Text>
           </View>
         </View>
@@ -168,12 +168,12 @@ SeatMap.displayName = 'SeatMap';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.white,
+    backgroundColor: '#15171E',
     borderRadius: 16,
     padding: 16,
     marginVertical: 10,
     borderWidth: 1,
-    borderColor: COLORS.gray[200],
+    borderColor: '#272B35',
     ...SHADOWS.sm,
   },
   headerRow: {
@@ -182,18 +182,18 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 16,
     fontWeight: '800',
-    color: COLORS.gray[900],
+    color: '#FFFFFF',
   },
   subheading: {
     fontSize: 12,
-    color: COLORS.gray[500],
+    color: '#94A3B8',
     marginTop: 2,
   },
   carBody: {
-    backgroundColor: COLORS.gray[50],
+    backgroundColor: '#0C0D11',
     borderRadius: 24,
-    borderWidth: 2,
-    borderColor: COLORS.gray[300],
+    borderWidth: 1.5,
+    borderColor: '#272B35',
     padding: 14,
     paddingTop: 10,
   },
@@ -201,20 +201,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 14,
     paddingBottom: 8,
-    borderBottomWidth: 1.5,
-    borderBottomColor: COLORS.gray[200],
+    borderBottomWidth: 1,
+    borderBottomColor: '#272B35',
   },
   windshieldLine: {
     width: 60,
     height: 3,
-    backgroundColor: COLORS.gray[300],
+    backgroundColor: '#272B35',
     borderRadius: 2,
     marginBottom: 4,
   },
   windshieldText: {
     fontSize: 11,
     fontWeight: '700',
-    color: COLORS.gray[400],
+    color: '#64748B',
     letterSpacing: 0.3,
   },
   row: {
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   aisleDivider: {
     width: '90%',
     height: 1,
-    backgroundColor: COLORS.gray[200],
+    backgroundColor: '#1E222A',
   },
   seatBox: {
     flex: 1,
@@ -246,19 +246,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     position: 'relative',
-    backgroundColor: COLORS.white,
+    backgroundColor: '#1A1D26',
+    borderColor: '#2A303F',
   },
   seatTopPillow: {
     width: 26,
     height: 4,
-    backgroundColor: COLORS.gray[300],
+    backgroundColor: '#272B35',
     borderRadius: 2,
   },
   seatTopPillowSelected: {
-    backgroundColor: '#64748B',
+    backgroundColor: '#0C0D11',
   },
   seatTopPillowOccupied: {
-    backgroundColor: COLORS.gray[300],
+    backgroundColor: '#1E222A',
   },
   vipTag: {
     position: 'absolute',
@@ -267,34 +268,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 2,
-    backgroundColor: COLORS.amber[50],
+    backgroundColor: 'rgba(255, 136, 0, 0.15)',
     borderWidth: 1,
-    borderColor: COLORS.amber[200],
+    borderColor: '#FF8800',
     paddingHorizontal: 4,
     paddingVertical: 1,
     borderRadius: 4,
   },
   vipText: {
     fontSize: 8,
-    fontWeight: '800',
-    color: COLORS.amber[700],
+    fontWeight: '900',
+    color: '#FF8800',
   },
   seatAvailable: {
-    backgroundColor: COLORS.white,
-    borderColor: '#CBD5E1',
+    backgroundColor: '#1A1D26',
+    borderColor: '#2A303F',
   },
   seatSelected: {
-    backgroundColor: '#090D16',
-    borderColor: '#090D16',
+    backgroundColor: '#FF8800',
+    borderColor: '#FF8800',
+    shadowColor: '#FF8800',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.35,
+    shadowRadius: 6,
+    elevation: 4,
   },
   seatOccupied: {
-    backgroundColor: COLORS.gray[100],
-    borderColor: COLORS.gray[200],
-    opacity: 0.65,
+    backgroundColor: '#12141A',
+    borderColor: '#1E222A',
+    opacity: 0.6,
   },
   driverSeat: {
-    backgroundColor: COLORS.gray[100],
-    borderColor: COLORS.gray[300],
+    backgroundColor: '#15171E',
+    borderColor: '#272B35',
     borderStyle: 'dashed',
     justifyContent: 'center',
     gap: 6,
@@ -303,17 +309,17 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#1E222A',
     alignItems: 'center',
     justifyContent: 'center',
   },
   driverSeatText: {
     fontSize: 11,
     fontWeight: '700',
-    color: COLORS.gray[600],
+    color: '#94A3B8',
   },
   driverBadge: {
-    backgroundColor: COLORS.gray[200],
+    backgroundColor: '#1E222A',
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
@@ -321,7 +327,7 @@ const styles = StyleSheet.create({
   driverBadgeText: {
     fontSize: 9,
     fontWeight: '700',
-    color: COLORS.gray[600],
+    color: '#64748B',
   },
   seatContent: {
     alignItems: 'center',
@@ -332,14 +338,14 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#1E293B',
+    backgroundColor: '#0C0D11',
     alignItems: 'center',
     justifyContent: 'center',
   },
   seatNum: {
     fontSize: 14,
-    fontWeight: '800',
-    color: COLORS.gray[800],
+    fontWeight: '900',
+    color: '#FFFFFF',
   },
   seatLabel: {
     fontSize: 10,
@@ -347,39 +353,40 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textAvailable: {
-    color: COLORS.gray[700],
+    color: '#94A3B8',
   },
   textSelected: {
-    color: COLORS.white,
+    color: '#0C0D11',
+    fontWeight: '800',
   },
   textOccupied: {
-    color: COLORS.gray[400],
+    color: '#475569',
   },
   priceTag: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#12141A',
     paddingHorizontal: 6,
     paddingVertical: 3,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: '#272B35',
     width: '100%',
     alignItems: 'center',
   },
   priceTagSelected: {
-    backgroundColor: '#1E293B',
-    borderColor: '#334155',
+    backgroundColor: '#0C0D11',
+    borderColor: '#0C0D11',
   },
   priceText: {
     fontSize: 9,
     fontWeight: '800',
-    color: '#090D16',
+    color: '#FF8800',
     fontVariant: ['tabular-nums'],
   },
   priceTextSelected: {
-    color: COLORS.white,
+    color: '#FF8800',
   },
   occupiedTag: {
-    backgroundColor: COLORS.gray[200],
+    backgroundColor: '#1E222A',
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
@@ -387,7 +394,7 @@ const styles = StyleSheet.create({
   occupiedText: {
     fontSize: 9,
     fontWeight: '700',
-    color: COLORS.gray[500],
+    color: '#64748B',
   },
   legendContainer: {
     flexDirection: 'row',
@@ -396,7 +403,7 @@ const styles = StyleSheet.create({
     marginTop: 14,
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: COLORS.gray[100],
+    borderTopColor: '#272B35',
   },
   legendItem: {
     flexDirection: 'row',
@@ -411,7 +418,7 @@ const styles = StyleSheet.create({
   },
   legendText: {
     fontSize: 11,
-    color: COLORS.gray[600],
+    color: '#94A3B8',
     fontWeight: '600',
   },
 });

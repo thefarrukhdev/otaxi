@@ -24,7 +24,7 @@ import {
   Clock,
   Star,
   Users,
-  ChevronRight,
+  ArrowRight,
 } from 'lucide-react-native';
 
 interface HomeScreenProps {
@@ -94,7 +94,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           <Text style={styles.heroTitle}>Qayerga borasiz?</Text>
         </View>
 
-        {/* Active Booking Minimal Banner */}
+        {/* Active Booking Banner */}
         {activeBooking && (
           <ActiveRideBanner
             booking={activeBooking}
@@ -103,7 +103,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           />
         )}
 
-        {/* Minimal Search Card */}
+        {/* Taxi Orange & Dark Noir Search Card */}
         <View style={styles.searchCard}>
           {/* Route Section */}
           <View style={styles.routeBox}>
@@ -116,13 +116,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <View style={styles.inputsCol}>
               {/* From */}
               <View style={styles.inputItem}>
-                <Text style={styles.inputMiniLabel}>Qayerdan</Text>
+                <Text style={styles.inputMiniLabel}>QAYERDAN</Text>
                 <TextInput
                   style={styles.inputField}
                   value={fromCity}
                   onChangeText={setFromCity}
                   placeholder="Shahar nomi"
-                  placeholderTextColor="#94A3B8"
+                  placeholderTextColor="#64748B"
                 />
               </View>
 
@@ -130,13 +130,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
               {/* To */}
               <View style={styles.inputItem}>
-                <Text style={styles.inputMiniLabel}>Qayerga</Text>
+                <Text style={styles.inputMiniLabel}>QAYERGA</Text>
                 <TextInput
                   style={styles.inputField}
                   value={toCity}
                   onChangeText={setToCity}
                   placeholder="Samarqand, Shymkent..."
-                  placeholderTextColor="#94A3B8"
+                  placeholderTextColor="#64748B"
                 />
               </View>
             </View>
@@ -148,7 +148,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 onPress={handleSwapCities}
                 activeOpacity={0.7}
               >
-                <ArrowUpDown size={14} color="#475569" />
+                <ArrowUpDown size={14} color="#FF8800" />
               </TouchableOpacity>
             ) : null}
           </View>
@@ -215,7 +215,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               </TouchableOpacity>
 
               <View style={styles.passengersValueRow}>
-                <Users size={12} color="#64748B" />
+                <Users size={12} color="#94A3B8" />
                 <Text style={styles.passengersNum}>{passengersCount}</Text>
               </View>
 
@@ -235,18 +235,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Search CTA */}
+          {/* Taxi Orange Primary CTA Button (matches user's screenshot) */}
           <TouchableOpacity
             style={styles.searchButton}
             onPress={handleSearch}
-            activeOpacity={0.85}
+            activeOpacity={0.88}
           >
-            <Search size={16} color="#FFFFFF" strokeWidth={2.5} />
+            <Search size={18} color="#0C0D11" strokeWidth={2.8} />
             <Text style={styles.searchButtonText}>
               {matchingTrips.length > 0
                 ? `Reyslarni ko'rish (${matchingTrips.length})`
                 : 'Reyslarni qidirish'}
             </Text>
+            <View style={styles.ctaArrowCircle}>
+              <ArrowRight size={14} color="#FFFFFF" strokeWidth={3} />
+            </View>
           </TouchableOpacity>
         </View>
 
@@ -284,7 +287,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                     Haptics.light();
                     navigation.navigate('TripDetails', { tripId: trip.id });
                   }}
-                  activeOpacity={0.75}
+                  activeOpacity={0.78}
                 >
                   <View style={styles.tripCardLeft}>
                     <View style={styles.tripRouteRow}>
@@ -296,14 +299,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
                     <View style={styles.tripMetaRow}>
                       <View style={styles.timeTag}>
-                        <Clock size={11} color="#64748B" />
+                        <Clock size={11} color="#94A3B8" />
                         <Text style={styles.timeTagText}>{depTime}</Text>
                       </View>
                       <Text style={styles.metaDot}>•</Text>
                       <Text style={styles.carText}>{trip.vehicle.model}</Text>
                       <Text style={styles.metaDot}>•</Text>
                       <View style={styles.ratingRow}>
-                        <Star size={11} color="#F59E0B" fill="#F59E0B" />
+                        <Star size={11} color="#FF8800" fill="#FF8800" />
                         <Text style={styles.ratingText}>{trip.driver.rating}</Text>
                       </View>
                     </View>
@@ -336,7 +339,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#0C0D11',
   },
   scrollView: {
     flex: 1,
@@ -352,29 +355,29 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 24,
     fontWeight: '900',
-    color: '#0F172A',
+    color: '#FFFFFF',
     letterSpacing: -0.5,
   },
   searchCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#15171E',
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: '#272B35',
     padding: 14,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 4,
     marginBottom: 8,
   },
   routeBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#1A1D26',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#F1F5F9',
+    borderColor: '#242834',
     paddingHorizontal: 12,
     paddingVertical: 8,
     position: 'relative',
@@ -390,19 +393,21 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#090D16',
+    backgroundColor: '#FF8800',
   },
   routeLine: {
     width: 1.5,
     height: 28,
-    backgroundColor: '#CBD5E1',
+    backgroundColor: '#2E3340',
     marginVertical: 3,
   },
   destDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#475569',
+    borderWidth: 1.5,
+    borderColor: '#FF8800',
+    backgroundColor: 'transparent',
   },
   inputsCol: {
     flex: 1,
@@ -412,30 +417,30 @@ const styles = StyleSheet.create({
   },
   inputMiniLabel: {
     fontSize: 9,
-    fontWeight: '700',
-    color: '#94A3B8',
-    letterSpacing: 0.3,
+    fontWeight: '800',
+    color: '#71717A',
+    letterSpacing: 0.5,
     marginBottom: 2,
   },
   inputField: {
-    fontSize: 14,
+    fontSize: 14.5,
     fontWeight: '700',
-    color: '#0F172A',
+    color: '#FFFFFF',
     padding: 0,
     height: 22,
   },
   divider: {
     height: 1,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: '#242834',
     marginVertical: 4,
   },
   swapBtn: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#222530',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: '#303444',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -448,10 +453,12 @@ const styles = StyleSheet.create({
   dateSelector: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: '#1A1D26',
     borderRadius: 10,
     padding: 3,
     gap: 3,
+    borderWidth: 1,
+    borderColor: '#242834',
   },
   datePill: {
     flex: 1,
@@ -461,30 +468,27 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   datePillActive: {
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 2,
-    elevation: 1,
+    backgroundColor: '#272B36',
   },
   dateText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#64748B',
+    color: '#94A3B8',
   },
   dateTextActive: {
-    fontWeight: '700',
-    color: '#0F172A',
+    fontWeight: '800',
+    color: '#FFFFFF',
   },
   passengersBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: '#1A1D26',
     borderRadius: 10,
     height: 38,
     paddingHorizontal: 6,
     gap: 6,
+    borderWidth: 1,
+    borderColor: '#242834',
   },
   passengersValueRow: {
     flexDirection: 'row',
@@ -494,25 +498,23 @@ const styles = StyleSheet.create({
   passengersNum: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#0F172A',
+    color: '#FFFFFF',
   },
   counterBtn: {
     width: 24,
     height: 24,
     borderRadius: 6,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#242834',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
   },
   counterBtnDisabled: {
-    opacity: 0.35,
+    opacity: 0.3,
   },
   counterBtnText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#0F172A',
+    color: '#FFFFFF',
     lineHeight: 16,
   },
   searchButton: {
@@ -520,14 +522,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    height: 44,
+    height: 48,
     borderRadius: 12,
-    backgroundColor: '#0F172A', // Ultra-sleek minimalist dark slate CTA
+    backgroundColor: '#FF8800', // Iconic Radiant Taxi Orange
+    shadowColor: '#FF8800',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 4,
   },
   searchButtonText: {
-    fontSize: 13.5,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontSize: 14.5,
+    fontWeight: '900',
+    color: '#0C0D11',
+    letterSpacing: 0.2,
+  },
+  ctaArrowCircle: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#0C0D11',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 2,
   },
   tripsSection: {
     marginTop: 8,
@@ -540,14 +557,14 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 14,
-    fontWeight: '700',
-    color: '#0F172A',
+    fontWeight: '800',
+    color: '#FFFFFF',
     letterSpacing: -0.2,
   },
   seeAllText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#090D16',
+    color: '#FF8800',
   },
   tripsList: {
     gap: 8,
@@ -556,10 +573,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#15171E',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: '#272B35',
     padding: 12,
   },
   tripCardLeft: {
@@ -568,13 +585,13 @@ const styles = StyleSheet.create({
   tripRouteRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 5,
     marginBottom: 4,
   },
   tripCityText: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#0F172A',
+    color: '#FFFFFF',
   },
   intlFlag: {
     fontSize: 12,
@@ -592,16 +609,16 @@ const styles = StyleSheet.create({
   timeTagText: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#64748B',
+    color: '#94A3B8',
   },
   metaDot: {
     fontSize: 8,
-    color: '#CBD5E1',
+    color: '#475569',
   },
   carText: {
     fontSize: 11,
-    color: '#475569',
-    fontWeight: '500',
+    color: '#CBD5E1',
+    fontWeight: '600',
   },
   ratingRow: {
     flexDirection: 'row',
@@ -610,27 +627,27 @@ const styles = StyleSheet.create({
   },
   ratingText: {
     fontSize: 11,
-    fontWeight: '700',
-    color: '#0F172A',
+    fontWeight: '800',
+    color: '#FFFFFF',
   },
   tripCardRight: {
     alignItems: 'flex-end',
     marginLeft: 12,
   },
   priceNumber: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '900',
-    color: '#090D16',
+    color: '#FF8800',
   },
   priceCurrency: {
     fontSize: 9,
-    fontWeight: '700',
-    color: '#64748B',
+    fontWeight: '800',
+    color: '#94A3B8',
   },
   seatsLeftText: {
     fontSize: 10,
     fontWeight: '600',
-    color: '#94A3B8',
+    color: '#71717A',
     marginTop: 2,
   },
 });
