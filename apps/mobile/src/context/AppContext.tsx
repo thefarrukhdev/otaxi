@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { UserMode, DetailedTrip, PassengerBooking, ActiveDriverTrip, WalletTransaction } from '../types';
 import { MOCK_TRIPS, INITIAL_BOOKINGS, INITIAL_ACTIVE_DRIVER_TRIP, INITIAL_TRANSACTIONS } from '../lib/data';
 import { BookingStatus, PaymentProvider, VerificationStatus } from '@otaxi/types';
+import { translations, SupportedLanguage, TranslationKeys } from '../locales';
 
 interface DriverVerificationState {
   status: VerificationStatus;
@@ -15,6 +16,11 @@ interface DriverVerificationState {
 }
 
 interface AppContextType {
+  // Language & i18n
+  language: SupportedLanguage;
+  setLanguage: (lang: SupportedLanguage) => void;
+  t: TranslationKeys;
+
   // Mode switch
   userMode: UserMode;
   setUserMode: (mode: UserMode) => void;
@@ -58,6 +64,10 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  // Language & i18n
+  const [language, setLanguage] = useState<SupportedLanguage>('uz');
+  const t = translations[language];
+
   // Mode: Passenger by default
   const [userMode, setUserMode] = useState<UserMode>('PASSENGER');
 
@@ -334,6 +344,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   return (
     <AppContext.Provider
       value={{
+        language,
+        setLanguage,
+        t,
         userMode,
         setUserMode,
         toggleUserMode,

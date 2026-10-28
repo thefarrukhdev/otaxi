@@ -8,3 +8,11 @@ export {
   type TripFilterStats,
 } from './useTripsFilter';
 export { useHaptics, Haptics, type HapticFeedbackType } from './useHaptics';
+export {
+  useTracking,
+  type UseTrackingOptions,
+  type UseTrackingReturn,
+  type CurrentCoords,
+  type CoordinatePoint,
+} from './useTracking';
+

@@ -14,6 +14,7 @@ import { Header } from '../../components/Header';
 import { Badge } from '../../components/Badge';
 import { SeatMap } from '../../components/SeatMap';
 import { BorderChecklistModal } from '../../components/BorderChecklistModal';
+import { RouteMap } from '../../components/RouteMap';
 import { Haptics } from '../../components/ui/Haptics';
 import { useApp } from '../../context/AppContext';
 import { getBorderChecklist } from '../../lib/data';
@@ -304,6 +305,23 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
             <ChevronRight size={18} color={COLORS.blue[600]} />
           </TouchableOpacity>
         )}
+
+        {/* Interactive Highway Corridor & Route Map */}
+        <RouteMap
+          originCity={trip.originCity}
+          destinationCity={trip.destinationCity}
+          isInternational={trip.isInternational}
+          borderName={trip.isInternational ? "G'isht-Ko'prik / Chernyayevka" : undefined}
+          borderWaitMinutes={trip.isInternational ? 25 : undefined}
+          progressPercent={0}
+          themeMode="light"
+          estimatedDurationMinutes={trip.durationMinutes}
+          onPressBorder={() => {
+            if (trip.isInternational) {
+              setChecklistVisible(true);
+            }
+          }}
+        />
 
         {/* Route Details Card */}
         <View style={styles.sectionCard}>

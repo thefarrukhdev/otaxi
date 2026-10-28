@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Modal,
 } from 'react-native';
 import { COLORS } from '../../lib/theme';
 import { Header } from '../../components/shared/Header';
@@ -14,38 +15,54 @@ import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Haptics } from '../../components/ui/Haptics';
 import { useApp } from '../../context/AppContext';
+import { SupportedLanguage } from '../../locales';
 import {
   User,
   Car,
   ShieldCheck,
   FileText,
-  PhoneCall,
   Globe,
-  Settings,
   LogOut,
   ChevronRight,
   Headphones,
+  Check,
+  X,
 } from 'lucide-react-native';
 
+const LANGUAGE_OPTIONS: { code: SupportedLanguage; label: string; flag: string; subLabel: string }[] = [
+  { code: 'uz', label: "O'zbekcha", flag: '🇺🇿', subLabel: 'Lotin alifbosida' },
+  { code: 'ru', label: 'Русский', flag: '🇷🇺', subLabel: 'Официальный перевод' },
+  { code: 'en', label: 'English', flag: '🇬🇧', subLabel: 'International travelers' },
+];
+
 export const ProfileScreen: React.FC = () => {
-  const { toggleUserMode } = useApp();
+  const { toggleUserMode, language, setLanguage, t } = useApp();
+  const [langModalVisible, setLangModalVisible] = useState(false);
+
+  const currentLangObj = LANGUAGE_OPTIONS.find((l) => l.code === language) || LANGUAGE_OPTIONS[0];
 
   const handleSupport = () => {
     Haptics.light();
-    Alert.alert('Qo’llab-quvvatlash', 'OTAXI 24/7 Call Center: +998 71 200 00 00');
+    Alert.alert('OTAXI 24/7 Support', 'Call Center: +998 71 200 00 00\nTelegram: @otaxi_support_bot');
   };
 
   const handleLogout = () => {
     Haptics.warning();
-    Alert.alert('Chiqish', 'Akkauntdan chiqishni tasdiqlaysizmi?', [
-      { text: 'Bekor qilish', style: 'cancel' },
-      { text: 'Chiqish', style: 'destructive', onPress: () => {} },
+    Alert.alert(t.profile.logout, 'Akkauntdan chiqishni tasdiqlaysizmi?', [
+      { text: t.common.cancel, style: 'cancel' },
+      { text: t.profile.logout, style: 'destructive', onPress: () => {} },
     ]);
+  };
+
+  const handleSelectLanguage = (lang: SupportedLanguage) => {
+    Haptics.selection();
+    setLanguage(lang);
+    setLangModalVisible(false);
   };
 
   return (
     <View style={styles.container}>
-      <Header title="Profil va sozlamalar" subtitle="Shaxsiy ma’lumotlar va xavfsizlik" />
+      <Header title={t.profile.title} subtitle={t.profile.subtitle} />
 
       <ScrollView
         style={styles.scrollView}
@@ -64,7 +81,7 @@ export const ProfileScreen: React.FC = () => {
             </View>
             <Text style={styles.userPhone}>+998 90 999 88 11</Text>
             <View style={{ marginTop: 4 }}>
-              <Badge label="Tasdiqlangan yo’lovchi" variant="success" size="sm" />
+              <Badge label={t.common.verifiedDriver.replace(' ★', '')} variant="success" size="sm" />
             </View>
           </View>
         </Card>
@@ -83,7 +100,7 @@ export const ProfileScreen: React.FC = () => {
             <Car size={24} color={COLORS.amber[500]} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.switchTitle}>Haydovchi rejimiga o’tish</Text>
+            <Text style={styles.switchTitle}>{t.common.switchToDriver}</Text>
             <Text style={styles.switchSubtitle}>
               Shaharlararo yoki xalqaro reys e’lon qiling va barqaror daromad oling.
             </Text>
@@ -93,12 +110,22 @@ export const ProfileScreen: React.FC = () => {
 
         {/* Settings Group */}
         <Card variant="surface" style={styles.settingsGroup}>
-          <TouchableOpacity style={styles.menuItem} onPress={() => Haptics.selection()} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              Haptics.light();
+              setLangModalVisible(true);
+            }}
+            activeOpacity={0.7}
+          >
             <View style={styles.menuIconCircle}>
               <Globe size={18} color={COLORS.emerald[700]} />
             </View>
-            <Text style={styles.menuTitle}>Ilova tili</Text>
-            <Text style={styles.menuValue}>O’zbekcha</Text>
+            <Text style={styles.menuTitle}>{t.profile.language}</Text>
+            <View style={styles.langBadgeContainer}>
+              <Text style={styles.flagIcon}>{currentLangObj.flag}</Text>
+              <Text style={styles.menuValue}>{currentLangObj.label}</Text>
+            </View>
             <ChevronRight size={16} color={COLORS.gray[400]} />
           </TouchableOpacity>
 
@@ -108,7 +135,7 @@ export const ProfileScreen: React.FC = () => {
             <View style={styles.menuIconCircle}>
               <Headphones size={18} color={COLORS.emerald[700]} />
             </View>
-            <Text style={styles.menuTitle}>24/7 Qo’llab-quvvatlash xizmati</Text>
+            <Text style={styles.menuTitle}>{t.profile.support}</Text>
             <ChevronRight size={16} color={COLORS.gray[400]} />
           </TouchableOpacity>
 
@@ -118,14 +145,14 @@ export const ProfileScreen: React.FC = () => {
             <View style={styles.menuIconCircle}>
               <FileText size={18} color={COLORS.emerald[700]} />
             </View>
-            <Text style={styles.menuTitle}>Foydalanish shartlari va maxfiylik</Text>
+            <Text style={styles.menuTitle}>{t.profile.privacy}</Text>
             <ChevronRight size={16} color={COLORS.gray[400]} />
           </TouchableOpacity>
         </Card>
 
         {/* Logout Button */}
         <Button
-          title="Tizimdan chiqish"
+          title={t.profile.logout}
           variant="outline"
           size="md"
           fullWidth
@@ -135,6 +162,59 @@ export const ProfileScreen: React.FC = () => {
           textStyle={{ color: COLORS.red[600] }}
         />
       </ScrollView>
+
+      {/* Language Selector Modal */}
+      <Modal
+        visible={langModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setLangModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <View>
+                <Text style={styles.modalTitle}>{t.profile.language}</Text>
+                <Text style={styles.modalSubtitle}>Interfeys tilini tanlang</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setLangModalVisible(false)}
+                style={styles.closeBtn}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <X size={20} color={COLORS.gray[500]} />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.langList}>
+              {LANGUAGE_OPTIONS.map((item) => {
+                const isSelected = item.code === language;
+                return (
+                  <TouchableOpacity
+                    key={item.code}
+                    style={[styles.langItem, isSelected && styles.langItemSelected]}
+                    onPress={() => handleSelectLanguage(item.code)}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={styles.langItemFlag}>{item.flag}</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text style={[styles.langItemLabel, isSelected && styles.langItemLabelSelected]}>
+                        {item.label}
+                      </Text>
+                      <Text style={styles.langItemSub}>{item.subLabel}</Text>
+                    </View>
+                    {isSelected && (
+                      <View style={styles.checkCircle}>
+                        <Check size={14} color={COLORS.white} />
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -233,10 +313,22 @@ const styles = StyleSheet.create({
     color: COLORS.gray[800],
     flex: 1,
   },
+  langBadgeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: COLORS.gray[100],
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  flagIcon: {
+    fontSize: 14,
+  },
   menuValue: {
     fontSize: 12,
-    color: COLORS.gray[500],
-    fontWeight: '500',
+    color: COLORS.gray[700],
+    fontWeight: '600',
   },
   menuDivider: {
     height: 1,
@@ -245,5 +337,82 @@ const styles = StyleSheet.create({
   },
   logoutBtn: {
     borderColor: COLORS.red[200],
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: COLORS.white,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 20,
+    paddingBottom: 36,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 18,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: COLORS.gray[900],
+  },
+  modalSubtitle: {
+    fontSize: 12,
+    color: COLORS.gray[500],
+    marginTop: 2,
+  },
+  closeBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: COLORS.gray[100],
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  langList: {
+    gap: 10,
+  },
+  langItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: COLORS.gray[200],
+    backgroundColor: COLORS.gray[50],
+    gap: 12,
+  },
+  langItemSelected: {
+    borderColor: COLORS.emerald[600],
+    backgroundColor: COLORS.emerald[50],
+  },
+  langItemFlag: {
+    fontSize: 26,
+  },
+  langItemLabel: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: COLORS.gray[900],
+  },
+  langItemLabelSelected: {
+    color: COLORS.emerald[800],
+  },
+  langItemSub: {
+    fontSize: 12,
+    color: COLORS.gray[500],
+    marginTop: 2,
+  },
+  checkCircle: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: COLORS.emerald[600],
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

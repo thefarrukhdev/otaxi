@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,8 @@ import {
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
 import { Badge } from '../../components/Badge';
+import { RouteMap } from '../../components/RouteMap';
+import { LiveTrackingCard } from '../../components/LiveTrackingCard';
 import { PassengerManifestCard } from '../../components/driver/PassengerManifestCard';
 import { PassengerCodeVerifyModal } from '../../components/driver/PassengerCodeVerifyModal';
 import { useApp } from '../../context/AppContext';
@@ -45,6 +47,50 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
   const boardedCount = activeDriverTrip.passengers.filter((p) => p.isBoarded).length;
   const totalPassengers = activeDriverTrip.passengers.length;
   const allBoarded = totalPassengers > 0 && boardedCount === totalPassengers;
+
+  // Dynamic cockpit telematics for RouteMap
+  const driverProgressPercent = useMemo(() => {
+    switch (activeDriverTrip.status) {
+      case 'SCHEDULED':
+        return 8; // At departure terminal
+      case 'DEPARTED':
+        return 42; // En route along highway M39
+      case 'AT_BORDER':
+        return 50; // At customs post G'isht-Ko'prik
+      case 'COMPLETED':
+        return 100; // Arrived at destination
+      default:
+        return 15;
+    }
+  }, [activeDriverTrip.status]);
+
+  const driverSpeedKmH = useMemo(() => {
+    switch (activeDriverTrip.status) {
+      case 'DEPARTED':
+        return 88;
+      case 'AT_BORDER':
+        return 0; // Waiting at customs
+      case 'SCHEDULED':
+      case 'COMPLETED':
+      default:
+        return 0;
+    }
+  }, [activeDriverTrip.status]);
+
+  const driverStatusNote = useMemo(() => {
+    switch (activeDriverTrip.status) {
+      case 'SCHEDULED':
+        return 'Terminalda kutilmoqda • Bortga olish jarayoni';
+      case 'DEPARTED':
+        return 'M39 magistralida harakatlanmoqda • Chegara tomon';
+      case 'AT_BORDER':
+        return "G'isht-Ko'prik chegara postida • Pasport va bojxona ko'rigi";
+      case 'COMPLETED':
+        return 'Safar muvaffaqiyatli yakunlandi • Manzilda';
+      default:
+        return undefined;
+    }
+  }, [activeDriverTrip.status]);
 
   const handleCallPassenger = (phone: string, name: string) => {
     Haptics.light();
@@ -242,6 +288,62 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
             })}
           </View>
         </View>
+
+        {/* Interactive Tactical Route Corridor Map (Obsidian Cockpit Mode) */}
+        <RouteMap
+          originCity={activeDriverTrip.originCity}
+          destinationCity={activeDriverTrip.destinationCity}
+          isInternational={activeDriverTrip.isInternational}
+          borderName={activeDriverTrip.isInternational ? "G'isht-Ko'prik / Chernyayevka" : undefined}
+          borderWaitMinutes={25}
+          progressPercent={driverProgressPercent}
+          themeMode="dark"
+          currentSpeedKmH={driverSpeedKmH}
+          statusNote={driverStatusNote}
+          onPressBorder={() => {
+            if (activeDriverTrip.isInternational) {
+              Haptics.medium();
+              Alert.alert(
+                "G'isht-Ko'prik Bojxona Posti (KZ Chegarasi)",
+                "Joriy kutish vaqti: ~25 daqiqa (Yashil yo'lak)\nHaydovchi va yo'lovchilar xorijiy biometrik pasporti hamda avtomobil texnik pasporti tayyor turishi lozim."
+              );
+            }
+          }}
+        />
+
+        {/* Real-time Telemetry & Live Speedometer Card */}
+        <LiveTrackingCard
+          tripId={activeDriverTrip.id}
+          isInternational={activeDriverTrip.isInternational}
+          routeType={
+            activeDriverTrip.destinationCity.toLowerCase().includes('chimkent') ||
+            activeDriverTrip.destinationCity.toLowerCase().includes('shymkent')
+              ? 'TASHKENT_SHYMKENT'
+              : 'TASHKENT_SAMARKAND'
+          }
+          originCity={activeDriverTrip.originCity}
+          destinationCity={activeDriverTrip.destinationCity}
+          speedKmH={
+            activeDriverTrip.status === 'SCHEDULED' || activeDriverTrip.status === 'COMPLETED'
+              ? 0
+              : activeDriverTrip.status === 'AT_BORDER'
+              ? 0
+              : undefined
+          }
+          onPressDetails={() => {
+            Haptics.light();
+            Alert.alert(
+              'Jonli Telemetriya Tafsilotlari',
+              `Reys: ${activeDriverTrip.originCity} ➔ ${activeDriverTrip.destinationCity}\nHolat: ${
+                activeDriverTrip.status === 'DEPARTED'
+                  ? 'Magistralda harakatlanmoqda (Jonli GPS)'
+                  : activeDriverTrip.status === 'AT_BORDER'
+                  ? "Davlat chegarasi postida (G'isht-Ko'prik)"
+                  : 'Bortga olish jarayoni'
+              }\nProtokol: Socket.IO Gateway (/tracking)`
+            );
+          }}
+        />
 
         {/* Route Summary Info Card */}
         <View style={styles.routeCard}>
