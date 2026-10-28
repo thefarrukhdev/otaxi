@@ -7,9 +7,9 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
-    "dev:backend": "turbo dev --filter=@otaxi/backend",
-    "dev:mobile": "turbo dev --filter=@otaxi/mobile",
-    "dev:admin": "turbo dev --filter=@otaxi/web-admin",
+    "dev:backend": "pnpm --filter @otaxi/backend dev",
+    "dev:mobile": "pnpm --filter @otaxi/mobile dev",
+    "dev:admin": "pnpm --filter @otaxi/web-admin dev",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
