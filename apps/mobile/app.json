@@ -37,6 +37,9 @@
         "WRITE_EXTERNAL_STORAGE"
       ]
     },
+    "web": {
+      "bundler": "metro"
+    },
     "plugins": [
       [
         "expo-location",
