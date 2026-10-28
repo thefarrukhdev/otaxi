@@ -8,10 +8,10 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { COLORS, SHADOWS } from '../../lib/theme';
+import { COLORS } from '../../lib/theme';
 import { Header } from '../../components/Header';
 import { Badge } from '../../components/Badge';
-import { BoardingPassCard } from '../../components/BoardingPassCard';
+import { ActiveRideBanner } from '../../components/passenger/ActiveRideBanner';
 import { BorderChecklistModal } from '../../components/BorderChecklistModal';
 import {
   CorridorQuickSelect,
@@ -28,12 +28,10 @@ import {
   Users,
   ShieldCheck,
   Globe,
-  Sparkles,
   ArrowRight,
-  Compass,
-  FileCheck2,
   ArrowUpDown,
-  Lock,
+  FileCheck2,
+  Sparkles,
   Headphones,
 } from 'lucide-react-native';
 
@@ -49,7 +47,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [passengersCount, setPassengersCount] = useState(1);
   const [isChecklistVisible, setChecklistVisible] = useState(false);
 
-  // Calculate available trips count
+  // Calculate matching trips count
   const matchingTripsCount = trips.filter((t) => {
     if (fromCity && !t.originCity.toLowerCase().includes(fromCity.toLowerCase())) {
       return false;
@@ -93,8 +91,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Header
-        title="Shaharlararo va xalqaro safarlar"
-        subtitle="Markaziy Osiyo bo'ylab tekshirilgan haydovchilar bilan xavfsiz qatnov"
+        title="Qayerga borasiz?"
+        subtitle="Markaziy Osiyo bo'ylab shaharlararo & xalqaro qatnov"
       />
 
       <ScrollView
@@ -102,203 +100,182 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Active Booking Reminder if passenger has one */}
+        {/* Active Booking Compact Banner */}
         {activeBooking && (
-          <View style={styles.activeBookingSection}>
-            <View style={styles.sectionHeaderRow}>
-              <View style={styles.activePill}>
-                <View style={styles.activePulseDot} />
-                <Text style={styles.activePillText}>Sizning faol safaringiz</Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Bookings')}
-                style={styles.linkButton}
-              >
-                <Text style={styles.linkText}>Barchasini ko'rish</Text>
-                <ArrowRight size={13} color={COLORS.emerald[700]} />
-              </TouchableOpacity>
-            </View>
-            <BoardingPassCard
-              booking={activeBooking}
-              onOpenChecklist={() => setChecklistVisible(true)}
-              onCancelBooking={(id) => cancelBooking(id)}
-            />
-          </View>
+          <ActiveRideBanner
+            booking={activeBooking}
+            onPressDetails={() => navigation.navigate('Bookings')}
+            onOpenChecklist={() => setChecklistVisible(true)}
+          />
         )}
 
-        {/* Search Hero Card */}
+        {/* Mobility Search Hero Card */}
         <View style={styles.searchCard}>
-          <View style={styles.searchCardHeader}>
-            <View style={styles.searchTypePill}>
-              <Sparkles size={14} color={COLORS.emerald[700]} />
-              <Text style={styles.searchTypePillText}>Shaharlararo & Xalqaro qatnov</Text>
-            </View>
-            <Text style={styles.availableCounterText}>
-              {matchingTripsCount > 0
-                ? `${matchingTripsCount} ta reys topildi`
-                : "Barcha yo'nalishlar"}
+          <View style={styles.searchCardTopBadge}>
+            <Sparkles size={13} color={COLORS.emerald[700]} />
+            <Text style={styles.searchCardBadgeText}>SHAHARLARARO & XALQARO</Text>
+            <Text style={styles.matchingTripsBadge}>
+              {matchingTripsCount > 0 ? `${matchingTripsCount} ta reys` : 'Barcha reyslar'}
             </Text>
           </View>
 
-          {/* From Input */}
-          <View style={styles.inputWrapper}>
-            <View style={styles.inputIconCircle}>
-              <MapPin size={16} color={COLORS.emerald[600]} />
+          {/* Connected Route Input Box */}
+          <View style={styles.routeContainer}>
+            {/* Visual Route Connector Pins */}
+            <View style={styles.connectorColumn}>
+              <View style={styles.originDot} />
+              <View style={styles.connectorDashedLine} />
+              <View style={styles.destinationPin} />
             </View>
-            <View style={styles.inputFieldContainer}>
-              <Text style={styles.inputLabel}>Qayerdan</Text>
-              <TextInput
-                style={styles.textInput}
-                value={fromCity}
-                onChangeText={setFromCity}
-                placeholder="Shahar nomi (Masalan: Toshkent)"
-                placeholderTextColor={COLORS.gray[400]}
-              />
+
+            {/* Inputs Column */}
+            <View style={styles.inputsColumn}>
+              {/* Origin Input */}
+              <View style={styles.inputRow}>
+                <Text style={styles.inputTinyLabel}>QAYERDAN</Text>
+                <TextInput
+                  style={styles.cityTextInput}
+                  value={fromCity}
+                  onChangeText={setFromCity}
+                  placeholder="Shahar nomi (Masalan: Toshkent)"
+                  placeholderTextColor="#94A3B8"
+                />
+              </View>
+
+              <View style={styles.horizontalDivider} />
+
+              {/* Destination Input */}
+              <View style={styles.inputRow}>
+                <Text style={styles.inputTinyLabel}>QAYERGA</Text>
+                <TextInput
+                  style={styles.cityTextInput}
+                  value={toCity}
+                  onChangeText={setToCity}
+                  placeholder="Samarqand, Shymkent 🇰🇿..."
+                  placeholderTextColor="#94A3B8"
+                />
+              </View>
             </View>
+
+            {/* Swap Button */}
             {toCity ? (
               <TouchableOpacity
-                style={styles.swapButton}
+                style={styles.floatingSwapButton}
                 onPress={handleSwapCities}
                 activeOpacity={0.7}
-                accessibilityLabel="Shaharlarni almashtirish"
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               >
-                <ArrowUpDown size={16} color={COLORS.gray[600]} />
+                <ArrowUpDown size={15} color="#475569" />
               </TouchableOpacity>
             ) : null}
           </View>
 
-          <View style={styles.inputDivider} />
-
-          {/* To Input */}
-          <View style={styles.inputWrapper}>
-            <View style={[styles.inputIconCircle, { backgroundColor: COLORS.blue[50] }]}>
-              <Compass size={16} color={COLORS.blue[600]} />
-            </View>
-            <View style={styles.inputFieldContainer}>
-              <Text style={styles.inputLabel}>Qayerga</Text>
-              <TextInput
-                style={styles.textInput}
-                value={toCity}
-                onChangeText={setToCity}
-                placeholder="Shahar nomi (Shymkent 🇰🇿, Samarqand...)"
-                placeholderTextColor={COLORS.gray[400]}
-              />
-            </View>
-          </View>
-
-          <View style={styles.inputDivider} />
-
-          {/* Date Selector Row */}
+          {/* Date & Passengers Row */}
           <View style={styles.optionsRow}>
-            <View style={styles.optionBox}>
-              <Calendar size={16} color={COLORS.gray[500]} />
-              <View style={styles.dateSelectorCol}>
-                <Text style={styles.optionLabel}>Jo'nash sanasi</Text>
-                <View style={styles.dateButtonsRow}>
-                  <TouchableOpacity
+            {/* Date Pill Selector */}
+            <View style={styles.optionBlock}>
+              <Text style={styles.optionLabel}>SANA</Text>
+              <View style={styles.datePillsRow}>
+                <TouchableOpacity
+                  style={[
+                    styles.datePill,
+                    selectedDate === 'TODAY' && styles.datePillActive,
+                  ]}
+                  onPress={() => {
+                    Haptics.light();
+                    setSelectedDate('TODAY');
+                  }}
+                  activeOpacity={0.8}
+                >
+                  <Text
                     style={[
-                      styles.dateChip,
-                      selectedDate === 'TODAY' && styles.dateChipActive,
+                      styles.datePillText,
+                      selectedDate === 'TODAY' && styles.datePillTextActive,
                     ]}
-                    onPress={() => {
-                      Haptics.light();
-                      setSelectedDate('TODAY');
-                    }}
                   >
-                    <Text
-                      style={[
-                        styles.dateChipText,
-                        selectedDate === 'TODAY' && styles.dateChipTextActive,
-                      ]}
-                    >
-                      Bugun
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
+                    Bugun
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.datePill,
+                    selectedDate === 'TOMORROW' && styles.datePillActive,
+                  ]}
+                  onPress={() => {
+                    Haptics.light();
+                    setSelectedDate('TOMORROW');
+                  }}
+                  activeOpacity={0.8}
+                >
+                  <Text
                     style={[
-                      styles.dateChip,
-                      selectedDate === 'TOMORROW' && styles.dateChipActive,
+                      styles.datePillText,
+                      selectedDate === 'TOMORROW' && styles.datePillTextActive,
                     ]}
-                    onPress={() => {
-                      Haptics.light();
-                      setSelectedDate('TOMORROW');
-                    }}
                   >
-                    <Text
-                      style={[
-                        styles.dateChipText,
-                        selectedDate === 'TOMORROW' && styles.dateChipTextActive,
-                      ]}
-                    >
-                      Ertaga
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                    Ertaga
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
 
-            {/* Passengers Count Counter */}
-            <View style={styles.optionBox}>
-              <Users size={16} color={COLORS.gray[500]} />
-              <View>
-                <Text style={styles.optionLabel}>Yo'lovchilar</Text>
-                <View style={styles.passengersCounter}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      Haptics.light();
-                      setPassengersCount((p) => Math.max(1, p - 1));
-                    }}
-                    style={styles.counterBtn}
-                    disabled={passengersCount <= 1}
-                  >
-                    <Text
-                      style={[
-                        styles.counterBtnText,
-                        passengersCount <= 1 && styles.counterBtnTextDisabled,
-                      ]}
-                    >
-                      -
-                    </Text>
-                  </TouchableOpacity>
-                  <Text style={styles.counterValue}>{passengersCount}</Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      Haptics.light();
-                      setPassengersCount((p) => Math.min(4, p + 1));
-                    }}
-                    style={styles.counterBtn}
-                    disabled={passengersCount >= 4}
-                  >
-                    <Text
-                      style={[
-                        styles.counterBtnText,
-                        passengersCount >= 4 && styles.counterBtnTextDisabled,
-                      ]}
-                    >
-                      +
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+            {/* Passenger Counter */}
+            <View style={styles.optionBlock}>
+              <Text style={styles.optionLabel}>YO'LOVCHILAR</Text>
+              <View style={styles.passengerCounterRow}>
+                <TouchableOpacity
+                  style={[
+                    styles.counterBtn,
+                    passengersCount <= 1 && styles.counterBtnDisabled,
+                  ]}
+                  onPress={() => {
+                    Haptics.light();
+                    setPassengersCount((p) => Math.max(1, p - 1));
+                  }}
+                  disabled={passengersCount <= 1}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.counterBtnText}>−</Text>
+                </TouchableOpacity>
+
+                <Text style={styles.counterNumber}>{passengersCount}</Text>
+
+                <TouchableOpacity
+                  style={[
+                    styles.counterBtn,
+                    passengersCount >= 4 && styles.counterBtnDisabled,
+                  ]}
+                  onPress={() => {
+                    Haptics.light();
+                    setPassengersCount((p) => Math.min(4, p + 1));
+                  }}
+                  disabled={passengersCount >= 4}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.counterBtnText}>+</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
 
           {/* Search Button */}
           <TouchableOpacity
-            style={styles.searchButton}
+            style={styles.searchCtaButton}
             onPress={handleSearch}
             activeOpacity={0.88}
           >
-            <Search size={18} color={COLORS.white} />
-            <Text style={styles.searchButtonText}>
+            <Search size={18} color="#FFFFFF" strokeWidth={2.5} />
+            <Text style={styles.searchCtaText}>
               {matchingTripsCount > 0
                 ? `Reyslarni qidirish (${matchingTripsCount} ta bo'sh reys)`
                 : 'Reyslarni qidirish'}
             </Text>
+            <ArrowRight size={16} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
 
-        {/* Tezkor Koridorlar Karuseli */}
+        {/* Popular Corridors Horizontal Carousel */}
         <CorridorQuickSelect
           onSelectRoute={handleSelectCorridor}
           selectedTo={toCity}
@@ -315,68 +292,70 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           activeOpacity={0.88}
         >
           <View style={styles.borderBannerIconCircle}>
-            <Globe size={22} color={COLORS.blue[600]} />
+            <Globe size={20} color="#2563EB" />
           </View>
           <View style={styles.borderBannerContent}>
             <View style={styles.borderBannerTitleRow}>
-              <Text style={styles.borderBannerTitle}>Xalqaro chegara yordamchisi</Text>
-              <Badge label="Gid 🇰🇿 🇰🇬 🇹🇯" variant="blue" />
+              <Text style={styles.borderBannerTitle}>Xalqaro chegara tayyorgarligi</Text>
+              <View style={styles.miniBadge}>
+                <Text style={styles.miniBadgeText}>Gid 🇰🇿 🇰🇬 🇹🇯</Text>
+              </View>
             </View>
             <Text style={styles.borderBannerSubtitle}>
-              Qozog'iston, Qirg'iziston va Tojikiston chegaralariga tayyorgarlik chek-listi
+              Qozog'iston, Qirg'iziston va Tojikiston bo'yicha viza va bojxona qoidalari
             </Text>
           </View>
-          <ArrowRight size={18} color={COLORS.blue[600]} />
+          <ArrowRight size={16} color="#2563EB" />
         </TouchableOpacity>
 
-        {/* Platform Advantages / Mobility Guarantees */}
+        {/* Mobility Guarantees Section */}
         <View style={styles.featuresSection}>
           <Text style={styles.sectionTitle}>OTAXI Safar Kafolatlari</Text>
 
           <View style={styles.featureCard}>
-            <View style={[styles.featureIcon, { backgroundColor: COLORS.emerald[50] }]}>
-              <ShieldCheck size={22} color={COLORS.emerald[600]} />
+            <View style={[styles.featureIcon, { backgroundColor: '#F0FDF4' }]}>
+              <ShieldCheck size={20} color={COLORS.emerald[600]} />
             </View>
             <View style={styles.featureContent}>
               <Text style={styles.featureTitle}>100% Tekshirilgan haydovchilar</Text>
               <Text style={styles.featureText}>
-                Har bir haydovchining shaxsi, haydovchilik guvohnomasi, avtomobil texpasporti va sug'urtasi qat'iy tekshiriladi.
+                Haydovchilik guvohnomasi, avtomobil texpasporti va sug'urtasi qat'iy tekshirilgan.
               </Text>
             </View>
           </View>
 
           <View style={styles.featureCard}>
-            <View style={[styles.featureIcon, { backgroundColor: COLORS.blue[50] }]}>
-              <FileCheck2 size={22} color={COLORS.blue[600]} />
+            <View style={[styles.featureIcon, { backgroundColor: '#EFF6FF' }]}>
+              <FileCheck2 size={20} color="#2563EB" />
             </View>
             <View style={styles.featureContent}>
               <Text style={styles.featureTitle}>Chegara qoidalari chek-listi</Text>
               <Text style={styles.featureText}>
-                Xorijiy pasport muddati, 30 kunlik vizasiz rejim, bolalar ruxsatnomasi va valyuta me'yorlari to'lovdan oldin ko'rsatiladi.
+                Xorijiy pasport muddati, 30 kunlik vizasiz rejim va bojxona deklaratsiyasi nazorati.
               </Text>
             </View>
           </View>
 
           <View style={styles.featureCard}>
-            <View style={[styles.featureIcon, { backgroundColor: COLORS.amber[50] }]}>
-              <Sparkles size={22} color={COLORS.amber[600]} />
+            <View style={[styles.featureIcon, { backgroundColor: '#FEF3C7' }]}>
+              <Sparkles size={20} color="#D97706" />
             </View>
             <View style={styles.featureContent}>
-              <Text style={styles.featureTitle}>Interaktiv joy tanlash & Kafolat</Text>
+              <Text style={styles.featureTitle}>Aniq o'rindiq & 4 xonali bort kodi</Text>
               <Text style={styles.featureText}>
-                Old o'rindiq (VIP) yoki orqa qulay joyni tanlaysiz. 4 xonali bort kodi orqali soxta bronlarning oldi olinadi.
+                Old VIP yoki orqa o'rindiqni aniq tanlaysiz. 4 xonali kod bilan mashinaga chiqasiz.
               </Text>
             </View>
           </View>
 
           <View style={styles.featureCard}>
-            <View style={[styles.featureIcon, { backgroundColor: COLORS.navy[100] }]}>
-              <Headphones size={22} color={COLORS.navy[700]} />
+            <View style={[styles.featureIcon, { backgroundColor: '#F1F5F9' }]}>
+              <Headphones size={20} color="#334155" />
             </View>
             <View style={styles.featureContent}>
-              <Text style={styles.featureTitle}>24/7 Safar xavfsizligi va qo'llab-quvvatlash</Text>
+              <Text style={styles.featureTitle}>24/7 Dispetcherlik va xavfsizlik</Text>
               <Text style={styles.featureText}>
-                Tog'li dovonlar va cho'l magistral yo'llarida GPS monitoring va dispetcherlik nazorati.
+                Tog'li dovonlar va cho'l magistrallarida doimiy GPS monitoring va qo'llab-quvvatlash.
               </Text>
             </View>
           </View>
@@ -396,255 +375,246 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.gray[50],
+    backgroundColor: '#F8FAFC',
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     padding: 16,
-    paddingBottom: 36,
+    paddingBottom: 40,
   },
-  activeBookingSection: {
+  searchCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    padding: 16,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    elevation: 4,
     marginBottom: 16,
   },
-  sectionHeaderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  activePill: {
+  searchCardTopBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: COLORS.emerald[50],
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: COLORS.emerald[200],
-  },
-  activePulseDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: COLORS.emerald[600],
-  },
-  activePillText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: COLORS.emerald[800],
-  },
-  linkButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  linkText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: COLORS.emerald[700],
-  },
-  searchCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray[200],
-    padding: 18,
-    ...SHADOWS.md,
-  },
-  searchCardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     marginBottom: 14,
   },
-  searchTypePill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    backgroundColor: COLORS.emerald[50],
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 7,
-    borderWidth: 1,
-    borderColor: COLORS.emerald[200],
-  },
-  searchTypePillText: {
-    fontSize: 11,
+  searchCardBadgeText: {
+    fontSize: 10.5,
     fontWeight: '800',
     color: COLORS.emerald[800],
+    letterSpacing: 0.5,
   },
-  availableCounterText: {
+  matchingTripsBadge: {
+    marginLeft: 'auto',
     fontSize: 11,
-    fontWeight: '600',
-    color: COLORS.gray[500],
+    fontWeight: '700',
+    color: '#64748B',
   },
-  inputWrapper: {
+  routeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    paddingVertical: 6,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    position: 'relative',
+    marginBottom: 14,
   },
-  inputFieldContainer: {
+  connectorColumn: {
+    alignItems: 'center',
+    width: 20,
+    marginRight: 8,
+    paddingVertical: 12,
+  },
+  originDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: COLORS.emerald[600],
+    borderWidth: 2,
+    borderColor: '#BBF7D0',
+  },
+  connectorDashedLine: {
+    width: 2,
+    height: 32,
+    backgroundColor: '#CBD5E1',
+    marginVertical: 4,
+  },
+  destinationPin: {
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    backgroundColor: '#F59E0B',
+    transform: [{ rotate: '45deg' }],
+  },
+  inputsColumn: {
     flex: 1,
   },
-  inputIconCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: COLORS.emerald[50],
-    alignItems: 'center',
-    justifyContent: 'center',
+  inputRow: {
+    paddingVertical: 4,
   },
-  inputLabel: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: COLORS.gray[400],
-    textTransform: 'uppercase',
+  inputTinyLabel: {
+    fontSize: 9,
+    fontWeight: '800',
+    color: '#94A3B8',
     letterSpacing: 0.5,
     marginBottom: 2,
   },
-  textInput: {
+  cityTextInput: {
     fontSize: 15,
     fontWeight: '700',
-    color: COLORS.gray[900],
+    color: '#0F172A',
     padding: 0,
+    height: 24,
   },
-  swapButton: {
+  horizontalDivider: {
+    height: 1,
+    backgroundColor: '#E2E8F0',
+    marginVertical: 6,
+  },
+  floatingSwapButton: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: COLORS.gray[100],
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: COLORS.gray[200],
-  },
-  inputDivider: {
-    height: 1,
-    backgroundColor: COLORS.gray[100],
-    marginVertical: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   optionsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
     gap: 12,
+    marginBottom: 16,
   },
-  optionBox: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  dateSelectorCol: {
+  optionBlock: {
     flex: 1,
   },
   optionLabel: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: COLORS.gray[400],
-    textTransform: 'uppercase',
-    marginBottom: 4,
-  },
-  dateButtonsRow: {
-    flexDirection: 'row',
-    gap: 6,
-  },
-  dateChip: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    backgroundColor: COLORS.gray[100],
-    borderWidth: 1,
-    borderColor: COLORS.gray[200],
-  },
-  dateChipActive: {
-    backgroundColor: COLORS.emerald[50],
-    borderColor: COLORS.emerald[500],
-  },
-  dateChipText: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: COLORS.gray[600],
-  },
-  dateChipTextActive: {
-    color: COLORS.emerald[800],
+    fontSize: 9.5,
     fontWeight: '800',
+    color: '#64748B',
+    letterSpacing: 0.5,
+    marginBottom: 6,
   },
-  passengersCounter: {
+  datePillsRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.gray[100],
-    borderRadius: 8,
-    padding: 2,
-    borderWidth: 1,
-    borderColor: COLORS.gray[200],
+    backgroundColor: '#F1F5F9',
+    borderRadius: 10,
+    padding: 3,
+    gap: 4,
   },
-  counterBtn: {
-    width: 26,
-    height: 26,
+  datePill: {
+    flex: 1,
+    height: 34,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: COLORS.white,
-    borderRadius: 6,
+    borderRadius: 8,
+  },
+  datePillActive: {
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  datePillText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#64748B',
+  },
+  datePillTextActive: {
+    color: '#0F172A',
+  },
+  passengerCounterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F1F5F9',
+    borderRadius: 10,
+    height: 40,
+    paddingHorizontal: 6,
+  },
+  counterBtn: {
+    width: 28,
+    height: 28,
+    borderRadius: 7,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  counterBtnDisabled: {
+    opacity: 0.4,
   },
   counterBtnText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#0F172A',
+    lineHeight: 18,
+  },
+  counterNumber: {
     fontSize: 14,
     fontWeight: '800',
-    color: COLORS.gray[800],
+    color: '#0F172A',
   },
-  counterBtnTextDisabled: {
-    color: COLORS.gray[300],
-  },
-  counterValue: {
-    fontSize: 13,
-    fontWeight: '800',
-    color: COLORS.gray[900],
-    paddingHorizontal: 10,
-    fontVariant: ['tabular-nums'],
-  },
-  searchButton: {
+  searchCtaButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: COLORS.emerald[600],
-    paddingVertical: 14,
+    height: 50,
     borderRadius: 14,
-    marginTop: 10,
-    ...SHADOWS.sm,
+    backgroundColor: COLORS.emerald[600],
+    shadowColor: COLORS.emerald[700],
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  searchButtonText: {
-    fontSize: 15,
+  searchCtaText: {
+    fontSize: 14.5,
     fontWeight: '800',
-    color: COLORS.white,
-    letterSpacing: -0.2,
+    color: '#FFFFFF',
+    letterSpacing: 0.2,
   },
   borderBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: '#BFDBFE',
-    padding: 14,
-    gap: 12,
-    marginVertical: 10,
-    ...SHADOWS.sm,
-  },
-  borderBannerIconCircle: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: COLORS.white,
-    alignItems: 'center',
-    justifyContent: 'center',
     borderWidth: 1,
     borderColor: '#DBEAFE',
+    padding: 14,
+    marginBottom: 20,
+    shadowColor: '#2563EB',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  borderBannerIconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#EFF6FF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
   },
   borderBannerContent: {
     flex: 1,
@@ -656,55 +626,66 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   borderBannerTitle: {
-    fontSize: 13,
+    fontSize: 13.5,
     fontWeight: '800',
     color: '#1E3A8A',
   },
+  miniBadge: {
+    backgroundColor: '#DBEAFE',
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 4,
+  },
+  miniBadgeText: {
+    fontSize: 9.5,
+    fontWeight: '800',
+    color: '#1D4ED8',
+  },
   borderBannerSubtitle: {
     fontSize: 11,
-    color: '#3B82F6',
+    color: '#64748B',
     lineHeight: 15,
   },
   featuresSection: {
-    marginTop: 14,
-    gap: 10,
+    marginTop: 8,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '800',
-    color: COLORS.gray[900],
-    marginBottom: 2,
+    color: '#0F172A',
+    marginBottom: 12,
+    letterSpacing: -0.2,
   },
   featureCard: {
     flexDirection: 'row',
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray[200],
-    padding: 14,
-    alignItems: 'center',
-    gap: 12,
-    ...SHADOWS.sm,
+    alignItems: 'flex-start',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    padding: 12,
+    marginBottom: 8,
   },
   featureIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 36,
+    height: 36,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 10,
   },
   featureContent: {
     flex: 1,
   },
   featureTitle: {
     fontSize: 13,
-    fontWeight: '800',
-    color: COLORS.gray[900],
+    fontWeight: '700',
+    color: '#0F172A',
     marginBottom: 2,
   },
   featureText: {
-    fontSize: 11,
-    color: COLORS.gray[500],
+    fontSize: 11.5,
+    color: '#64748B',
     lineHeight: 16,
   },
 });

@@ -5,3 +5,4 @@ export {
   type CorridorQuickSelectProps,
   type RouteOption,
 } from './CorridorQuickSelect';
+export { ActiveRideBanner, type ActiveRideBannerProps } from './ActiveRideBanner';

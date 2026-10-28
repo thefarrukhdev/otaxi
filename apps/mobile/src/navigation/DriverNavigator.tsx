@@ -21,13 +21,17 @@ export const DriverNavigator: React.FC = () => {
           backgroundColor: '#090D16', // Cockpit Obsidian
           borderTopColor: '#1F2937',
           borderTopWidth: 1,
-          height: 64,
-          paddingBottom: 10,
+          height: 68,
           paddingTop: 8,
+          paddingBottom: 10,
         },
         tabBarLabelStyle: {
-          fontSize: 10,
-          fontWeight: '800',
+          fontSize: 11,
+          fontWeight: '700',
+          marginTop: 2,
+        },
+        tabBarItemStyle: {
+          paddingVertical: 2,
         },
       }}
     >
@@ -36,7 +40,9 @@ export const DriverNavigator: React.FC = () => {
         component={DashboardScreen}
         options={{
           tabBarLabel: 'Boshqaruv',
-          tabBarIcon: ({ color, size }) => <LayoutDashboard size={size} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <LayoutDashboard size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+          ),
         }}
       />
       <Tab.Screen
@@ -44,7 +50,9 @@ export const DriverNavigator: React.FC = () => {
         component={CreateTripScreen}
         options={{
           tabBarLabel: 'Yangi reys',
-          tabBarIcon: ({ color, size }) => <PlusCircle size={size} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <PlusCircle size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+          ),
         }}
       />
       <Tab.Screen
@@ -52,7 +60,9 @@ export const DriverNavigator: React.FC = () => {
         component={ActiveTripScreen}
         options={{
           tabBarLabel: 'Faol reys',
-          tabBarIcon: ({ color, size }) => <Car size={size} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Car size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+          ),
         }}
       />
       <Tab.Screen
@@ -60,7 +70,9 @@ export const DriverNavigator: React.FC = () => {
         component={WalletScreen}
         options={{
           tabBarLabel: 'Hamyon',
-          tabBarIcon: ({ color, size }) => <Wallet size={size} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Wallet size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+          ),
         }}
       />
       <Tab.Screen
@@ -68,7 +80,9 @@ export const DriverNavigator: React.FC = () => {
         component={VerificationScreen}
         options={{
           tabBarLabel: 'Hujjatlar',
-          tabBarIcon: ({ color, size }) => <ShieldCheck size={size} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <ShieldCheck size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+          ),
         }}
       />
     </Tab.Navigator>

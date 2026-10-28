@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { COLORS, SHADOWS } from '../../lib/theme';
+import { COLORS } from '../../lib/theme';
 import { Haptics } from '../ui/Haptics';
 import { Sparkles, ArrowRight, Clock, ShieldCheck, MapPin } from 'lucide-react-native';
 
@@ -92,8 +92,8 @@ export const CorridorQuickSelect: React.FC<CorridorQuickSelectProps> = React.mem
       <View style={styles.container}>
         <View style={styles.headerRow}>
           <View style={styles.titleWithIcon}>
-            <Sparkles size={16} color={COLORS.emerald[600]} />
-            <Text style={styles.title}>Mashhur magistral koridorlar</Text>
+            <Sparkles size={15} color={COLORS.emerald[600]} />
+            <Text style={styles.title}>Mashhur magistral yo'llar</Text>
           </View>
           <Text style={styles.hint}>Bir tegishda qidirish</Text>
         </View>
@@ -115,7 +115,6 @@ export const CorridorQuickSelect: React.FC<CorridorQuickSelectProps> = React.mem
                 style={[
                   styles.routeCard,
                   isSelected && styles.routeCardSelected,
-                  route.isInternational && styles.routeCardInternational,
                 ]}
                 onPress={() => handleSelect(route)}
                 activeOpacity={0.82}
@@ -139,18 +138,16 @@ export const CorridorQuickSelect: React.FC<CorridorQuickSelectProps> = React.mem
                 {/* Cities Row */}
                 <View style={styles.routeCityRow}>
                   <Text style={styles.fromText}>{route.from}</Text>
-                  <View style={styles.arrowIconContainer}>
-                    <ArrowRight size={13} color={COLORS.gray[400]} />
-                  </View>
-                  <Text style={styles.toText}>
-                    {route.to} {route.isInternational ? flag : ''}
+                  <ArrowRight size={12} color="#94A3B8" />
+                  <Text style={styles.toText} numberOfLines={1}>
+                    {route.to}
                   </Text>
                 </View>
 
                 {/* Border or Highway info */}
                 {route.borderName ? (
                   <View style={styles.borderNoteRow}>
-                    <MapPin size={10} color={COLORS.blue[600]} />
+                    <MapPin size={10} color="#2563EB" />
                     <Text style={styles.borderNoteText} numberOfLines={1}>
                       Chegara: {route.borderName}
                     </Text>
@@ -159,7 +156,7 @@ export const CorridorQuickSelect: React.FC<CorridorQuickSelectProps> = React.mem
                   <View style={styles.borderNoteRow}>
                     <ShieldCheck size={10} color={COLORS.emerald[600]} />
                     <Text style={styles.domesticNoteText} numberOfLines={1}>
-                      M39 trassa orqali
+                      M39 magistrali
                     </Text>
                   </View>
                 )}
@@ -171,7 +168,7 @@ export const CorridorQuickSelect: React.FC<CorridorQuickSelectProps> = React.mem
                     <Text style={styles.priceSubtext}>dan</Text>
                   </Text>
                   <View style={styles.timeRow}>
-                    <Clock size={11} color={COLORS.gray[400]} />
+                    <Clock size={11} color="#94A3B8" />
                     <Text style={styles.timeText}>{route.time}</Text>
                   </View>
                 </View>
@@ -188,13 +185,12 @@ CorridorQuickSelect.displayName = 'CorridorQuickSelect';
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 14,
+    marginVertical: 12,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
     marginBottom: 10,
   },
   titleWithIcon: {
@@ -203,36 +199,37 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   title: {
-    fontSize: 15,
+    fontSize: 14.5,
     fontWeight: '800',
-    color: COLORS.gray[900],
+    color: '#0F172A',
     letterSpacing: -0.2,
   },
   hint: {
     fontSize: 11,
-    color: COLORS.gray[500],
+    color: '#64748B',
     fontWeight: '600',
   },
   scrollContent: {
-    paddingHorizontal: 16,
     gap: 10,
+    paddingRight: 8,
   },
   routeCard: {
-    width: 185,
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray[200],
+    width: 175,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
     padding: 12,
     justifyContent: 'space-between',
-    ...SHADOWS.sm,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 2,
   },
   routeCardSelected: {
     borderColor: COLORS.emerald[600],
-    backgroundColor: COLORS.emerald[50],
-  },
-  routeCardInternational: {
-    borderColor: '#DDD6FE',
+    backgroundColor: '#F0FDF4',
   },
   cardTopRow: {
     flexDirection: 'row',
@@ -241,29 +238,25 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   flagBadge: {
-    fontSize: 18,
+    fontSize: 16,
   },
   intlPill: {
-    backgroundColor: '#F5F3FF',
-    paddingHorizontal: 7,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#DDD6FE',
+    backgroundColor: '#EFF6FF',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
   },
   intlPillText: {
     fontSize: 9,
     fontWeight: '800',
-    color: '#6D28D9',
+    color: '#1D4ED8',
     textTransform: 'uppercase',
   },
   domesticPill: {
-    backgroundColor: COLORS.emerald[50],
-    paddingHorizontal: 7,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: COLORS.emerald[200],
+    backgroundColor: '#F0FDF4',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
   },
   domesticPillText: {
     fontSize: 9,
@@ -278,17 +271,14 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   fromText: {
-    fontSize: 13,
+    fontSize: 12.5,
     fontWeight: '600',
-    color: COLORS.gray[600],
-  },
-  arrowIconContainer: {
-    paddingHorizontal: 1,
+    color: '#475569',
   },
   toText: {
     fontSize: 13,
     fontWeight: '800',
-    color: COLORS.gray[900],
+    color: '#0F172A',
     flexShrink: 1,
   },
   borderNoteRow: {
@@ -299,7 +289,7 @@ const styles = StyleSheet.create({
   },
   borderNoteText: {
     fontSize: 10,
-    color: COLORS.blue[600],
+    color: '#2563EB',
     fontWeight: '600',
   },
   domesticNoteText: {
@@ -313,18 +303,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: COLORS.gray[100],
+    borderTopColor: '#F1F5F9',
   },
   priceText: {
-    fontSize: 13,
+    fontSize: 12.5,
     fontWeight: '900',
     color: COLORS.emerald[700],
-    fontVariant: ['tabular-nums'],
   },
   priceSubtext: {
-    fontSize: 10,
+    fontSize: 9.5,
     fontWeight: '500',
-    color: COLORS.gray[400],
+    color: '#94A3B8',
   },
   timeRow: {
     flexDirection: 'row',
@@ -332,8 +321,8 @@ const styles = StyleSheet.create({
     gap: 3,
   },
   timeText: {
-    fontSize: 11,
-    color: COLORS.gray[500],
+    fontSize: 10.5,
+    color: '#64748B',
     fontWeight: '600',
   },
 });

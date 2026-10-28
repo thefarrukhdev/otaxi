@@ -1,4 +1,5 @@
 import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from '../screens/passenger/HomeScreen';
@@ -37,14 +38,24 @@ export const PassengerNavigator: React.FC = () => {
         tabBarInactiveTintColor: COLORS.gray[400],
         tabBarStyle: {
           backgroundColor: COLORS.white,
-          borderTopColor: COLORS.gray[200],
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 6,
+          borderTopColor: '#F1F5F9',
+          borderTopWidth: 1,
+          height: 68,
+          paddingTop: 8,
+          paddingBottom: 10,
+          elevation: 8,
+          shadowColor: '#0F172A',
+          shadowOffset: { width: 0, height: -3 },
+          shadowOpacity: 0.05,
+          shadowRadius: 8,
         },
         tabBarLabelStyle: {
-          fontSize: 10,
+          fontSize: 11,
           fontWeight: '700',
+          marginTop: 2,
+        },
+        tabBarItemStyle: {
+          paddingVertical: 2,
         },
       }}
     >
@@ -53,7 +64,9 @@ export const PassengerNavigator: React.FC = () => {
         component={HomeTripsStack}
         options={{
           tabBarLabel: 'Qidiruv',
-          tabBarIcon: ({ color, size }) => <Search size={size} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Search size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+          ),
         }}
       />
       <Tab.Screen
@@ -61,7 +74,9 @@ export const PassengerNavigator: React.FC = () => {
         component={DirectTripsStack}
         options={{
           tabBarLabel: 'Reyslar',
-          tabBarIcon: ({ color, size }) => <Compass size={size} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Compass size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+          ),
         }}
       />
       <Tab.Screen
@@ -69,7 +84,9 @@ export const PassengerNavigator: React.FC = () => {
         component={BookingsScreen}
         options={{
           tabBarLabel: 'Safarlarim',
-          tabBarIcon: ({ color, size }) => <Ticket size={size} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Ticket size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+          ),
         }}
       />
       <Tab.Screen
@@ -77,7 +94,9 @@ export const PassengerNavigator: React.FC = () => {
         component={ChecklistScreen}
         options={{
           tabBarLabel: 'Chegara',
-          tabBarIcon: ({ color, size }) => <ShieldCheck size={size} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <ShieldCheck size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+          ),
         }}
       />
       <Tab.Screen
@@ -85,7 +104,9 @@ export const PassengerNavigator: React.FC = () => {
         component={ProfileScreen}
         options={{
           tabBarLabel: 'Profil',
-          tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <User size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+          ),
         }}
       />
     </Tab.Navigator>

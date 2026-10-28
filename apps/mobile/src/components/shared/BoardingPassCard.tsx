@@ -10,11 +10,11 @@ import {
   QrCode,
   ShieldCheck,
   Calendar,
-  Clock,
   MapPin,
   Car,
   FileCheck2,
   CheckCircle,
+  Clock,
 } from 'lucide-react-native';
 
 export interface BoardingPassCardProps {
@@ -68,6 +68,8 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
       );
     };
 
+    const digits = (booking.verificationCode || '1234').split('');
+
     return (
       <View style={styles.card}>
         {/* Top Header Ticket Band */}
@@ -100,18 +102,25 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
 
         {/* Boarding Code Security Highlight Banner */}
         <View style={styles.codeSection}>
-          <Text style={styles.codeLabel}>HAYDOVCHIGA AYTILADIGAN 4 XONALI BORT KODI:</Text>
+          <Text style={styles.codeLabel}>HAYDOVCHIGA AYTILADIGAN 4 XONALI BORT KODI</Text>
+          
           <View style={styles.codeRow}>
-            <View style={styles.codeBox}>
-              <Text style={styles.codeText}>{booking.verificationCode}</Text>
+            <View style={styles.digitsRow}>
+              {digits.map((digit, index) => (
+                <View key={index} style={styles.digitBox}>
+                  <Text style={styles.digitText}>{digit}</Text>
+                </View>
+              ))}
             </View>
-            <View style={styles.qrMock}>
-              <QrCode size={36} color={COLORS.gray[800]} />
-              <Text style={styles.qrText}>QR KOD</Text>
+
+            <View style={styles.qrBadge}>
+              <QrCode size={28} color="#0F172A" />
+              <Text style={styles.qrBadgeText}>QR KOD</Text>
             </View>
           </View>
+
           <Text style={styles.codeHint}>
-            Haydovchi sizni avtomobilga qabul qilayotganda ushbu 4 xonali xavfsizlik kodini kiritadi.
+            Haydovchi sizni avtomobilga qabul qilayotganda ushbu 4 xonali kodni tekshiradi.
           </Text>
         </View>
 
@@ -125,8 +134,8 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
         {/* Trip Meta Grid */}
         <View style={styles.detailsGrid}>
           <View style={styles.detailItem}>
-            <Calendar size={14} color={COLORS.gray[400]} />
-            <View>
+            <Calendar size={15} color={COLORS.gray[400]} />
+            <View style={{ flex: 1 }}>
               <Text style={styles.detailLabel}>Jo’nash vaqti</Text>
               <Text style={styles.detailValue}>
                 {new Date(booking.trip.departureTime).toLocaleTimeString('uz-UZ', {
@@ -142,8 +151,8 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
           </View>
 
           <View style={styles.detailItem}>
-            <Car size={14} color={COLORS.gray[400]} />
-            <View>
+            <Car size={15} color={COLORS.gray[400]} />
+            <View style={{ flex: 1 }}>
               <Text style={styles.detailLabel}>Avtomobil</Text>
               <Text style={styles.detailValue}>
                 {booking.trip.vehicle.make} {booking.trip.vehicle.model}
@@ -155,7 +164,7 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
 
         <View style={styles.detailsGrid}>
           <View style={styles.detailItem}>
-            <MapPin size={14} color={COLORS.gray[400]} />
+            <MapPin size={15} color={COLORS.gray[400]} />
             <View style={{ flex: 1 }}>
               <Text style={styles.detailLabel}>Qayerdan</Text>
               <Text style={styles.detailValue} numberOfLines={1}>
@@ -165,8 +174,8 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
           </View>
 
           <View style={styles.detailItem}>
-            <ShieldCheck size={14} color={COLORS.emerald[600]} />
-            <View>
+            <ShieldCheck size={15} color={COLORS.emerald[600]} />
+            <View style={{ flex: 1 }}>
               <Text style={styles.detailLabel}>Band o’rindiqlar</Text>
               <Text style={styles.detailValue}>
                 {booking.selectedSeats.map((s) => `#${s}`).join(', ')} ({booking.totalPrice.toLocaleString('uz-UZ')} UZS)
@@ -175,31 +184,33 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
           </View>
         </View>
 
-        {/* Action Buttons */}
-        <View style={styles.cardActions}>
-          <Button
-            title="Haydovchiga qo’ng’iroq"
-            variant="outline"
-            size="sm"
-            onPress={handleCallDriver}
-            leftIcon={<Phone size={14} color={COLORS.gray[700]} />}
-            style={{ flex: 1 }}
-          />
+        {/* Action Buttons Section */}
+        <View style={styles.cardActionsContainer}>
+          <View style={styles.actionButtonsRow}>
+            <TouchableOpacity
+              style={styles.callButton}
+              onPress={handleCallDriver}
+              activeOpacity={0.8}
+            >
+              <Phone size={14} color="#0F172A" />
+              <Text style={styles.callButtonText}>Haydovchiga qo‘ng‘iroq</Text>
+            </TouchableOpacity>
 
-          {isInternational && onOpenChecklist && (
-            <Button
-              title="Chegara gidi"
-              variant="primary"
-              size="sm"
-              onPress={onOpenChecklist}
-              leftIcon={<FileCheck2 size={14} color={COLORS.white} />}
-              style={{ flex: 1 }}
-            />
-          )}
+            {isInternational && onOpenChecklist && (
+              <TouchableOpacity
+                style={styles.guideButton}
+                onPress={onOpenChecklist}
+                activeOpacity={0.8}
+              >
+                <FileCheck2 size={14} color={COLORS.white} />
+                <Text style={styles.guideButtonText}>Chegara gidi</Text>
+              </TouchableOpacity>
+            )}
+          </View>
 
           {onCancelBooking && (
-            <TouchableOpacity onPress={handleCancel} style={styles.cancelBtn}>
-              <Text style={styles.cancelBtnText}>Bekor qilish</Text>
+            <TouchableOpacity onPress={handleCancel} style={styles.cancelLink} activeOpacity={0.7}>
+              <Text style={styles.cancelLinkText}>Safarni bekor qilish</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -214,20 +225,24 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: COLORS.white,
     borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: COLORS.gray[200],
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
     overflow: 'hidden',
     marginBottom: 16,
-    ...SHADOWS.md,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    elevation: 3,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: COLORS.gray[50],
+    backgroundColor: '#F8FAFC',
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray[200],
+    borderBottomColor: '#E2E8F0',
   },
   headerLeft: {
     flex: 1,
@@ -241,8 +256,8 @@ const styles = StyleSheet.create({
   airportCode: {
     fontSize: 20,
     fontWeight: '900',
-    color: COLORS.gray[900],
-    letterSpacing: 1,
+    color: '#0F172A',
+    letterSpacing: 0.5,
   },
   flightArrowContainer: {
     flexDirection: 'row',
@@ -251,8 +266,9 @@ const styles = StyleSheet.create({
   },
   flightLine: {
     width: 24,
-    height: 1.5,
-    backgroundColor: COLORS.emerald[600],
+    height: 2,
+    backgroundColor: COLORS.emerald[500],
+    borderRadius: 1,
   },
   flightArrowText: {
     fontSize: 12,
@@ -261,108 +277,112 @@ const styles = StyleSheet.create({
   },
   tripRoute: {
     fontSize: 12,
-    color: COLORS.gray[500],
+    color: '#64748B',
     fontWeight: '600',
   },
   headerRight: {
     alignItems: 'flex-end',
-    gap: 4,
+    gap: 5,
   },
   codeSection: {
     padding: 16,
-    backgroundColor: COLORS.emerald[50],
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
   },
   codeLabel: {
     fontSize: 10,
     fontWeight: '800',
-    color: COLORS.emerald[800],
-    letterSpacing: 0.8,
-    marginBottom: 8,
-    textAlign: 'center',
+    color: '#64748B',
+    letterSpacing: 0.6,
+    marginBottom: 10,
   },
   codeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 14,
+    marginBottom: 8,
   },
-  codeBox: {
-    backgroundColor: COLORS.white,
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: COLORS.emerald[500],
-    ...SHADOWS.sm,
+  digitsRow: {
+    flexDirection: 'row',
+    gap: 8,
   },
-  codeText: {
-    fontSize: 32,
-    fontWeight: '900',
-    color: COLORS.emerald[800],
-    letterSpacing: 6,
-    fontVariant: ['tabular-nums'],
-  },
-  qrMock: {
+  digitBox: {
+    width: 42,
+    height: 48,
+    borderRadius: 10,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1.5,
+    borderColor: '#CBD5E1',
     alignItems: 'center',
-    backgroundColor: COLORS.white,
-    padding: 6,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: COLORS.gray[200],
+    justifyContent: 'center',
   },
-  qrText: {
+  digitText: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#0F172A',
+    fontFamily: 'monospace',
+  },
+  qrBadge: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    backgroundColor: '#F1F5F9',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  qrBadgeText: {
     fontSize: 8,
-    fontWeight: '700',
-    color: COLORS.gray[500],
+    fontWeight: '800',
+    color: '#475569',
     marginTop: 2,
   },
   codeHint: {
     fontSize: 11,
-    color: COLORS.emerald[700],
+    color: '#64748B',
     textAlign: 'center',
-    marginTop: 8,
-    paddingHorizontal: 12,
+    marginTop: 2,
   },
   perforationWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 24,
-    backgroundColor: COLORS.white,
     position: 'relative',
-    overflow: 'hidden',
+    height: 20,
+    marginVertical: 4,
   },
   leftCutout: {
-    width: 16,
-    height: 24,
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 12,
-    backgroundColor: COLORS.gray[100],
-    borderWidth: 1.5,
+    width: 14,
+    height: 20,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
     borderLeftWidth: 0,
-    borderColor: COLORS.gray[200],
+    borderColor: '#E2E8F0',
   },
   rightCutout: {
-    width: 16,
-    height: 24,
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
-    backgroundColor: COLORS.gray[100],
-    borderWidth: 1.5,
+    width: 14,
+    height: 20,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
     borderRightWidth: 0,
-    borderColor: COLORS.gray[200],
+    borderColor: '#E2E8F0',
   },
   dashedLine: {
     flex: 1,
     height: 1,
     borderWidth: 1,
-    borderColor: COLORS.gray[300],
+    borderColor: '#CBD5E1',
     borderStyle: 'dashed',
     marginHorizontal: 8,
   },
   detailsGrid: {
     flexDirection: 'row',
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 7,
     gap: 16,
   },
   detailItem: {
@@ -373,13 +393,13 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 11,
-    color: COLORS.gray[500],
+    color: '#64748B',
     fontWeight: '600',
   },
   detailValue: {
-    fontSize: 13,
+    fontSize: 12.5,
     fontWeight: '700',
-    color: COLORS.gray[900],
+    color: '#0F172A',
     marginTop: 1,
   },
   plateText: {
@@ -387,28 +407,62 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: COLORS.emerald[700],
     backgroundColor: COLORS.emerald[50],
-    paddingHorizontal: 4,
+    paddingHorizontal: 5,
     paddingVertical: 1,
-    borderRadius: 3,
+    borderRadius: 4,
     alignSelf: 'flex-start',
     marginTop: 2,
   },
-  cardActions: {
+  cardActionsContainer: {
+    padding: 14,
+    borderTopWidth: 1,
+    borderTopColor: '#F1F5F9',
+    backgroundColor: '#FAFAFA',
+  },
+  actionButtonsRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  callButton: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    paddingTop: 12,
-    gap: 10,
-    borderTopWidth: 1,
-    borderTopColor: COLORS.gray[100],
+    justifyContent: 'center',
+    gap: 6,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.2,
+    borderColor: '#CBD5E1',
   },
-  cancelBtn: {
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+  callButtonText: {
+    fontSize: 12.5,
+    fontWeight: '700',
+    color: '#0F172A',
   },
-  cancelBtnText: {
+  guideButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: COLORS.emerald[600],
+  },
+  guideButtonText: {
+    fontSize: 12.5,
+    fontWeight: '700',
+    color: COLORS.white,
+  },
+  cancelLink: {
+    alignSelf: 'center',
+    marginTop: 10,
+    paddingVertical: 4,
+  },
+  cancelLinkText: {
     fontSize: 12,
     fontWeight: '600',
-    color: COLORS.red[600],
+    color: '#DC2626',
   },
 });
