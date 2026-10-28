@@ -6,11 +6,8 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
-  Alert,
 } from 'react-native';
-import { COLORS } from '../../lib/theme';
 import { Header } from '../../components/Header';
-import { Badge } from '../../components/Badge';
 import { ActiveRideBanner } from '../../components/passenger/ActiveRideBanner';
 import { BorderChecklistModal } from '../../components/BorderChecklistModal';
 import {
@@ -23,16 +20,11 @@ import { getBorderChecklist } from '../../lib/data';
 import { CountryCode } from '@otaxi/types';
 import {
   Search,
-  MapPin,
-  Calendar,
-  Users,
-  ShieldCheck,
-  Globe,
-  ArrowRight,
   ArrowUpDown,
-  FileCheck2,
-  Sparkles,
-  Headphones,
+  Clock,
+  Star,
+  Users,
+  ChevronRight,
 } from 'lucide-react-native';
 
 interface HomeScreenProps {
@@ -40,15 +32,15 @@ interface HomeScreenProps {
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const { activeBooking, cancelBooking, trips } = useApp();
+  const { activeBooking, trips } = useApp();
   const [fromCity, setFromCity] = useState('Toshkent');
   const [toCity, setToCity] = useState('');
   const [selectedDate, setSelectedDate] = useState<'TODAY' | 'TOMORROW'>('TODAY');
   const [passengersCount, setPassengersCount] = useState(1);
   const [isChecklistVisible, setChecklistVisible] = useState(false);
 
-  // Calculate matching trips count
-  const matchingTripsCount = trips.filter((t) => {
+  // Filter matching trips
+  const matchingTrips = trips.filter((t) => {
     if (fromCity && !t.originCity.toLowerCase().includes(fromCity.toLowerCase())) {
       return false;
     }
@@ -56,7 +48,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       return false;
     }
     return t.availableSeats >= passengersCount;
-  }).length;
+  });
 
   const handleSearch = () => {
     Haptics.selection();
@@ -90,17 +82,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header
-        title="Qayerga borasiz?"
-        subtitle="Markaziy Osiyo bo'ylab shaharlararo & xalqaro qatnov"
-      />
+      <Header />
 
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Active Booking Compact Banner */}
+        {/* Title */}
+        <View style={styles.heroSection}>
+          <Text style={styles.heroTitle}>Qayerga borasiz?</Text>
+        </View>
+
+        {/* Active Booking Minimal Banner */}
         {activeBooking && (
           <ActiveRideBanner
             booking={activeBooking}
@@ -109,49 +103,39 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           />
         )}
 
-        {/* Mobility Search Hero Card */}
+        {/* Minimal Search Card */}
         <View style={styles.searchCard}>
-          <View style={styles.searchCardTopBadge}>
-            <Sparkles size={13} color={COLORS.emerald[700]} />
-            <Text style={styles.searchCardBadgeText}>SHAHARLARARO & XALQARO</Text>
-            <Text style={styles.matchingTripsBadge}>
-              {matchingTripsCount > 0 ? `${matchingTripsCount} ta reys` : 'Barcha reyslar'}
-            </Text>
-          </View>
-
-          {/* Connected Route Input Box */}
-          <View style={styles.routeContainer}>
-            {/* Visual Route Connector Pins */}
-            <View style={styles.connectorColumn}>
+          {/* Route Section */}
+          <View style={styles.routeBox}>
+            <View style={styles.pinCol}>
               <View style={styles.originDot} />
-              <View style={styles.connectorDashedLine} />
-              <View style={styles.destinationPin} />
+              <View style={styles.routeLine} />
+              <View style={styles.destDot} />
             </View>
 
-            {/* Inputs Column */}
-            <View style={styles.inputsColumn}>
-              {/* Origin Input */}
-              <View style={styles.inputRow}>
-                <Text style={styles.inputTinyLabel}>QAYERDAN</Text>
+            <View style={styles.inputsCol}>
+              {/* From */}
+              <View style={styles.inputItem}>
+                <Text style={styles.inputMiniLabel}>Qayerdan</Text>
                 <TextInput
-                  style={styles.cityTextInput}
+                  style={styles.inputField}
                   value={fromCity}
                   onChangeText={setFromCity}
-                  placeholder="Shahar nomi (Masalan: Toshkent)"
+                  placeholder="Shahar nomi"
                   placeholderTextColor="#94A3B8"
                 />
               </View>
 
-              <View style={styles.horizontalDivider} />
+              <View style={styles.divider} />
 
-              {/* Destination Input */}
-              <View style={styles.inputRow}>
-                <Text style={styles.inputTinyLabel}>QAYERGA</Text>
+              {/* To */}
+              <View style={styles.inputItem}>
+                <Text style={styles.inputMiniLabel}>Qayerga</Text>
                 <TextInput
-                  style={styles.cityTextInput}
+                  style={styles.inputField}
                   value={toCity}
                   onChangeText={setToCity}
-                  placeholder="Samarqand, Shymkent 🇰🇿..."
+                  placeholder="Samarqand, Shymkent..."
                   placeholderTextColor="#94A3B8"
                 />
               </View>
@@ -160,204 +144,181 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             {/* Swap Button */}
             {toCity ? (
               <TouchableOpacity
-                style={styles.floatingSwapButton}
+                style={styles.swapBtn}
                 onPress={handleSwapCities}
                 activeOpacity={0.7}
-                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               >
-                <ArrowUpDown size={15} color="#475569" />
+                <ArrowUpDown size={14} color="#475569" />
               </TouchableOpacity>
             ) : null}
           </View>
 
-          {/* Date & Passengers Row */}
+          {/* Options Row: Date & Passengers */}
           <View style={styles.optionsRow}>
-            {/* Date Pill Selector */}
-            <View style={styles.optionBlock}>
-              <Text style={styles.optionLabel}>SANA</Text>
-              <View style={styles.datePillsRow}>
-                <TouchableOpacity
+            {/* Date */}
+            <View style={styles.dateSelector}>
+              <TouchableOpacity
+                style={[
+                  styles.datePill,
+                  selectedDate === 'TODAY' && styles.datePillActive,
+                ]}
+                onPress={() => {
+                  Haptics.light();
+                  setSelectedDate('TODAY');
+                }}
+              >
+                <Text
                   style={[
-                    styles.datePill,
-                    selectedDate === 'TODAY' && styles.datePillActive,
+                    styles.dateText,
+                    selectedDate === 'TODAY' && styles.dateTextActive,
                   ]}
-                  onPress={() => {
-                    Haptics.light();
-                    setSelectedDate('TODAY');
-                  }}
-                  activeOpacity={0.8}
                 >
-                  <Text
-                    style={[
-                      styles.datePillText,
-                      selectedDate === 'TODAY' && styles.datePillTextActive,
-                    ]}
-                  >
-                    Bugun
-                  </Text>
-                </TouchableOpacity>
+                  Bugun
+                </Text>
+              </TouchableOpacity>
 
-                <TouchableOpacity
+              <TouchableOpacity
+                style={[
+                  styles.datePill,
+                  selectedDate === 'TOMORROW' && styles.datePillActive,
+                ]}
+                onPress={() => {
+                  Haptics.light();
+                  setSelectedDate('TOMORROW');
+                }}
+              >
+                <Text
                   style={[
-                    styles.datePill,
-                    selectedDate === 'TOMORROW' && styles.datePillActive,
+                    styles.dateText,
+                    selectedDate === 'TOMORROW' && styles.dateTextActive,
                   ]}
-                  onPress={() => {
-                    Haptics.light();
-                    setSelectedDate('TOMORROW');
-                  }}
-                  activeOpacity={0.8}
                 >
-                  <Text
-                    style={[
-                      styles.datePillText,
-                      selectedDate === 'TOMORROW' && styles.datePillTextActive,
-                    ]}
-                  >
-                    Ertaga
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                  Ertaga
+                </Text>
+              </TouchableOpacity>
             </View>
 
-            {/* Passenger Counter */}
-            <View style={styles.optionBlock}>
-              <Text style={styles.optionLabel}>YO'LOVCHILAR</Text>
-              <View style={styles.passengerCounterRow}>
-                <TouchableOpacity
-                  style={[
-                    styles.counterBtn,
-                    passengersCount <= 1 && styles.counterBtnDisabled,
-                  ]}
-                  onPress={() => {
-                    Haptics.light();
-                    setPassengersCount((p) => Math.max(1, p - 1));
-                  }}
-                  disabled={passengersCount <= 1}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.counterBtnText}>−</Text>
-                </TouchableOpacity>
+            {/* Passengers */}
+            <View style={styles.passengersBox}>
+              <TouchableOpacity
+                style={[
+                  styles.counterBtn,
+                  passengersCount <= 1 && styles.counterBtnDisabled,
+                ]}
+                onPress={() => {
+                  Haptics.light();
+                  setPassengersCount((p) => Math.max(1, p - 1));
+                }}
+                disabled={passengersCount <= 1}
+              >
+                <Text style={styles.counterBtnText}>−</Text>
+              </TouchableOpacity>
 
-                <Text style={styles.counterNumber}>{passengersCount}</Text>
-
-                <TouchableOpacity
-                  style={[
-                    styles.counterBtn,
-                    passengersCount >= 4 && styles.counterBtnDisabled,
-                  ]}
-                  onPress={() => {
-                    Haptics.light();
-                    setPassengersCount((p) => Math.min(4, p + 1));
-                  }}
-                  disabled={passengersCount >= 4}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.counterBtnText}>+</Text>
-                </TouchableOpacity>
+              <View style={styles.passengersValueRow}>
+                <Users size={12} color="#64748B" />
+                <Text style={styles.passengersNum}>{passengersCount}</Text>
               </View>
+
+              <TouchableOpacity
+                style={[
+                  styles.counterBtn,
+                  passengersCount >= 4 && styles.counterBtnDisabled,
+                ]}
+                onPress={() => {
+                  Haptics.light();
+                  setPassengersCount((p) => Math.min(4, p + 1));
+                }}
+                disabled={passengersCount >= 4}
+              >
+                <Text style={styles.counterBtnText}>+</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
-          {/* Search Button */}
+          {/* Search CTA */}
           <TouchableOpacity
-            style={styles.searchCtaButton}
+            style={styles.searchButton}
             onPress={handleSearch}
-            activeOpacity={0.88}
+            activeOpacity={0.85}
           >
-            <Search size={18} color="#FFFFFF" strokeWidth={2.5} />
-            <Text style={styles.searchCtaText}>
-              {matchingTripsCount > 0
-                ? `Reyslarni qidirish (${matchingTripsCount} ta bo'sh reys)`
+            <Search size={16} color="#FFFFFF" strokeWidth={2.5} />
+            <Text style={styles.searchButtonText}>
+              {matchingTrips.length > 0
+                ? `Reyslarni ko'rish (${matchingTrips.length})`
                 : 'Reyslarni qidirish'}
             </Text>
-            <ArrowRight size={16} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
 
-        {/* Popular Corridors Horizontal Carousel */}
+        {/* Popular Corridors */}
         <CorridorQuickSelect
           onSelectRoute={handleSelectCorridor}
           selectedTo={toCity}
           selectedFrom={fromCity}
         />
 
-        {/* International Border Guide Quick Banner */}
-        <TouchableOpacity
-          style={styles.borderBanner}
-          onPress={() => {
-            Haptics.selection();
-            setChecklistVisible(true);
-          }}
-          activeOpacity={0.88}
-        >
-          <View style={styles.borderBannerIconCircle}>
-            <Globe size={20} color="#2563EB" />
-          </View>
-          <View style={styles.borderBannerContent}>
-            <View style={styles.borderBannerTitleRow}>
-              <Text style={styles.borderBannerTitle}>Xalqaro chegara tayyorgarligi</Text>
-              <View style={styles.miniBadge}>
-                <Text style={styles.miniBadgeText}>Gid 🇰🇿 🇰🇬 🇹🇯</Text>
-              </View>
-            </View>
-            <Text style={styles.borderBannerSubtitle}>
-              Qozog'iston, Qirg'iziston va Tojikiston bo'yicha viza va bojxona qoidalari
-            </Text>
-          </View>
-          <ArrowRight size={16} color="#2563EB" />
-        </TouchableOpacity>
-
-        {/* Mobility Guarantees Section */}
-        <View style={styles.featuresSection}>
-          <Text style={styles.sectionTitle}>OTAXI Safar Kafolatlari</Text>
-
-          <View style={styles.featureCard}>
-            <View style={[styles.featureIcon, { backgroundColor: '#F0FDF4' }]}>
-              <ShieldCheck size={20} color={COLORS.emerald[600]} />
-            </View>
-            <View style={styles.featureContent}>
-              <Text style={styles.featureTitle}>100% Tekshirilgan haydovchilar</Text>
-              <Text style={styles.featureText}>
-                Haydovchilik guvohnomasi, avtomobil texpasporti va sug'urtasi qat'iy tekshirilgan.
-              </Text>
-            </View>
+        {/* Available Live Rides Preview */}
+        <View style={styles.tripsSection}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Mavjud reyslar</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Trips')}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            >
+              <Text style={styles.seeAllText}>Barchasi →</Text>
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.featureCard}>
-            <View style={[styles.featureIcon, { backgroundColor: '#EFF6FF' }]}>
-              <FileCheck2 size={20} color="#2563EB" />
-            </View>
-            <View style={styles.featureContent}>
-              <Text style={styles.featureTitle}>Chegara qoidalari chek-listi</Text>
-              <Text style={styles.featureText}>
-                Xorijiy pasport muddati, 30 kunlik vizasiz rejim va bojxona deklaratsiyasi nazorati.
-              </Text>
-            </View>
-          </View>
+          <View style={styles.tripsList}>
+            {trips.slice(0, 3).map((trip) => {
+              const depTime = new Date(trip.departureTime).toLocaleTimeString('uz-UZ', {
+                hour: '2-digit',
+                minute: '2-digit',
+              });
 
-          <View style={styles.featureCard}>
-            <View style={[styles.featureIcon, { backgroundColor: '#FEF3C7' }]}>
-              <Sparkles size={20} color="#D97706" />
-            </View>
-            <View style={styles.featureContent}>
-              <Text style={styles.featureTitle}>Aniq o'rindiq & 4 xonali bort kodi</Text>
-              <Text style={styles.featureText}>
-                Old VIP yoki orqa o'rindiqni aniq tanlaysiz. 4 xonali kod bilan mashinaga chiqasiz.
-              </Text>
-            </View>
-          </View>
+              return (
+                <TouchableOpacity
+                  key={trip.id}
+                  style={styles.tripCard}
+                  onPress={() => {
+                    Haptics.light();
+                    navigation.navigate('TripDetails', { tripId: trip.id });
+                  }}
+                  activeOpacity={0.75}
+                >
+                  <View style={styles.tripCardLeft}>
+                    <View style={styles.tripRouteRow}>
+                      <Text style={styles.tripCityText}>
+                        {trip.originCity} → {trip.destinationCity}
+                      </Text>
+                      {trip.isInternational && <Text style={styles.intlFlag}>🇰🇿</Text>}
+                    </View>
 
-          <View style={styles.featureCard}>
-            <View style={[styles.featureIcon, { backgroundColor: '#F1F5F9' }]}>
-              <Headphones size={20} color="#334155" />
-            </View>
-            <View style={styles.featureContent}>
-              <Text style={styles.featureTitle}>24/7 Dispetcherlik va xavfsizlik</Text>
-              <Text style={styles.featureText}>
-                Tog'li dovonlar va cho'l magistrallarida doimiy GPS monitoring va qo'llab-quvvatlash.
-              </Text>
-            </View>
+                    <View style={styles.tripMetaRow}>
+                      <View style={styles.timeTag}>
+                        <Clock size={11} color="#64748B" />
+                        <Text style={styles.timeTagText}>{depTime}</Text>
+                      </View>
+                      <Text style={styles.metaDot}>•</Text>
+                      <Text style={styles.carText}>{trip.vehicle.model}</Text>
+                      <Text style={styles.metaDot}>•</Text>
+                      <View style={styles.ratingRow}>
+                        <Star size={11} color="#F59E0B" fill="#F59E0B" />
+                        <Text style={styles.ratingText}>{trip.driver.rating}</Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  <View style={styles.tripCardRight}>
+                    <Text style={styles.priceNumber}>
+                      {trip.pricePerSeat.toLocaleString('uz-UZ')}
+                    </Text>
+                    <Text style={styles.priceCurrency}>UZS</Text>
+                    <Text style={styles.seatsLeftText}>{trip.availableSeats} ta joy</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
       </ScrollView>
@@ -375,150 +336,126 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#FFFFFF',
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    padding: 16,
-    paddingBottom: 40,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 36,
+  },
+  heroSection: {
+    marginBottom: 14,
+  },
+  heroTitle: {
+    fontSize: 24,
+    fontWeight: '900',
+    color: '#0F172A',
+    letterSpacing: -0.5,
   },
   searchCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: '#E2E8F0',
-    padding: 16,
+    padding: 14,
     shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.06,
-    shadowRadius: 14,
-    elevation: 4,
-    marginBottom: 16,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
+    marginBottom: 8,
   },
-  searchCardTopBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 14,
-  },
-  searchCardBadgeText: {
-    fontSize: 10.5,
-    fontWeight: '800',
-    color: COLORS.emerald[800],
-    letterSpacing: 0.5,
-  },
-  matchingTripsBadge: {
-    marginLeft: 'auto',
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#64748B',
-  },
-  routeContainer: {
+  routeBox: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F8FAFC',
-    borderRadius: 14,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: '#F1F5F9',
     paddingHorizontal: 12,
     paddingVertical: 8,
     position: 'relative',
-    marginBottom: 14,
+    marginBottom: 12,
   },
-  connectorColumn: {
+  pinCol: {
     alignItems: 'center',
-    width: 20,
-    marginRight: 8,
-    paddingVertical: 12,
+    width: 14,
+    marginRight: 10,
+    paddingVertical: 10,
   },
   originDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: COLORS.emerald[600],
-    borderWidth: 2,
-    borderColor: '#BBF7D0',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#059669',
   },
-  connectorDashedLine: {
-    width: 2,
-    height: 32,
+  routeLine: {
+    width: 1.5,
+    height: 28,
     backgroundColor: '#CBD5E1',
-    marginVertical: 4,
+    marginVertical: 3,
   },
-  destinationPin: {
-    width: 10,
-    height: 10,
-    borderRadius: 2,
+  destDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     backgroundColor: '#F59E0B',
-    transform: [{ rotate: '45deg' }],
   },
-  inputsColumn: {
+  inputsCol: {
     flex: 1,
   },
-  inputRow: {
-    paddingVertical: 4,
+  inputItem: {
+    paddingVertical: 2,
   },
-  inputTinyLabel: {
+  inputMiniLabel: {
     fontSize: 9,
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#94A3B8',
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
     marginBottom: 2,
   },
-  cityTextInput: {
-    fontSize: 15,
+  inputField: {
+    fontSize: 14,
     fontWeight: '700',
     color: '#0F172A',
     padding: 0,
-    height: 24,
+    height: 22,
   },
-  horizontalDivider: {
+  divider: {
     height: 1,
     backgroundColor: '#E2E8F0',
-    marginVertical: 6,
+    marginVertical: 4,
   },
-  floatingSwapButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+  swapBtn: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: '#E2E8F0',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
   },
   optionsRow: {
     flexDirection: 'row',
-    gap: 12,
-    marginBottom: 16,
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
   },
-  optionBlock: {
+  dateSelector: {
     flex: 1,
-  },
-  optionLabel: {
-    fontSize: 9.5,
-    fontWeight: '800',
-    color: '#64748B',
-    letterSpacing: 0.5,
-    marginBottom: 6,
-  },
-  datePillsRow: {
     flexDirection: 'row',
     backgroundColor: '#F1F5F9',
     borderRadius: 10,
     padding: 3,
-    gap: 4,
+    gap: 3,
   },
   datePill: {
     flex: 1,
-    height: 34,
+    height: 32,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 8,
@@ -527,31 +464,42 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.06,
     shadowRadius: 2,
-    elevation: 2,
+    elevation: 1,
   },
-  datePillText: {
+  dateText: {
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#64748B',
   },
-  datePillTextActive: {
+  dateTextActive: {
+    fontWeight: '700',
     color: '#0F172A',
   },
-  passengerCounterRow: {
+  passengersBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     backgroundColor: '#F1F5F9',
     borderRadius: 10,
-    height: 40,
+    height: 38,
     paddingHorizontal: 6,
+    gap: 6,
+  },
+  passengersValueRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  passengersNum: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#0F172A',
   },
   counterBtn: {
-    width: 28,
-    height: 28,
-    borderRadius: 7,
+    width: 24,
+    height: 24,
+    borderRadius: 6,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
@@ -559,133 +507,130 @@ const styles = StyleSheet.create({
     borderColor: '#E2E8F0',
   },
   counterBtnDisabled: {
-    opacity: 0.4,
+    opacity: 0.35,
   },
   counterBtnText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '700',
     color: '#0F172A',
-    lineHeight: 18,
+    lineHeight: 16,
   },
-  counterNumber: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#0F172A',
-  },
-  searchCtaButton: {
+  searchButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    height: 50,
-    borderRadius: 14,
-    backgroundColor: COLORS.emerald[600],
-    shadowColor: COLORS.emerald[700],
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 3,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: '#0F172A', // Ultra-sleek minimalist dark slate CTA
   },
-  searchCtaText: {
-    fontSize: 14.5,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    letterSpacing: 0.2,
-  },
-  borderBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#DBEAFE',
-    padding: 14,
-    marginBottom: 20,
-    shadowColor: '#2563EB',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  borderBannerIconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#EFF6FF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  borderBannerContent: {
-    flex: 1,
-  },
-  borderBannerTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 2,
-  },
-  borderBannerTitle: {
+  searchButtonText: {
     fontSize: 13.5,
-    fontWeight: '800',
-    color: '#1E3A8A',
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
-  miniBadge: {
-    backgroundColor: '#DBEAFE',
-    paddingHorizontal: 6,
-    paddingVertical: 1,
-    borderRadius: 4,
-  },
-  miniBadgeText: {
-    fontSize: 9.5,
-    fontWeight: '800',
-    color: '#1D4ED8',
-  },
-  borderBannerSubtitle: {
-    fontSize: 11,
-    color: '#64748B',
-    lineHeight: 15,
-  },
-  featuresSection: {
+  tripsSection: {
     marginTop: 8,
   },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
   sectionTitle: {
-    fontSize: 15,
-    fontWeight: '800',
+    fontSize: 14,
+    fontWeight: '700',
     color: '#0F172A',
-    marginBottom: 12,
     letterSpacing: -0.2,
   },
-  featureCard: {
+  seeAllText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#059669',
+  },
+  tripsList: {
+    gap: 8,
+  },
+  tripCard: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: '#FFFFFF',
-    borderRadius: 14,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: '#E2E8F0',
     padding: 12,
-    marginBottom: 8,
   },
-  featureIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
-  },
-  featureContent: {
+  tripCardLeft: {
     flex: 1,
   },
-  featureTitle: {
-    fontSize: 13,
+  tripRouteRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginBottom: 4,
+  },
+  tripCityText: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#0F172A',
+  },
+  intlFlag: {
+    fontSize: 12,
+  },
+  tripMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  timeTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+  },
+  timeTagText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#64748B',
+  },
+  metaDot: {
+    fontSize: 8,
+    color: '#CBD5E1',
+  },
+  carText: {
+    fontSize: 11,
+    color: '#475569',
+    fontWeight: '500',
+  },
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  ratingText: {
+    fontSize: 11,
     fontWeight: '700',
     color: '#0F172A',
-    marginBottom: 2,
   },
-  featureText: {
-    fontSize: 11.5,
+  tripCardRight: {
+    alignItems: 'flex-end',
+    marginLeft: 12,
+  },
+  priceNumber: {
+    fontSize: 14,
+    fontWeight: '900',
+    color: '#059669',
+  },
+  priceCurrency: {
+    fontSize: 9,
+    fontWeight: '700',
     color: '#64748B',
-    lineHeight: 16,
+  },
+  seatsLeftText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: '#94A3B8',
+    marginTop: 2,
   },
 });
