@@ -58,7 +58,7 @@ export const PassengerCodeVerifyModal: React.FC<PassengerCodeVerifyModalProps> =
       const cleanCode = code.trim();
       if (cleanCode.length !== 4) {
         Haptics.warning();
-        Alert.alert('Xato', 'Iltimos, yo’lovchining 4 xonali bort kodini to’liq kiriting.');
+        Alert.alert('Xato', 'Iltimos, yo’lovchining 4 xonali tasdiqlash kodini to’liq kiriting.');
         return;
       }
 
@@ -102,8 +102,8 @@ export const PassengerCodeVerifyModal: React.FC<PassengerCodeVerifyModalProps> =
                 <KeyRound size={22} color={COLORS.amber[400]} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={styles.title}>Yo’lovchini bortga olish</Text>
-                <Text style={styles.subtitle}>Yo’lovchi chiptasidagi 4 xonali bort kodi</Text>
+                <Text style={styles.title}>Yo’lovchini qabul qilish</Text>
+                <Text style={styles.subtitle}>Yo’lovchi chiptasidagi 4 xonali tasdiqlash kodi</Text>
               </View>
               <TouchableOpacity onPress={handleClose} style={styles.closeBtn} activeOpacity={0.7}>
                 <X size={18} color="#94A3B8" />
@@ -231,7 +231,7 @@ export const PassengerCodeVerifyModal: React.FC<PassengerCodeVerifyModalProps> =
               ) : (
                 <>
                   <ShieldCheck size={18} color={COLORS.navy[950]} />
-                  <Text style={styles.verifyBtnText}>Kodni tekshirish va bortga olish</Text>
+                  <Text style={styles.verifyBtnText}>Kodni tekshirish va tasdiqlash</Text>
                 </>
               )}
             </TouchableOpacity>
@@ -377,11 +377,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#1E293B',
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#334155',
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    borderRadius: 12,
   },
   waitingChipName: {
     fontSize: 12,
@@ -389,10 +387,10 @@ const styles = StyleSheet.create({
     color: '#E2E8F0',
   },
   waitingChipCodeBadge: {
-    backgroundColor: 'rgba(245, 158, 11, 0.15)',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
+    backgroundColor: 'rgba(255, 136, 0, 0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 2.5,
+    borderRadius: 10,
   },
   waitingChipCode: {
     fontSize: 11,

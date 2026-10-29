@@ -184,7 +184,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     if (match.isBoarded) {
       return {
         success: false,
-        message: `${match.name} allaqachon bortga qabul qilingan.`,
+        message: `${match.name} allaqachon qabul qilingan.`,
         passengerName: match.name,
       };
     }
@@ -196,7 +196,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
     return {
       success: true,
-      message: `${match.name} (Joy #${match.seatNumber}) muvaffaqiyatli bortga qabul qilindi!`,
+      message: `${match.name} (Joy #${match.seatNumber}) muvaffaqiyatli qabul qilindi!`,
       passengerName: match.name,
     };
   };
@@ -250,6 +250,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       pricePerSeat: newTripData.pricePerSeat || 90000,
       currency: newTripData.currency || ('UZS' as any),
       isInternational: !!newTripData.isInternational,
+      departureType: newTripData.departureType || 'SCHEDULED',
       status: 'PUBLISHED' as any,
       allowLuggage: true,
       notes: newTripData.notes || 'Yangi e’lon qilingan reys',
@@ -289,6 +290,27 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     };
 
     setTrips((prev) => [newTrip, ...prev]);
+    setActiveDriverTrip({
+      id: newTrip.id,
+      originCity: newTrip.originCity,
+      destinationCity: newTrip.destinationCity,
+      originAddress: newTrip.originAddress,
+      destinationAddress: newTrip.destinationAddress,
+      departureTime: newTripData.departureTime || (newTrip.departureType === 'WHEN_FULL' ? "To'lganda jo'naydi" : 'Bugun, 18:00'),
+      departureType: newTrip.departureType,
+      isInternational: newTrip.isInternational,
+      status: 'SCHEDULED',
+      vehicle: {
+        make: newTrip.vehicle.make,
+        model: newTrip.vehicle.model,
+        licensePlate: newTrip.vehicle.licensePlate,
+      },
+      totalSeats: newTrip.totalSeats,
+      pricePerSeat: newTrip.pricePerSeat,
+      currency: newTrip.currency,
+      stops: newTrip.stops.map((s) => s.cityName),
+      passengers: [],
+    });
   };
 
   const requestPayout = (cardNumber: string, amount: number): { success: boolean; message: string } => {

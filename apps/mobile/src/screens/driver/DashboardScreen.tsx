@@ -231,9 +231,9 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
             activeOpacity={0.85}
           >
             <View style={styles.manageTripBtnContent}>
-              <Text style={styles.manageTripBtnText}>Faol reysni boshqarish (Bortga olish)</Text>
+              <Text style={styles.manageTripBtnText}>Faol reysni boshqarish</Text>
               <Text style={styles.manageTripBtnSubText}>
-                {bookedCount} ta yo’lovchi kodi va bortga qabul qilish
+                {bookedCount} ta yo’lovchi kodi va qabul qilish
               </Text>
             </View>
             <View style={styles.manageTripArrowCircle}>

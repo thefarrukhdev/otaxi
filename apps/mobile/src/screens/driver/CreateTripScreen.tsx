@@ -103,6 +103,8 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
   const [destinationCity, setDestinationCity] = useState('Samarqand');
   const [destinationAddress, setDestinationAddress] = useState('Markaziy Registon shoxbekati');
   const [departureTime, setDepartureTime] = useState('Ertaga, 07:00');
+  const [departureType, setDepartureType] = useState<'WHEN_FULL' | 'SCHEDULED'>('WHEN_FULL');
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [seatsCount, setSeatsCount] = useState<number>(4);
   const [pricePerSeat, setPricePerSeat] = useState<string>('90000');
   const [hasVIPFrontSeat, setHasVIPFrontSeat] = useState<boolean>(true);
@@ -167,7 +169,8 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
       originAddress,
       destinationCity,
       destinationAddress,
-      departureTime,
+      departureTime: departureType === 'WHEN_FULL' ? "To'lganda jo'naydi" : departureTime,
+      departureType,
       totalSeats: seatsCount,
       availableSeats: seatsCount,
       pricePerSeat: parsedPrice,
@@ -327,90 +330,87 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
           </View>
         </View>
 
-        {/* Intermediate Stops (Oraliq bekatlar) */}
+        {/* Date & Departure Mode Selection */}
         <View style={styles.card}>
-          <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardLabel}>Oraliq bekatlar (Tranzit to’xtash joylari)</Text>
-            <Text style={styles.cardLabelCount}>{stops.length} ta bekat</Text>
-          </View>
-
-          {stops.map((stop, idx) => (
-            <View key={idx} style={styles.stopChipRow}>
-              <View style={styles.stopNumberBadge}>
-                <Text style={styles.stopNumberText}>{idx + 1}</Text>
-              </View>
-              <Text style={styles.stopNameText}>{stop}</Text>
-              <TouchableOpacity
-                onPress={() => handleRemoveStop(idx)}
-                style={styles.removeStopBtn}
-                activeOpacity={0.7}
-              >
-                <X size={14} color="#94A3B8" />
-              </TouchableOpacity>
-            </View>
-          ))}
-
-          {/* Add Stop Input */}
-          <View style={styles.addStopRow}>
-            <TextInput
-              style={styles.addStopInput}
-              value={newStopInput}
-              onChangeText={setNewStopInput}
-              placeholder="Yangi bekat qo’shish (masalan: Jizzax)"
-              placeholderTextColor="#64748B"
-            />
+          <Text style={styles.cardLabel}>Jo’nash tartibi (Rejim)</Text>
+          <View style={styles.typeToggleRow}>
             <TouchableOpacity
-              style={styles.addStopBtn}
-              onPress={handleAddStop}
+              style={[styles.typeBtn, departureType === 'WHEN_FULL' && styles.typeBtnActive]}
+              onPress={() => {
+                Haptics.selection();
+                setDepartureType('WHEN_FULL');
+              }}
               activeOpacity={0.8}
             >
-              <Plus size={16} color={COLORS.navy[950]} />
-              <Text style={styles.addStopBtnText}>Qo’shish</Text>
+              <Sparkles size={16} color={departureType === 'WHEN_FULL' ? '#FF8800' : '#94A3B8'} />
+              <Text style={[styles.typeBtnText, departureType === 'WHEN_FULL' && styles.typeBtnTextActive]}>
+                ⚡ To’lsa jo’naymiz (Jonli)
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.typeBtn, departureType === 'SCHEDULED' && styles.typeBtnActive]}
+              onPress={() => {
+                Haptics.selection();
+                setDepartureType('SCHEDULED');
+              }}
+              activeOpacity={0.8}
+            >
+              <Clock size={16} color={departureType === 'SCHEDULED' ? '#FF8800' : '#94A3B8'} />
+              <Text style={[styles.typeBtnText, departureType === 'SCHEDULED' && styles.typeBtnTextActive]}>
+                Aniq vaqt bo’yicha
+              </Text>
             </TouchableOpacity>
           </View>
-        </View>
 
-        {/* Date & Time Selection */}
-        <View style={styles.card}>
-          <Text style={styles.cardLabel}>Jo’nash vaqti</Text>
-          <View style={styles.timePresetsRow}>
-            {TIME_PRESETS.map((t, idx) => {
-              const isSelected = departureTime === t;
-              return (
-                <TouchableOpacity
-                  key={idx}
-                  style={[styles.timePresetChip, isSelected && styles.timePresetChipActive]}
-                  onPress={() => {
-                    Haptics.selection();
-                    setDepartureTime(t);
-                  }}
-                  activeOpacity={0.8}
-                >
-                  <Clock
-                    size={12}
-                    color={isSelected ? COLORS.amber[400] : '#94A3B8'}
-                    style={{ marginRight: 4 }}
-                  />
-                  <Text
-                    style={[styles.timePresetText, isSelected && styles.timePresetTextActive]}
-                  >
-                    {t}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
+          {departureType === 'WHEN_FULL' ? (
+            <View style={styles.whenFullNoteBox}>
+              <Text style={styles.whenFullNoteText}>
+                💡 Jonli reys: Bekatda turibsiz. 4 ta yo’lovchi buyurtma berishi bilanoq darhol safarga chiqiladi.
+              </Text>
+            </View>
+          ) : (
+            <View style={{ marginTop: 12 }}>
+              <View style={styles.timePresetsRow}>
+                {TIME_PRESETS.map((t, idx) => {
+                  const isSelected = departureTime === t;
+                  return (
+                    <TouchableOpacity
+                      key={idx}
+                      style={[styles.timePresetChip, isSelected && styles.timePresetChipActive]}
+                      onPress={() => {
+                        Haptics.selection();
+                        setDepartureTime(t);
+                      }}
+                      activeOpacity={0.8}
+                    >
+                      <Clock
+                        size={12}
+                        color={isSelected ? COLORS.amber[400] : '#94A3B8'}
+                        style={{ marginRight: 4 }}
+                      />
+                      <Text
+                        style={[styles.timePresetText, isSelected && styles.timePresetTextActive]}
+                      >
+                        {t}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
 
-          <View style={styles.inputBox}>
-            <Calendar size={16} color={COLORS.amber[400]} style={{ marginRight: 8 }} />
-            <TextInput
-              style={styles.textInput}
-              value={departureTime}
-              onChangeText={setDepartureTime}
-              placeholder="Sana va vaqt (masalan: Ertaga, 07:00)"
-              placeholderTextColor="#64748B"
-            />
-          </View>
+              <View style={styles.inputBox}>
+                <Calendar size={16} color={COLORS.amber[400]} style={{ marginRight: 8 }} />
+                <TextInput
+                  style={styles.textInput}
+                  value={departureTime}
+                  onChangeText={setDepartureTime}
+                  placeholder="Sana va vaqt (masalan: Ertaga, 07:00)"
+                  placeholderTextColor="#64748B"
+                />
+              </View>
+            </View>
+          )}
         </View>
 
         {/* Seat Count & Pricing */}
@@ -516,76 +516,139 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
           </View>
         </View>
 
-        {/* Vehicle Amenities Switches */}
-        <View style={styles.card}>
-          <Text style={styles.cardLabel}>Avtomobil qulayliklari</Text>
+        {/* Collapsible Advanced Settings (Oraliq bekatlar, Qulayliklar, Izoh) */}
+        <TouchableOpacity
+          style={styles.advancedToggleBtn}
+          onPress={() => {
+            Haptics.light();
+            setShowAdvanced(!showAdvanced);
+          }}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.advancedToggleText}>
+            {showAdvanced
+              ? "▲ Qo'shimcha sozlamalarni yopish"
+              : "▼ Qo'shimcha sozlamalar (Oraliq bekatlar, qulayliklar, izoh)"}
+          </Text>
+        </TouchableOpacity>
 
-          <View style={styles.amenityRow}>
-            <View style={styles.amenityLeft}>
-              <Wind size={18} color={COLORS.emerald[400]} />
-              <Text style={styles.amenityText}>Konditsioner (Iqlim nazorati)</Text>
+        {showAdvanced && (
+          <>
+            {/* Intermediate Stops (Oraliq bekatlar) */}
+            <View style={styles.card}>
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.cardLabel}>Oraliq bekatlar (Tranzit to’xtash joylari)</Text>
+                <Text style={styles.cardLabelCount}>{stops.length} ta bekat</Text>
+              </View>
+
+              {stops.map((stop, idx) => (
+                <View key={idx} style={styles.stopChipRow}>
+                  <View style={styles.stopNumberBadge}>
+                    <Text style={styles.stopNumberText}>{idx + 1}</Text>
+                  </View>
+                  <Text style={styles.stopNameText}>{stop}</Text>
+                  <TouchableOpacity
+                    onPress={() => handleRemoveStop(idx)}
+                    style={styles.removeStopBtn}
+                    activeOpacity={0.7}
+                  >
+                    <X size={14} color="#94A3B8" />
+                  </TouchableOpacity>
+                </View>
+              ))}
+
+              {/* Add Stop Input */}
+              <View style={styles.addStopRow}>
+                <TextInput
+                  style={styles.addStopInput}
+                  value={newStopInput}
+                  onChangeText={setNewStopInput}
+                  placeholder="Yangi bekat qo’shish (masalan: Jizzax)"
+                  placeholderTextColor="#64748B"
+                />
+                <TouchableOpacity
+                  style={styles.addStopBtn}
+                  onPress={handleAddStop}
+                  activeOpacity={0.8}
+                >
+                  <Plus size={16} color={COLORS.navy[950]} />
+                  <Text style={styles.addStopBtnText}>Qo’shish</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <Switch
-              value={hasAC}
-              onValueChange={setHasAC}
-              trackColor={{ false: '#1E293B', true: COLORS.emerald[500] }}
-              thumbColor="#FFFFFF"
-            />
-          </View>
 
-          <View style={styles.amenityRow}>
-            <View style={styles.amenityLeft}>
-              <Luggage size={18} color={COLORS.amber[400]} />
-              <Text style={styles.amenityText}>Katta bagaj / yukxona</Text>
+            {/* Vehicle Amenities Switches */}
+            <View style={styles.card}>
+              <Text style={styles.cardLabel}>Avtomobil qulayliklari</Text>
+
+              <View style={styles.amenityRow}>
+                <View style={styles.amenityLeft}>
+                  <Wind size={18} color={COLORS.emerald[400]} />
+                  <Text style={styles.amenityText}>Konditsioner (Iqlim nazorati)</Text>
+                </View>
+                <Switch
+                  value={hasAC}
+                  onValueChange={setHasAC}
+                  trackColor={{ false: '#1E293B', true: COLORS.emerald[500] }}
+                  thumbColor="#FFFFFF"
+                />
+              </View>
+
+              <View style={styles.amenityRow}>
+                <View style={styles.amenityLeft}>
+                  <Luggage size={18} color={COLORS.amber[400]} />
+                  <Text style={styles.amenityText}>Katta bagaj / yukxona</Text>
+                </View>
+                <Switch
+                  value={hasLuggage}
+                  onValueChange={setHasLuggage}
+                  trackColor={{ false: '#1E293B', true: COLORS.emerald[500] }}
+                  thumbColor="#FFFFFF"
+                />
+              </View>
+
+              <View style={styles.amenityRow}>
+                <View style={styles.amenityLeft}>
+                  <CigaretteOff size={18} color="#EF4444" />
+                  <Text style={styles.amenityText}>Salonda chekish taqiqlangan</Text>
+                </View>
+                <Switch
+                  value={noSmoking}
+                  onValueChange={setNoSmoking}
+                  trackColor={{ false: '#1E293B', true: COLORS.emerald[500] }}
+                  thumbColor="#FFFFFF"
+                />
+              </View>
+
+              <View style={styles.amenityRow}>
+                <View style={styles.amenityLeft}>
+                  <BatteryCharging size={18} color="#38BDF8" />
+                  <Text style={styles.amenityText}>Telefon zaryadlash (USB / Type-C)</Text>
+                </View>
+                <Switch
+                  value={hasCharging}
+                  onValueChange={setHasCharging}
+                  trackColor={{ false: '#1E293B', true: COLORS.emerald[500] }}
+                  thumbColor="#FFFFFF"
+                />
+              </View>
             </View>
-            <Switch
-              value={hasLuggage}
-              onValueChange={setHasLuggage}
-              trackColor={{ false: '#1E293B', true: COLORS.emerald[500] }}
-              thumbColor="#FFFFFF"
-            />
-          </View>
 
-          <View style={styles.amenityRow}>
-            <View style={styles.amenityLeft}>
-              <CigaretteOff size={18} color="#EF4444" />
-              <Text style={styles.amenityText}>Salonda chekish taqiqlangan</Text>
+            {/* Trip Notes */}
+            <View style={styles.card}>
+              <Text style={styles.cardLabel}>Yo’lovchilar uchun qo’shimcha izoh</Text>
+              <TextInput
+                style={styles.notesInput}
+                value={notes}
+                onChangeText={setNotes}
+                placeholder="Qo’shimcha talablar yoki ma’lumotlar..."
+                placeholderTextColor="#64748B"
+                multiline
+                numberOfLines={3}
+              />
             </View>
-            <Switch
-              value={noSmoking}
-              onValueChange={setNoSmoking}
-              trackColor={{ false: '#1E293B', true: COLORS.emerald[500] }}
-              thumbColor="#FFFFFF"
-            />
-          </View>
-
-          <View style={styles.amenityRow}>
-            <View style={styles.amenityLeft}>
-              <BatteryCharging size={18} color="#38BDF8" />
-              <Text style={styles.amenityText}>Telefon zaryadlash (USB / Type-C)</Text>
-            </View>
-            <Switch
-              value={hasCharging}
-              onValueChange={setHasCharging}
-              trackColor={{ false: '#1E293B', true: COLORS.emerald[500] }}
-              thumbColor="#FFFFFF"
-            />
-          </View>
-        </View>
-
-        {/* Trip Notes */}
-        <View style={styles.card}>
-          <Text style={styles.cardLabel}>Yo’lovchilar uchun qo’shimcha izoh</Text>
-          <TextInput
-            style={styles.notesInput}
-            value={notes}
-            onChangeText={setNotes}
-            placeholder="Qo’shimcha talablar yoki ma’lumotlar..."
-            placeholderTextColor="#64748B"
-            multiline
-            numberOfLines={3}
-          />
-        </View>
+          </>
+        )}
 
         {/* Submit Publish Button */}
         <TouchableOpacity
@@ -676,6 +739,35 @@ const styles = StyleSheet.create({
   typeBtnTextActiveInternational: {
     color: COLORS.amber[400],
     fontWeight: '800',
+  },
+  whenFullNoteBox: {
+    backgroundColor: 'rgba(255, 136, 0, 0.08)',
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 136, 0, 0.2)',
+  },
+  whenFullNoteText: {
+    fontSize: 12,
+    color: '#FF8800',
+    lineHeight: 17,
+    fontWeight: '600',
+  },
+  advancedToggleBtn: {
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 14,
+    backgroundColor: '#111827',
+    borderWidth: 1,
+    borderColor: '#1F2937',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
+  advancedToggleText: {
+    fontSize: 12.5,
+    fontWeight: '700',
+    color: '#FF8800',
   },
   internationalAlert: {
     flexDirection: 'row',

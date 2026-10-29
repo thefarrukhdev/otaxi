@@ -8,7 +8,7 @@ import { TripDetailsScreen } from '../screens/passenger/TripDetailsScreen';
 import { BookingsScreen } from '../screens/passenger/BookingsScreen';
 import { ChecklistScreen } from '../screens/passenger/ChecklistScreen';
 import { ProfileScreen } from '../screens/passenger/ProfileScreen';
-import { Search, Compass, Ticket, ShieldCheck, User } from 'lucide-react-native';
+import { Search, Compass, Ticket, User } from 'lucide-react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -18,6 +18,7 @@ const HomeTripsStack = () => (
     <Stack.Screen name="HomeScreen" component={HomeScreen} />
     <Stack.Screen name="TripsList" component={TripsListScreen} />
     <Stack.Screen name="TripDetails" component={TripDetailsScreen} />
+    <Stack.Screen name="Checklist" component={ChecklistScreen} />
   </Stack.Navigator>
 );
 
@@ -25,6 +26,7 @@ const DirectTripsStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="TripsListMain" component={TripsListScreen} />
     <Stack.Screen name="TripDetails" component={TripDetailsScreen} />
+    <Stack.Screen name="Checklist" component={ChecklistScreen} />
   </Stack.Navigator>
 );
 
@@ -97,16 +99,6 @@ export const PassengerNavigator: React.FC = () => {
           tabBarLabel: 'Safarlarim',
           tabBarIcon: ({ focused }) => (
             <Ticket size={22} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.4 : 1.8} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Checklist"
-        component={ChecklistScreen}
-        options={{
-          tabBarLabel: 'Chegara',
-          tabBarIcon: ({ focused }) => (
-            <ShieldCheck size={22} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.4 : 1.8} />
           ),
         }}
       />

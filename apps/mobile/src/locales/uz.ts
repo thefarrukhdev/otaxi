@@ -32,7 +32,7 @@ export const uz = {
     whyUs: 'Nega aynan OTAXI?',
     guarantee1: '100% tekshirilgan haydovchilar',
     guarantee2: 'Chegara hujjatlari chek-listi',
-    guarantee3: 'Aniq joy tanlash va 4 xonali bort kodi',
+    guarantee3: 'Aniq joy tanlash va 4 xonali tasdiqlash kodi',
   },
   trips: {
     title: 'Mavjud reyslar',
@@ -79,7 +79,7 @@ export const uz = {
     manageActiveTrip: 'Faol reysni boshqarish',
     createTrip: 'Yangi reys yaratish',
     wallet: 'Hamyon va daromad',
-    verifyCodePrompt: "Yo'lovchining 4 xonali bort kodini kiriting",
+    verifyCodePrompt: "Yo'lovchining 4 xonali tasdiqlash kodini kiriting",
     payout: 'Kartaga pul yechish',
   },
   profile: {

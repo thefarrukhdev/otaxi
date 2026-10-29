@@ -219,7 +219,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
 
     Alert.alert(
       'Muvaffaqiyatli band qilindi! 🎉',
-      `Sizning 4 xonali bort kodingiz: #${newBooking.verificationCode}\n\nHaydovchi avtomobilga mindirishda ushbu kodni so'raydi. Chiptangiz "Safarlarim" bo'limida saqlanadi.`,
+      `Sizning 4 xonali tasdiqlash kodingiz: #${newBooking.verificationCode}\n\nHaydovchi avtomobilga chiqishingizda ushbu kodni so'raydi. Chiptangiz "Safarlarim" bo'limida saqlanadi.`,
       [
         {
           text: 'Safarlarimga o\'tish',
@@ -229,14 +229,21 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
     );
   };
 
-  const departureTimeStr = formatClockTime(trip.departureTime);
-  const arrivalTimeStr = formatClockTime(trip.estimatedArrivalTime);
+  const isWhenFull = trip.departureType === 'WHEN_FULL';
+  const departureTimeStr = isWhenFull ? "To'lganda" : formatClockTime(trip.departureTime);
+  const arrivalTimeStr = isWhenFull ? `~${Math.round(trip.durationMinutes / 60)} soat` : formatClockTime(trip.estimatedArrivalTime);
 
   return (
     <View style={styles.container}>
       <Header
         title={`${trip.originCity} ➔ ${trip.destinationCity}`}
-        subtitle={trip.isInternational ? 'Xalqaro reys' : 'Shaharlararo qatnov'}
+        subtitle={
+          isWhenFull
+            ? '⚡ To’lsa jo’naydi (Jonli reys)'
+            : trip.isInternational
+            ? 'Xalqaro reys'
+            : 'Shaharlararo qatnov'
+        }
       />
 
       <ScrollView
@@ -342,7 +349,9 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
                 <View style={[styles.timelineDot, styles.timelineDotEnd]} />
               </View>
               <Text style={styles.routeDirectText}>
-                {trip.stops.length > 0
+                {isWhenFull
+                  ? "To'lganda jo'naydi"
+                  : trip.stops.length > 0
                   ? `${trip.stops.length} ta to'xtash`
                   : "To'g'ridan-to'g'ri"}
               </Text>
@@ -454,12 +463,17 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
                   <Text style={styles.amenityText}>Konditsioner mavjud</Text>
                 </View>
               )}
-              {trip.allowLuggage && (
+              {trip.vehicle.trunkCapacity === 'LIMITED' ? (
                 <View style={styles.amenityItem}>
-                  <Luggage size={14} color={COLORS.gray[600]} />
-                  <Text style={styles.amenityText}>Yuk uchun keng bagaj</Text>
+                  <Luggage size={14} color="#F59E0B" />
+                  <Text style={styles.amenityText}>Kichik bagaj (Metan gaz)</Text>
                 </View>
-              )}
+              ) : trip.vehicle.trunkCapacity === 'LARGE' || trip.allowLuggage ? (
+                <View style={styles.amenityItem}>
+                  <Luggage size={14} color="#10B981" />
+                  <Text style={styles.amenityText}>Katta bagaj (Bo’sh yukxona)</Text>
+                </View>
+              ) : null}
               {trip.vehicle.hasPhoneCharging && (
                 <View style={styles.amenityItem}>
                   <BatteryCharging size={14} color={COLORS.blue[600]} />

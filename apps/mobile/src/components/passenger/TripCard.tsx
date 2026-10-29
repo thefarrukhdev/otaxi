@@ -87,6 +87,8 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
       <View style={styles.topRow}>
         {trip.isInternational ? (
           <Text style={styles.intlText}>🇰🇿 Xalqaro</Text>
+        ) : trip.departureType === 'WHEN_FULL' ? (
+          <Text style={styles.whenFullText}>⚡ Jonli reys (To’lsa ketamiz)</Text>
         ) : (
           <Text style={styles.domesticText}>Shaharlararo</Text>
         )}
@@ -99,7 +101,9 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
       {/* Timeline Section */}
       <View style={styles.timelineRow}>
         <View style={styles.timePoint}>
-          <Text style={styles.timeText}>{departureTime}</Text>
+          <Text style={[styles.timeText, trip.departureType === 'WHEN_FULL' && styles.timeTextWhenFull]}>
+            {trip.departureType === 'WHEN_FULL' ? "To'lganda" : departureTime}
+          </Text>
           <Text style={styles.cityName}>{trip.originCity}</Text>
           <Text style={styles.addressName} numberOfLines={1}>
             {trip.originAddress}
@@ -182,7 +186,9 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
             {trip.allowLuggage && (
               <View style={styles.amenityChip}>
                 <Luggage size={11} color="#94A3B8" />
-                <Text style={styles.amenityChipText}>Yukxona</Text>
+                <Text style={styles.amenityChipText}>
+                  {trip.vehicle.trunkCapacity === 'LIMITED' ? 'Kichik bagaj (Metan)' : 'Katta bagaj'}
+                </Text>
               </View>
             )}
             {trip.vehicle.hasPhoneCharging && (
@@ -203,6 +209,11 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
             {trip.pricePerSeat.toLocaleString('uz-UZ')}{' '}
             <Text style={styles.priceCurrency}>{trip.currency}</Text>
           </Text>
+          {trip.seats[0]?.priceDelta ? (
+            <Text style={styles.frontSeatPriceHint}>
+              Old o’rindiq: {(trip.pricePerSeat + trip.seats[0].priceDelta).toLocaleString('uz-UZ')} UZS
+            </Text>
+          ) : null}
         </View>
 
         <View style={styles.bookButtonFake}>
@@ -242,6 +253,11 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#FF8800',
   },
+  whenFullText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FF8800',
+  },
   domesticText: {
     fontSize: 11,
     fontWeight: '600',
@@ -274,6 +290,11 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontVariant: ['tabular-nums'],
     letterSpacing: -0.5,
+  },
+  timeTextWhenFull: {
+    fontSize: 16,
+    color: '#FF8800',
+    fontWeight: '800',
   },
   cityName: {
     fontSize: 14,
@@ -414,15 +435,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    backgroundColor: '#1D2029',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: '#272B35',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 8,
   },
   amenityChipText: {
-    fontSize: 9,
+    fontSize: 9.5,
     color: '#94A3B8',
     fontWeight: '600',
   },
@@ -446,6 +465,12 @@ const styles = StyleSheet.create({
     color: '#FF8800',
     fontVariant: ['tabular-nums'],
     letterSpacing: -0.3,
+  },
+  frontSeatPriceHint: {
+    fontSize: 10.5,
+    fontWeight: '700',
+    color: '#94A3B8',
+    marginTop: 2,
   },
   priceCurrency: {
     fontSize: 12,

@@ -111,8 +111,8 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
     if (activeDriverTrip.status === 'SCHEDULED') {
       if (!allBoarded) {
         Alert.alert(
-          'Barcha yo’lovchilar bortda emas!',
-          `${totalPassengers} tadan faqat ${boardedCount} ta yo’lovchi bortga qabul qilindi. Shunga qaramay safarni boshlaysizmi?`,
+          'Barcha yo’lovchilar salonda emas!',
+          `${totalPassengers} tadan faqat ${boardedCount} ta yo’lovchi qabul qilindi. Shunga qaramay safarni boshlaysizmi?`,
           [
             { text: 'Kutish', style: 'cancel' },
             {
@@ -128,7 +128,7 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
       } else {
         updateTripStatus('DEPARTED');
         Haptics.success();
-        Alert.alert('Safar boshlandi', 'Barcha yo’lovchilar bortda! Oq yo’l!');
+        Alert.alert('Safar boshlandi', 'Barcha yo’lovchilar joylashdi! Oq yo’l!');
       }
     } else if (activeDriverTrip.status === 'DEPARTED') {
       if (activeDriverTrip.isInternational) {

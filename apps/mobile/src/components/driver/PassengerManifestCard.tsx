@@ -223,7 +223,7 @@ export const PassengerManifestCard: React.FC<PassengerManifestCardProps> = React
           <View style={styles.allBoardedBanner}>
             <CheckCircle2 size={18} color={COLORS.emerald[400]} />
             <Text style={styles.allBoardedBannerText}>
-              Barcha yo’lovchilar bortga qabul qilindi. Safarni boshlashingiz mumkin!
+              Barcha yo’lovchilar qabul qilindi. Safarni boshlashingiz mumkin!
             </Text>
           </View>
         )}

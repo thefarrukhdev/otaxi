@@ -197,12 +197,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   setPassengersCount((p) => Math.max(1, p - 1));
                 }}
                 disabled={passengersCount <= 1}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
                 <Text style={styles.counterBtnText}>−</Text>
               </TouchableOpacity>
 
               <View style={styles.passengersValueRow}>
-                <Users size={12} color="#94A3B8" />
+                <Users size={14} color="#94A3B8" />
                 <Text style={styles.passengersNum}>{passengersCount}</Text>
               </View>
 
@@ -216,6 +217,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   setPassengersCount((p) => Math.min(4, p + 1));
                 }}
                 disabled={passengersCount >= 4}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
                 <Text style={styles.counterBtnText}>+</Text>
               </TouchableOpacity>
@@ -283,7 +285,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                     </View>
 
                     <View style={styles.tripMetaRow}>
-                      <Text style={styles.timeTagText}>{depTime}</Text>
+                      <Text style={[styles.timeTagText, trip.departureType === 'WHEN_FULL' && styles.timeTagWhenFull]}>
+                        {trip.departureType === 'WHEN_FULL' ? '⚡ To’lsa ketamiz' : depTime}
+                      </Text>
                       <Text style={styles.metaDot}>•</Text>
                       <Text style={styles.carText}>{trip.vehicle.model}</Text>
                       <Text style={styles.metaDot}>•</Text>
@@ -438,9 +442,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#191C25',
-    borderRadius: 10,
-    height: 38,
-    paddingHorizontal: 6,
+    borderRadius: 12,
+    height: 42,
+    paddingHorizontal: 5,
     gap: 6,
     borderWidth: 1,
     borderColor: '#222632',
@@ -449,16 +453,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+    paddingHorizontal: 2,
   },
   passengersNum: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '800',
     color: '#FFFFFF',
   },
   counterBtn: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: '#222530',
     alignItems: 'center',
     justifyContent: 'center',
@@ -556,6 +561,10 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     color: '#94A3B8',
+  },
+  timeTagWhenFull: {
+    color: '#FF8800',
+    fontWeight: '800',
   },
   metaDot: {
     fontSize: 8,

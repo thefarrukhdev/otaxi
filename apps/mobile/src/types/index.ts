@@ -25,6 +25,7 @@ export interface DetailedTrip {
   pricePerSeat: number;
   currency: Currency;
   isInternational: boolean;
+  departureType?: 'SCHEDULED' | 'WHEN_FULL';
   status: TripStatus;
   allowLuggage: boolean;
   notes?: string;
@@ -51,6 +52,7 @@ export interface DetailedTrip {
     photoUrl: string;
     hasAirConditioner: boolean;
     hasLuggageSpace: boolean;
+    trunkCapacity?: 'LARGE' | 'MEDIUM' | 'LIMITED';
     noSmoking: boolean;
     hasPhoneCharging: boolean;
   };
@@ -100,6 +102,7 @@ export interface ActiveDriverTrip {
   originAddress: string;
   destinationAddress: string;
   departureTime: string;
+  departureType?: 'SCHEDULED' | 'WHEN_FULL';
   isInternational: boolean;
   status: 'SCHEDULED' | 'DEPARTED' | 'AT_BORDER' | 'COMPLETED';
   vehicle: {

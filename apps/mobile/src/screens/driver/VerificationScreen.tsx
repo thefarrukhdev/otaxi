@@ -263,7 +263,7 @@ export const VerificationScreen: React.FC = () => {
               • Avtomobil boshqa shaxs nomida bo’lsa, chet elga chiqish huquqi bilan notarial ishonchnoma;
             </Text>
             <Text style={styles.bulletItem}>
-              • Chegara postida har bir yo’lovchining 4 xonali bort kodi tekshirilgan bo’lishi zarur.
+              • Chegara postida har bir yo’lovchining 4 xonali tasdiqlash kodi tekshirilgan bo’lishi zarur.
             </Text>
           </View>
         </View>

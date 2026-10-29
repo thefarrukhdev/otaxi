@@ -78,7 +78,7 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ navigation }) =>
     <View style={styles.container}>
       <Header
         title="Mening safarlarim"
-        subtitle="Aviachipta uslubidagi dinamik bort chiptalari va safarlar tarixi"
+        subtitle="Faol chiptalar va safarlar tarixi"
       />
 
       {/* Tabs */}
