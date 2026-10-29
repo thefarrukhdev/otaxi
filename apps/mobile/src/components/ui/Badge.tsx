@@ -54,40 +54,40 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         case 'warning':
         case 'amber':
           return {
-            bg: 'rgba(255, 136, 0, 0.15)',
-            border: 'rgba(255, 136, 0, 0.4)',
+            bg: 'rgba(255, 136, 0, 0.12)',
+            border: 'transparent',
             text: '#FF8800',
             dot: '#FF8800',
           };
         case 'info':
         case 'blue':
           return {
-            bg: 'rgba(59, 130, 246, 0.15)',
-            border: 'rgba(59, 130, 246, 0.35)',
-            text: '#93C5FD',
+            bg: 'rgba(59, 130, 246, 0.12)',
+            border: 'transparent',
+            text: '#60A5FA',
             dot: '#60A5FA',
           };
         case 'danger':
         case 'red':
           return {
-            bg: 'rgba(239, 68, 68, 0.15)',
-            border: 'rgba(239, 68, 68, 0.35)',
+            bg: 'rgba(239, 68, 68, 0.12)',
+            border: 'transparent',
             text: '#F87171',
             dot: '#EF4444',
           };
         case 'international':
         case 'purple':
           return {
-            bg: 'rgba(139, 92, 246, 0.15)',
-            border: 'rgba(139, 92, 246, 0.35)',
-            text: '#C4B5FD',
+            bg: 'rgba(139, 92, 246, 0.12)',
+            border: 'transparent',
+            text: '#A78BFA',
             dot: '#A78BFA',
           };
         case 'neutral':
         case 'gray':
           return {
-            bg: '#1D2029',
-            border: '#272B35',
+            bg: '#1A1D26',
+            border: 'transparent',
             text: '#94A3B8',
             dot: '#64748B',
           };
@@ -96,7 +96,7 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         default:
           return {
             bg: 'rgba(255, 136, 0, 0.12)',
-            border: 'rgba(255, 136, 0, 0.35)',
+            border: 'transparent',
             text: '#FF8800',
             dot: '#FF8800',
           };
@@ -141,8 +141,8 @@ const styles = StyleSheet.create({
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 8,
-    borderWidth: 1,
+    borderRadius: 20,
+    borderWidth: 0,
     alignSelf: 'flex-start',
   },
   badgeSm: {
@@ -152,16 +152,16 @@ const styles = StyleSheet.create({
   },
   badgeMd: {
     paddingHorizontal: 10,
-    paddingVertical: 5,
-    gap: 6,
+    paddingVertical: 4,
+    gap: 5,
   },
   dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
   },
   flagText: {
-    fontSize: 12,
+    fontSize: 11,
   },
   icon: {
     marginRight: 2,
@@ -171,9 +171,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0.1,
   },
   labelSm: {
-    fontSize: 11,
+    fontSize: 10.5,
   },
   labelMd: {
-    fontSize: 13,
+    fontSize: 12,
   },
 });

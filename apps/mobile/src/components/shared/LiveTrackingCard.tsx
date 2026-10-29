@@ -564,21 +564,19 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   corridorTagDark: {
-    backgroundColor: 'rgba(245, 158, 11, 0.12)',
-    borderColor: 'rgba(245, 158, 11, 0.25)',
-    borderWidth: 1,
+    backgroundColor: 'rgba(255, 136, 0, 0.1)',
+    borderWidth: 0,
   },
   corridorTagLight: {
-    backgroundColor: '#ecfdf5',
-    borderColor: '#a7f3d0',
-    borderWidth: 1,
+    backgroundColor: 'rgba(255, 136, 0, 0.08)',
+    borderWidth: 0,
   },
   corridorTagText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   corridorTextDark: {
-    color: COLORS.amber[400],
+    color: '#FF8800',
   },
   corridorTextLight: {
     color: COLORS.emerald[700],

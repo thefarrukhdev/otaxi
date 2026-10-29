@@ -26,7 +26,6 @@ import {
   Clock,
   Compass,
   Zap,
-  Globe,
   CheckCircle2,
 } from 'lucide-react-native';
 
@@ -197,24 +196,9 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
             <View style={styles.nextTripRouteWrap}>
               <View style={styles.tagRow}>
                 <Text style={styles.nextTripTag}>NAVBATDAGI REYS</Text>
-                <View
-                  style={[
-                    styles.corridorPill,
-                    activeDriverTrip.isInternational ? styles.corridorInternational : styles.corridorLocal,
-                  ]}
-                >
-                  {activeDriverTrip.isInternational && (
-                    <Globe size={11} color={COLORS.amber[400]} style={{ marginRight: 4 }} />
-                  )}
-                  <Text
-                    style={[
-                      styles.corridorPillText,
-                      activeDriverTrip.isInternational ? styles.corridorTextInternational : styles.corridorTextLocal,
-                    ]}
-                  >
-                    {activeDriverTrip.isInternational ? 'Xalqaro (Chegara)' : 'Shaharlararo'}
-                  </Text>
-                </View>
+                {activeDriverTrip.isInternational && (
+                  <Text style={styles.intlFlagText}>🇰🇿 Xalqaro</Text>
+                )}
               </View>
 
               <Text style={styles.nextTripRoute}>
@@ -382,9 +366,9 @@ const styles = StyleSheet.create({
     color: '#F8FAFC',
   },
   onlineBadge: {
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 2.5,
+    borderRadius: 12,
   },
   onlineBadgeActive: {
     backgroundColor: 'rgba(16, 185, 129, 0.15)',
@@ -446,9 +430,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 3,
     backgroundColor: 'rgba(16, 185, 129, 0.12)',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 2.5,
+    borderRadius: 12,
   },
   verifPillText: {
     fontSize: 10,
@@ -532,9 +516,9 @@ const styles = StyleSheet.create({
   },
   greenTag: {
     backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 2.5,
+    borderRadius: 12,
   },
   greenTagText: {
     fontSize: 10,
@@ -543,9 +527,9 @@ const styles = StyleSheet.create({
   },
   ratingBadge: {
     backgroundColor: 'rgba(250, 204, 21, 0.15)',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 2.5,
+    borderRadius: 12,
   },
   ratingBadgeText: {
     fontSize: 10,
@@ -554,9 +538,9 @@ const styles = StyleSheet.create({
   },
   successRateBadge: {
     backgroundColor: 'rgba(56, 189, 248, 0.15)',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 2.5,
+    borderRadius: 12,
   },
   successRateText: {
     fontSize: 10,
@@ -590,32 +574,10 @@ const styles = StyleSheet.create({
     color: COLORS.amber[400],
     letterSpacing: 0.8,
   },
-  corridorPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  corridorInternational: {
-    backgroundColor: 'rgba(245, 158, 11, 0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(245, 158, 11, 0.3)',
-  },
-  corridorLocal: {
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
-  },
-  corridorPillText: {
-    fontSize: 10,
+  intlFlagText: {
+    fontSize: 11,
     fontWeight: '700',
-  },
-  corridorTextInternational: {
-    color: COLORS.amber[400],
-  },
-  corridorTextLocal: {
-    color: COLORS.emerald[400],
+    color: '#FF8800',
   },
   nextTripRoute: {
     fontSize: 18,

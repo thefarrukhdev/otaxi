@@ -229,7 +229,7 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
                   isInternational && styles.typeBtnTextActiveInternational,
                 ]}
               >
-                Xalqaro (Chegara) 🇰🇿 🇰🇬
+                Xalqaro 🇰🇿 🇰🇬
               </Text>
             </TouchableOpacity>
           </View>

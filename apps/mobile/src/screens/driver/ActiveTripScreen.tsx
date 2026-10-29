@@ -351,10 +351,7 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
             <View>
               <View style={styles.routeBadgeRow}>
                 {activeDriverTrip.isInternational && (
-                  <View style={styles.internationalTag}>
-                    <Globe size={11} color={COLORS.amber[400]} />
-                    <Text style={styles.internationalTagText}>Xalqaro Chegara Reysi</Text>
-                  </View>
+                  <Text style={styles.intlFlagText}>🇰🇿 Xalqaro reys</Text>
                 )}
                 <Text style={styles.departureTimeText}>
                   Jo’nash: {activeDriverTrip.departureTime}
@@ -638,21 +635,10 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     flexWrap: 'wrap',
   },
-  internationalTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(245, 158, 11, 0.15)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(245, 158, 11, 0.3)',
-  },
-  internationalTagText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: COLORS.amber[400],
+  intlFlagText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FF8800',
   },
   departureTimeText: {
     fontSize: 11,
