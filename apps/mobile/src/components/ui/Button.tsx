@@ -8,6 +8,7 @@ import {
   ViewStyle,
   TextStyle,
   StyleProp,
+  Insets,
 } from 'react-native';
 import { COLORS } from '../../lib/theme';
 import { Haptics } from './Haptics';
@@ -30,25 +31,34 @@ export interface ButtonProps {
   textStyle?: StyleProp<TextStyle>;
   haptic?: 'light' | 'medium' | 'heavy' | 'selection' | 'success' | 'none';
   testID?: string;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  hitSlop?: Insets | number;
 }
 
-export const Button: React.FC<ButtonProps> = React.memo(
-  ({
-    title,
-    children,
-    onPress,
-    variant = 'primary',
-    size = 'md',
-    isLoading = false,
-    disabled = false,
-    leftIcon,
-    rightIcon,
-    fullWidth = false,
-    style,
-    textStyle,
-    haptic = 'selection',
-    testID,
-  }) => {
+export const Button = React.forwardRef<View, ButtonProps>(
+  (
+    {
+      title,
+      children,
+      onPress,
+      variant = 'primary',
+      size = 'md',
+      isLoading = false,
+      disabled = false,
+      leftIcon,
+      rightIcon,
+      fullWidth = false,
+      style,
+      textStyle,
+      haptic = 'selection',
+      testID,
+      accessibilityLabel,
+      accessibilityHint,
+      hitSlop,
+    },
+    ref
+  ) => {
     const handlePress = () => {
       if (disabled || isLoading) return;
 
@@ -78,64 +88,36 @@ export const Button: React.FC<ButtonProps> = React.memo(
 
     const getVariantStyles = (): { container: ViewStyle; text: TextStyle; spinnerColor: string } => {
       switch (variant) {
-        case 'amber':
-          return {
-            container: {
-              backgroundColor: '#FF8800',
-              borderColor: '#FF8800',
-              borderWidth: 1,
-            },
-            text: { color: '#0C0D11', fontWeight: '800' },
-            spinnerColor: '#0C0D11',
-          };
         case 'secondary':
           return {
-            container: {
-              backgroundColor: '#1D2029',
-              borderColor: '#272B35',
-              borderWidth: 1,
-            },
-            text: { color: COLORS.white, fontWeight: '700' },
-            spinnerColor: COLORS.white,
+            container: styles.variantSecondary,
+            text: styles.variantSecondaryText,
+            spinnerColor: '#FFFFFF',
           };
         case 'outline':
           return {
-            container: {
-              backgroundColor: '#15171E',
-              borderColor: '#272B35',
-              borderWidth: 1.5,
-            },
-            text: { color: COLORS.white, fontWeight: '700' },
-            spinnerColor: COLORS.white,
+            container: styles.variantOutline,
+            text: styles.variantOutlineText,
+            spinnerColor: '#FFFFFF',
           };
         case 'ghost':
           return {
-            container: {
-              backgroundColor: COLORS.transparent,
-              borderWidth: 0,
-            },
-            text: { color: '#FF8800', fontWeight: '700' },
+            container: styles.variantGhost,
+            text: styles.variantGhostText,
             spinnerColor: '#FF8800',
           };
         case 'danger':
           return {
-            container: {
-              backgroundColor: COLORS.red[600],
-              borderColor: COLORS.red[700],
-              borderWidth: 1,
-            },
-            text: { color: COLORS.white, fontWeight: '700' },
-            spinnerColor: COLORS.white,
+            container: styles.variantDanger,
+            text: styles.variantDangerText,
+            spinnerColor: '#FFFFFF',
           };
+        case 'amber':
         case 'primary':
         default:
           return {
-            container: {
-              backgroundColor: '#FF8800',
-              borderColor: '#FF8800',
-              borderWidth: 1,
-            },
-            text: { color: '#0C0D11', fontWeight: '800' },
+            container: styles.variantPrimary,
+            text: styles.variantPrimaryText,
             spinnerColor: '#0C0D11',
           };
       }
@@ -145,56 +127,83 @@ export const Button: React.FC<ButtonProps> = React.memo(
       switch (size) {
         case 'sm':
           return {
-            container: { height: 36, paddingHorizontal: 12, borderRadius: 8 },
-            text: { fontSize: 13 },
+            container: styles.sizeSm,
+            text: styles.sizeSmText,
           };
         case 'lg':
           return {
-            container: { height: 56, paddingHorizontal: 24, borderRadius: 14 },
-            text: { fontSize: 17 },
+            container: styles.sizeLg,
+            text: styles.sizeLgText,
           };
         case 'md':
         default:
           return {
-            container: { height: 48, paddingHorizontal: 18, borderRadius: 12 },
-            text: { fontSize: 15 },
+            container: styles.sizeMd,
+            text: styles.sizeMdText,
           };
       }
     };
 
     const variantStyle = getVariantStyles();
     const sizeStyle = getSizeStyles();
+    const defaultHitSlop = size === 'sm' ? { top: 8, bottom: 8, left: 8, right: 8 } : undefined;
+    const computedLabel =
+      accessibilityLabel ||
+      title ||
+      (typeof children === 'string' ? children : undefined);
+
+    const renderContent = () => {
+      if (isLoading) {
+        return <ActivityIndicator size="small" color={variantStyle.spinnerColor} />;
+      }
+
+      return (
+        <View style={styles.contentRow}>
+          {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
+          {title ? (
+            <Text
+              style={[styles.baseText, sizeStyle.text, variantStyle.text, textStyle]}
+              numberOfLines={1}
+            >
+              {title}
+            </Text>
+          ) : typeof children === 'string' ? (
+            <Text
+              style={[styles.baseText, sizeStyle.text, variantStyle.text, textStyle]}
+              numberOfLines={1}
+            >
+              {children}
+            </Text>
+          ) : (
+            children
+          )}
+          {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>}
+        </View>
+      );
+    };
 
     return (
       <TouchableOpacity
+        ref={ref as any}
         testID={testID}
         activeOpacity={0.8}
         onPress={handlePress}
         disabled={disabled || isLoading}
+        hitSlop={hitSlop || defaultHitSlop}
+        accessibilityRole="button"
+        accessibilityLabel={computedLabel}
+        accessibilityHint={accessibilityHint}
+        accessibilityState={{ disabled: disabled || isLoading, busy: isLoading }}
         style={[
           styles.base,
           sizeStyle.container,
           variantStyle.container,
           fullWidth && styles.fullWidth,
-          disabled && styles.disabled,
+          (disabled || isLoading) && styles.disabled,
           style,
         ]}
       >
-        {isLoading ? (
-          <ActivityIndicator size="small" color={variantStyle.spinnerColor} />
-        ) : (
-          <View style={styles.contentRow}>
-            {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
-            {title ? (
-              <Text style={[styles.baseText, sizeStyle.text, variantStyle.text, textStyle]}>
-                {title}
-              </Text>
-            ) : (
-              children
-            )}
-            {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>}
-          </View>
-        )}
+        {renderContent()}
       </TouchableOpacity>
     );
   }
@@ -209,9 +218,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 2,
   },
   fullWidth: {
     width: '100%',
@@ -226,12 +235,82 @@ const styles = StyleSheet.create({
   },
   baseText: {
     textAlign: 'center',
-    letterSpacing: 0.2,
+    letterSpacing: 0.1,
   },
   leftIcon: {
     marginRight: 8,
   },
   rightIcon: {
     marginLeft: 8,
+  },
+  // Sizes
+  sizeSm: {
+    height: 38,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+  },
+  sizeSmText: {
+    fontSize: 13,
+  },
+  sizeMd: {
+    height: 48,
+    paddingHorizontal: 18,
+    borderRadius: 12,
+  },
+  sizeMdText: {
+    fontSize: 15,
+  },
+  sizeLg: {
+    height: 54,
+    paddingHorizontal: 24,
+    borderRadius: 14,
+  },
+  sizeLgText: {
+    fontSize: 16,
+  },
+  // Variants
+  variantPrimary: {
+    backgroundColor: '#FF8800',
+    borderColor: '#FF8800',
+    borderWidth: 1,
+  },
+  variantPrimaryText: {
+    color: '#0C0D11',
+    fontWeight: '800',
+  },
+  variantSecondary: {
+    backgroundColor: '#1D2029',
+    borderColor: '#272B35',
+    borderWidth: 1,
+  },
+  variantSecondaryText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  variantOutline: {
+    backgroundColor: '#15171E',
+    borderColor: '#272B35',
+    borderWidth: 1.5,
+  },
+  variantOutlineText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  variantGhost: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+  },
+  variantGhostText: {
+    color: '#FF8800',
+    fontWeight: '700',
+  },
+  variantDanger: {
+    backgroundColor: COLORS.red[600],
+    borderColor: COLORS.red[700],
+    borderWidth: 1,
+  },
+  variantDangerText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
   },
 });

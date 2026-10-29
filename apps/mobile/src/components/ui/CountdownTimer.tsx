@@ -37,9 +37,9 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = React.memo(
         >
           <View style={styles.cardHeader}>
             {isUrgent ? (
-              <AlertTriangle size={18} color={COLORS.red[600]} />
+              <AlertTriangle size={18} color="#EF4444" />
             ) : (
-              <Clock size={18} color={COLORS.amber[600]} />
+              <Clock size={18} color="#FF8800" />
             )}
             <Text
               style={[
@@ -63,7 +63,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = React.memo(
           <Text style={styles.cardHint}>
             {isExpired
               ? 'Joy boshqa yo’lovchilar uchun ochildi.'
-              : 'Ushbu vaqt ichida to’lovni amalga oshiring, aks holda joy bekor qilinadi.'}
+              : 'Ushbu vaqt ichida to’lovni tasdiqlang, aks holda joy bekor qilinadi.'}
           </Text>
         </View>
       );
@@ -79,9 +79,9 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = React.memo(
         ]}
       >
         {isUrgent ? (
-          <AlertTriangle size={14} color={COLORS.red[600]} />
+          <AlertTriangle size={14} color="#EF4444" />
         ) : (
-          <Clock size={14} color={isExpired ? COLORS.gray[500] : COLORS.amber[700]} />
+          <Clock size={14} color={isExpired ? '#64748B' : '#FF8800'} />
         )}
         <Text
           style={[
@@ -107,70 +107,71 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 8,
-    backgroundColor: COLORS.amber[50],
+    backgroundColor: 'rgba(255, 136, 0, 0.12)',
     borderWidth: 1,
-    borderColor: COLORS.amber[200],
+    borderColor: 'rgba(255, 136, 0, 0.25)',
     alignSelf: 'flex-start',
   },
   pillUrgent: {
-    backgroundColor: COLORS.red[50],
-    borderColor: COLORS.red[200],
+    backgroundColor: 'rgba(239, 68, 68, 0.14)',
+    borderColor: 'rgba(239, 68, 68, 0.35)',
   },
   pillExpired: {
-    backgroundColor: COLORS.gray[100],
-    borderColor: COLORS.gray[300],
+    backgroundColor: '#1D2029',
+    borderColor: '#272B35',
   },
   pillText: {
     fontSize: 12,
     fontWeight: '700',
-    color: COLORS.amber[900],
+    color: '#FFA033',
     fontVariant: ['tabular-nums'],
   },
   cardContainer: {
-    padding: 14,
-    borderRadius: 12,
-    backgroundColor: COLORS.amber[50],
+    padding: 16,
+    borderRadius: 14,
+    backgroundColor: '#15171E',
     borderWidth: 1,
-    borderColor: COLORS.amber[200],
+    borderColor: '#272B35',
     alignItems: 'center',
   },
   cardUrgent: {
-    backgroundColor: COLORS.red[50],
-    borderColor: COLORS.red[200],
+    borderColor: 'rgba(239, 68, 68, 0.4)',
+    backgroundColor: 'rgba(239, 68, 68, 0.08)',
   },
   cardExpired: {
-    backgroundColor: COLORS.gray[100],
-    borderColor: COLORS.gray[300],
+    borderColor: '#272B35',
+    backgroundColor: '#15171E',
   },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginBottom: 4,
+    marginBottom: 6,
   },
   cardTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: COLORS.amber[900],
+    color: '#FFFFFF',
   },
   cardTimer: {
     fontSize: 28,
     fontWeight: '800',
-    color: COLORS.amber[900],
+    color: '#FF8800',
     fontVariant: ['tabular-nums'],
     letterSpacing: 1,
     marginVertical: 4,
   },
   cardHint: {
-    fontSize: 11,
-    color: COLORS.gray[600],
+    fontSize: 11.5,
+    color: '#94A3B8',
     textAlign: 'center',
-    marginTop: 2,
+    marginTop: 4,
+    lineHeight: 16,
   },
   textUrgent: {
-    color: COLORS.red[700],
+    color: '#F87171',
   },
   textExpired: {
-    color: COLORS.gray[500],
+    color: '#64748B',
   },
 });

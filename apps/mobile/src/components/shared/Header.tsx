@@ -56,8 +56,10 @@ export const Header: React.FC<HeaderProps> = React.memo(
               <TouchableOpacity
                 onPress={handleBack}
                 style={styles.backButton}
-                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                 activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel="Orqaga qaytish"
               >
                 <ChevronLeft size={24} color="#FFFFFF" />
               </TouchableOpacity>
@@ -91,6 +93,11 @@ export const Header: React.FC<HeaderProps> = React.memo(
                 style={styles.modePill}
                 onPress={handleToggleMode}
                 activeOpacity={0.8}
+                hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  isDriver ? "Yo'lovchi rejimiga o'tish" : "Haydovchi rejimiga o'tish"
+                }
               >
                 {isDriver ? (
                   <>

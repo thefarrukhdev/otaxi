@@ -9,6 +9,7 @@ export type BadgeVariant =
   | 'danger'
   | 'neutral'
   | 'international'
+  | 'brand'
   // Backward compatibility aliases
   | 'emerald'
   | 'amber'
@@ -51,10 +52,17 @@ export const Badge: React.FC<BadgeProps> = React.memo(
   }) => {
     const getColors = () => {
       switch (variant) {
+        case 'brand':
+          return {
+            bg: 'rgba(255, 136, 0, 0.14)',
+            border: 'transparent',
+            text: '#FF8800',
+            dot: '#FF8800',
+          };
         case 'warning':
         case 'amber':
           return {
-            bg: 'rgba(255, 136, 0, 0.12)',
+            bg: 'rgba(255, 136, 0, 0.14)',
             border: 'transparent',
             text: '#FF8800',
             dot: '#FF8800',
@@ -62,7 +70,7 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         case 'info':
         case 'blue':
           return {
-            bg: 'rgba(59, 130, 246, 0.12)',
+            bg: 'rgba(59, 130, 246, 0.14)',
             border: 'transparent',
             text: '#60A5FA',
             dot: '#60A5FA',
@@ -70,7 +78,7 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         case 'danger':
         case 'red':
           return {
-            bg: 'rgba(239, 68, 68, 0.12)',
+            bg: 'rgba(239, 68, 68, 0.14)',
             border: 'transparent',
             text: '#F87171',
             dot: '#EF4444',
@@ -78,7 +86,7 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         case 'international':
         case 'purple':
           return {
-            bg: 'rgba(139, 92, 246, 0.12)',
+            bg: 'rgba(139, 92, 246, 0.14)',
             border: 'transparent',
             text: '#A78BFA',
             dot: '#A78BFA',
@@ -95,10 +103,10 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         case 'emerald':
         default:
           return {
-            bg: 'rgba(255, 136, 0, 0.12)',
+            bg: 'rgba(16, 185, 129, 0.14)',
             border: 'transparent',
-            text: '#FF8800',
-            dot: '#FF8800',
+            text: '#10B981',
+            dot: '#10B981',
           };
       }
     };
@@ -171,7 +179,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.1,
   },
   labelSm: {
-    fontSize: 10.5,
+    fontSize: 11,
   },
   labelMd: {
     fontSize: 12,

@@ -6,8 +6,7 @@ import {
   ViewStyle,
   StyleProp,
 } from 'react-native';
-import { COLORS, SHADOWS } from '../../lib/theme';
-import { useTheme } from '../../hooks/useTheme';
+import { SHADOWS } from '../../lib/theme';
 import { Haptics } from './Haptics';
 
 export type CardVariant = 'surface' | 'elevated' | 'outlined' | 'glass';
@@ -21,6 +20,7 @@ export interface CardProps {
   contentStyle?: StyleProp<ViewStyle>;
   haptic?: 'light' | 'selection' | 'none';
   testID?: string;
+  accessibilityLabel?: string;
 }
 
 export const Card: React.FC<CardProps> = React.memo(
@@ -33,42 +33,8 @@ export const Card: React.FC<CardProps> = React.memo(
     contentStyle,
     haptic = 'selection',
     testID,
+    accessibilityLabel,
   }) => {
-    const { isDriver, palette } = useTheme();
-
-    const getVariantStyles = (): ViewStyle => {
-      switch (variant) {
-        case 'elevated':
-          return {
-            backgroundColor: '#1D2029',
-            borderColor: '#272B35',
-            borderWidth: 1,
-            ...SHADOWS.sm,
-          };
-        case 'outlined':
-          return {
-            backgroundColor: '#15171E',
-            borderColor: '#272B35',
-            borderWidth: 1.5,
-          };
-        case 'glass':
-          return {
-            backgroundColor: 'rgba(21, 23, 30, 0.85)',
-            borderColor: 'rgba(255, 255, 255, 0.08)',
-            borderWidth: 1,
-            backdropFilter: 'blur(10px)',
-          } as ViewStyle;
-        case 'surface':
-        default:
-          return {
-            backgroundColor: '#15171E',
-            borderColor: '#272B35',
-            borderWidth: 1,
-            ...SHADOWS.sm,
-          };
-      }
-    };
-
     const handlePress = () => {
       if (!onPress) return;
       if (haptic === 'light') Haptics.light();
@@ -77,7 +43,19 @@ export const Card: React.FC<CardProps> = React.memo(
     };
 
     const isInteractive = pressable || Boolean(onPress);
-    const combinedStyles = [styles.card, getVariantStyles(), style];
+
+    const variantStyle =
+      variant === 'elevated'
+        ? styles.elevated
+        : variant === 'outlined'
+        ? styles.outlined
+        : variant === 'glass'
+        ? styles.glass
+        : styles.surface;
+
+    const combinedStyles = [styles.card, variantStyle, style];
+
+    const body = contentStyle ? <View style={contentStyle}>{children}</View> : children;
 
     if (isInteractive) {
       return (
@@ -85,16 +63,18 @@ export const Card: React.FC<CardProps> = React.memo(
           testID={testID}
           activeOpacity={0.85}
           onPress={handlePress}
+          accessibilityRole="button"
+          accessibilityLabel={accessibilityLabel}
           style={combinedStyles}
         >
-          <View style={contentStyle}>{children}</View>
+          {body}
         </TouchableOpacity>
       );
     }
 
     return (
-      <View testID={testID} style={combinedStyles}>
-        <View style={contentStyle}>{children}</View>
+      <View testID={testID} style={combinedStyles} accessibilityLabel={accessibilityLabel}>
+        {body}
       </View>
     );
   }
@@ -107,5 +87,27 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     overflow: 'hidden',
+  },
+  surface: {
+    backgroundColor: '#15171E',
+    borderColor: '#272B35',
+    borderWidth: 1,
+    ...SHADOWS.sm,
+  },
+  elevated: {
+    backgroundColor: '#1D2029',
+    borderColor: '#272B35',
+    borderWidth: 1,
+    ...SHADOWS.md,
+  },
+  outlined: {
+    backgroundColor: '#15171E',
+    borderColor: '#272B35',
+    borderWidth: 1.5,
+  },
+  glass: {
+    backgroundColor: 'rgba(21, 23, 30, 0.92)',
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderWidth: 1,
   },
 });
