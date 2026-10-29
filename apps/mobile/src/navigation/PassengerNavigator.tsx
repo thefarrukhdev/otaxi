@@ -60,6 +60,7 @@ export const PassengerNavigator: React.FC = () => {
           alignItems: 'center',
           flex: 1,
         },
+        tabBarBackground: () => null,
         tabBarIcon: undefined,
       })}
     >
