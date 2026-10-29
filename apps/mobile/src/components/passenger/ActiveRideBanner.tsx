@@ -25,7 +25,7 @@ export const ActiveRideBanner: React.FC<ActiveRideBannerProps> = React.memo(
             <View style={styles.statusRow}>
               <View style={styles.pulseDot} />
               <Text style={styles.statusLabel}>FAOL SAFAR</Text>
-              {isInternational && <Text style={styles.flag}>🇰🇿</Text>}
+              {isInternational && <Text style={styles.statusLabel}>• XALQARO</Text>}
               <Text style={styles.metaDot}>•</Text>
               <Text style={styles.timeText}>
                 Bugun,{' '}

@@ -153,7 +153,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
               </View>
             </View>
             <Text style={styles.statLabel}>Haftalik reyting</Text>
-            <Text style={styles.statValue}>4.95 ★</Text>
+            <Text style={styles.statValue}>4.95</Text>
             <Text style={styles.statSubText}>128 ta yo’lovchi bahosi</Text>
           </View>
 
@@ -177,7 +177,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
               <View style={styles.tagRow}>
                 <Text style={styles.nextTripTag}>NAVBATDAGI REYS</Text>
                 {activeDriverTrip.isInternational && (
-                  <Badge label="Xalqaro" flag="KZ" variant="brand" size="sm" />
+                  <Badge label="Xalqaro" variant="brand" size="sm" />
                 )}
               </View>
 

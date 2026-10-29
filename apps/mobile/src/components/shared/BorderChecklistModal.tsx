@@ -22,7 +22,6 @@ import {
   AlertTriangle,
   FileText,
   Globe,
-  Sparkles,
   Info,
 } from 'lucide-react-native';
 

@@ -21,7 +21,6 @@ import {
   Zap,
   CheckCircle2,
   Clock,
-  Sparkles,
 } from 'lucide-react-native';
 
 export interface PayoutModalProps {
@@ -146,7 +145,7 @@ export const PayoutModal: React.FC<PayoutModalProps> = React.memo(({ visible, on
             {/* 0% Commission Promo Banner */}
             <View style={styles.promoBanner}>
               <View style={styles.promoIconBox}>
-                <Sparkles size={16} color={COLORS.emerald[400]} />
+                <ShieldCheck size={16} color={COLORS.emerald[400]} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.promoTitle}>0% Komissiya • Maxsus Aksiya</Text>
@@ -174,9 +173,9 @@ export const PayoutModal: React.FC<PayoutModalProps> = React.memo(({ visible, on
                       style={{ marginRight: 6 }}
                     />
                     <Text style={[styles.tabText, isActive && styles.tabTextActive]}>
-                      {type === 'UZCARD' && 'Uzcard 🇺🇿'}
-                      {type === 'HUMO' && 'Humo 🇺🇿'}
-                      {type === 'KASPI' && 'Kaspi Gold 🇰🇿'}
+                      {type === 'UZCARD' && 'Uzcard'}
+                      {type === 'HUMO' && 'Humo'}
+                      {type === 'KASPI' && 'Kaspi Gold'}
                     </Text>
                   </TouchableOpacity>
                 );

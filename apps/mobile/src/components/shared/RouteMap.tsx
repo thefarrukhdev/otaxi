@@ -442,7 +442,7 @@ export const RouteMap: React.FC<RouteMapProps> = React.memo(
                   {originCity} ➔ {destinationCity}
                 </Text>
                 {actualIsInternational && (
-                  <Badge label="Xalqaro" flag="KZ" variant="brand" size="sm" />
+                  <Badge label="Xalqaro" variant="brand" size="sm" />
                 )}
               </View>
               <Text style={[styles.headerSubtitle, { color: themeColors.textSecondary }]}>

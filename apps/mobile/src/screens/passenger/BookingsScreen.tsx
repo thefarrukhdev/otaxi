@@ -23,7 +23,6 @@ import {
   CheckCircle2,
   History,
   Search,
-  Sparkles,
   Compass,
 } from 'lucide-react-native';
 

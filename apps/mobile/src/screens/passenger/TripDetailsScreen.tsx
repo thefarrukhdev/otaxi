@@ -218,7 +218,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
     });
 
     Alert.alert(
-      'Muvaffaqiyatli band qilindi! 🎉',
+      'Muvaffaqiyatli band qilindi!',
       `Sizning 4 xonali tasdiqlash kodingiz: #${newBooking.verificationCode}\n\nHaydovchi avtomobilga chiqishingizda ushbu kodni so'raydi. Chiptangiz "Safarlarim" bo'limida saqlanadi.`,
       [
         {
@@ -239,7 +239,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
         title={`${trip.originCity} ➔ ${trip.destinationCity}`}
         subtitle={
           isWhenFull
-            ? '⚡ To’lsa jo’naydi (Jonli reys)'
+            ? 'To’lsa jo’naydi (Jonli reys)'
             : trip.isInternational
             ? 'Xalqaro reys'
             : 'Shaharlararo qatnov'
@@ -429,7 +429,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
               <View style={styles.driverMetaRow}>
                 <Star size={13} color={COLORS.amber[500]} fill={COLORS.amber[500]} />
                 <Text style={styles.driverRating}>
-                  {trip.driver.rating.toFixed(2)}★
+                  {trip.driver.rating.toFixed(2)}
                 </Text>
                 <Text style={styles.driverTrips}>
                   • {trip.driver.totalTrips} ta safar

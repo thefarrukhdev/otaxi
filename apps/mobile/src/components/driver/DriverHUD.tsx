@@ -96,7 +96,7 @@ export const DriverHUD: React.FC<DriverHUDProps> = React.memo(
               <Text style={styles.metricLabel}>Haydovchi reytingi</Text>
             </View>
             <View style={styles.ratingValRow}>
-              <Text style={styles.metricValueEmerald}>{rating.toFixed(2)} ★</Text>
+              <Text style={styles.metricValueEmerald}>{rating.toFixed(2)}</Text>
               <Text style={styles.tripsCountText}>({totalTrips} safar)</Text>
             </View>
           </View>

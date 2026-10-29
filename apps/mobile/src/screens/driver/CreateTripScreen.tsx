@@ -30,7 +30,7 @@ import {
   CheckCircle,
   X,
   Plus,
-  Sparkles,
+  Zap,
   Calculator,
 } from 'lucide-react-native';
 
@@ -60,7 +60,7 @@ const POPULAR_CORRIDORS: CorridorPreset[] = [
   },
   {
     from: 'Toshkent',
-    to: 'Shymkent 🇰🇿',
+    to: 'Shymkent',
     isInternational: true,
     price: 120000,
     pickup: 'Sobir Rahimov / G’ishtko’prik posti',
@@ -78,7 +78,7 @@ const POPULAR_CORRIDORS: CorridorPreset[] = [
   },
   {
     from: 'Toshkent',
-    to: 'Bishkek 🇰🇬',
+    to: 'Bishkek',
     isInternational: true,
     price: 250000,
     pickup: 'Shimoliy vokzal maydoni',
@@ -130,7 +130,7 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
     Haptics.selection();
     setIsInternational(corridor.isInternational);
     setOriginCity(corridor.from);
-    setDestinationCity(corridor.to.replace(' 🇰🇿', '').replace(' 🇰🇬', ''));
+    setDestinationCity(corridor.to);
     setOriginAddress(corridor.pickup);
     setDestinationAddress(corridor.dropoff);
     setPricePerSeat(corridor.price.toString());
@@ -213,7 +213,7 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
             >
               <Car size={16} color={!isInternational ? COLORS.amber[400] : '#94A3B8'} />
               <Text style={[styles.typeBtnText, !isInternational && styles.typeBtnTextActive]}>
-                Shaharlararo reys 🇺🇿
+                Shaharlararo reys
               </Text>
             </TouchableOpacity>
 
@@ -232,7 +232,7 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
                   isInternational && styles.typeBtnTextActiveInternational,
                 ]}
               >
-                Xalqaro 🇰🇿 🇰🇬
+                Xalqaro reys
               </Text>
             </TouchableOpacity>
           </View>
@@ -342,9 +342,9 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
               }}
               activeOpacity={0.8}
             >
-              <Sparkles size={16} color={departureType === 'WHEN_FULL' ? '#FF8800' : '#94A3B8'} />
+              <Zap size={16} color={departureType === 'WHEN_FULL' ? '#FF8800' : '#94A3B8'} />
               <Text style={[styles.typeBtnText, departureType === 'WHEN_FULL' && styles.typeBtnTextActive]}>
-                ⚡ To’lsa jo’naymiz (Jonli)
+                To’lsa jo’naymiz (Jonli)
               </Text>
             </TouchableOpacity>
 
@@ -366,7 +366,7 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
           {departureType === 'WHEN_FULL' ? (
             <View style={styles.whenFullNoteBox}>
               <Text style={styles.whenFullNoteText}>
-                💡 Jonli reys: Bekatda turibsiz. 4 ta yo’lovchi buyurtma berishi bilanoq darhol safarga chiqiladi.
+                Eslatma: Jonli reys — Bekatda turibsiz. 4 ta yo’lovchi buyurtma berishi bilanoq darhol safarga chiqiladi.
               </Text>
             </View>
           ) : (

@@ -24,7 +24,6 @@ import {
   History,
   Zap,
   Percent,
-  Sparkles,
 } from 'lucide-react-native';
 
 type FilterType = 'ALL' | 'EARNING' | 'PAYOUT' | 'COMMISSION';

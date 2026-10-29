@@ -30,9 +30,9 @@ import {
 } from 'lucide-react-native';
 
 const LANGUAGE_OPTIONS: { code: SupportedLanguage; label: string; flag: string; subLabel: string }[] = [
-  { code: 'uz', label: "O'zbekcha", flag: '🇺🇿', subLabel: 'Lotin alifbosida' },
-  { code: 'ru', label: 'Русский', flag: '🇷🇺', subLabel: 'Официальный перевод' },
-  { code: 'en', label: 'English', flag: '🇬🇧', subLabel: 'International travelers' },
+  { code: 'uz', label: "O'zbekcha", flag: 'UZ', subLabel: 'Lotin alifbosida' },
+  { code: 'ru', label: 'Русский', flag: 'RU', subLabel: 'Официальный перевод' },
+  { code: 'en', label: 'English', flag: 'EN', subLabel: 'International travelers' },
 ];
 
 export const ProfileScreen: React.FC = () => {

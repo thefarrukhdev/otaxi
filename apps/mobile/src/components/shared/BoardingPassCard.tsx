@@ -94,7 +94,7 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
               <Text style={styles.confirmedText}>{isConfirmed ? 'Tasdiqlangan' : booking.status}</Text>
             </View>
             {isInternational && (
-              <Badge label="Xalqaro" flag="KZ" variant="brand" size="sm" />
+              <Badge label="Xalqaro" variant="brand" size="sm" />
             )}
           </View>
         </View>

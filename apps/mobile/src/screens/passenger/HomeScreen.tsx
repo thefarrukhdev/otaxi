@@ -279,17 +279,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                       <Text style={styles.tripCityText}>
                         {trip.originCity} → {trip.destinationCity}
                       </Text>
-                      {trip.isInternational && <Text style={styles.intlFlag}>🇰🇿</Text>}
+                      {trip.isInternational && (
+                        <View style={styles.intlDot} />
+                      )}
                     </View>
 
                     <View style={styles.tripMetaRow}>
                       <Text style={[styles.timeTagText, trip.departureType === 'WHEN_FULL' && styles.timeTagWhenFull]}>
-                        {trip.departureType === 'WHEN_FULL' ? '⚡ To’lsa ketamiz' : depTime}
+                        {trip.departureType === 'WHEN_FULL' ? "To'lsa ketamiz" : depTime}
                       </Text>
                       <Text style={styles.metaDot}>•</Text>
                       <Text style={styles.carText}>{trip.vehicle.model}</Text>
                       <Text style={styles.metaDot}>•</Text>
-                      <Text style={styles.ratingText}>★ {trip.driver.rating}</Text>
+                      <Text style={styles.ratingText}>{trip.driver.rating}</Text>
                     </View>
                   </View>
 
@@ -543,8 +545,11 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#FFFFFF',
   },
-  intlFlag: {
-    fontSize: 12,
+  intlDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#FF8800',
   },
   tripMetaRow: {
     flexDirection: 'row',

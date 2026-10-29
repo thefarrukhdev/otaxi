@@ -19,7 +19,6 @@ import {
   AlertCircle,
   KeyRound,
   ShieldCheck,
-  Sparkles,
   Users,
 } from 'lucide-react-native';
 

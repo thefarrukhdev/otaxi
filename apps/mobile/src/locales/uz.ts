@@ -16,7 +16,7 @@ export const uz = {
     seats: "O'rindiqlar",
     price: 'Narx',
     currency: 'UZS',
-    verifiedDriver: 'Tekshirilgan haydovchi ★',
+    verifiedDriver: 'Tekshirilgan haydovchi',
     international: 'Xalqaro reys',
     intercity: 'Shaharlararo',
     all: 'Barchasi',

@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { SeatInfo } from '../../types';
 import { Haptics } from '../ui/Haptics';
-import { Disc, Check, Lock, Sparkles } from 'lucide-react-native';
+import { Disc, Check, Lock } from 'lucide-react-native';
 
 export interface SeatMapProps {
   seats: SeatInfo[];
@@ -55,7 +55,6 @@ export const SeatMap: React.FC<SeatMapProps> = React.memo(
 
           {isVip && isAvailable && (
             <View style={styles.vipTag}>
-              <Sparkles size={9} color={COLORS.amber[600]} />
               <Text style={styles.vipText}>VIP</Text>
             </View>
           )}

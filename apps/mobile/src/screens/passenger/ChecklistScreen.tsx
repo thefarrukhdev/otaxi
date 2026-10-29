@@ -24,7 +24,6 @@ import {
   Calendar,
   CheckCircle2,
   RotateCcw,
-  Sparkles,
   FileText,
 } from 'lucide-react-native';
 
@@ -116,7 +115,7 @@ export const ChecklistScreen: React.FC = () => {
                 selectedRouteKey === 'UZ-KZ' && styles.tabTextActive,
               ]}
             >
-              🇺🇿 O'zbekiston — Qozog'iston 🇰🇿
+              O'zbekiston — Qozog'iston (UZ-KZ)
             </Text>
           </TouchableOpacity>
 
@@ -136,7 +135,7 @@ export const ChecklistScreen: React.FC = () => {
                 selectedRouteKey === 'UZ-KG' && styles.tabTextActive,
               ]}
             >
-              🇺🇿 O'zbekiston — Qirg'iziston 🇰🇬
+              O'zbekiston — Qirg'iziston (UZ-KG)
             </Text>
           </TouchableOpacity>
 
@@ -156,7 +155,7 @@ export const ChecklistScreen: React.FC = () => {
                 selectedRouteKey === 'UZ-TJ' && styles.tabTextActive,
               ]}
             >
-              🇺🇿 O'zbekiston — Tojikiston 🇹🇯
+              O'zbekiston — Tojikiston (UZ-TJ)
             </Text>
           </TouchableOpacity>
         </ScrollView>
@@ -211,7 +210,7 @@ export const ChecklistScreen: React.FC = () => {
                 style={styles.quickActionBtn}
                 onPress={handleCheckAll}
               >
-                <Sparkles size={12} color={COLORS.emerald[700]} />
+                <CheckCircle2 size={12} color={COLORS.emerald[700]} />
                 <Text style={styles.quickActionBtnText}>Barchasini belgilash</Text>
               </TouchableOpacity>
 

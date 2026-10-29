@@ -33,24 +33,6 @@ const formatClockTime = (isoString: string): string => {
   }
 };
 
-const getCountryFlag = (countryCode: string): string => {
-  switch (countryCode) {
-    case 'KZ':
-      return '🇰🇿';
-    case 'KG':
-      return '🇰🇬';
-    case 'TJ':
-      return '🇹🇯';
-    case 'AF':
-      return '🇦🇫';
-    case 'TM':
-      return '🇹🇲';
-    case 'UZ':
-    default:
-      return '🇺🇿';
-  }
-};
-
 export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) => {
   const departureTime = formatClockTime(trip.departureTime);
   const arrivalTime = formatClockTime(trip.estimatedArrivalTime);
@@ -59,8 +41,6 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
   const durationMins = trip.durationMinutes % 60;
   const durationStr =
     durationMins > 0 ? `${durationHours}s ${durationMins}m` : `${durationHours} soat`;
-
-  const destFlag = getCountryFlag(trip.destinationCountry);
 
   const handlePress = () => {
     Haptics.selection();
@@ -80,7 +60,7 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
       {/* Top Meta Row */}
       <View style={styles.topRow}>
         {trip.isInternational ? (
-          <Badge label="Xalqaro" flag="KZ" variant="brand" size="sm" />
+          <Badge label="Xalqaro" variant="brand" size="sm" />
         ) : trip.departureType === 'WHEN_FULL' ? (
           <Badge label="To’lsa ketamiz" variant="brand" size="sm" />
         ) : (
@@ -149,7 +129,7 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
             <View style={styles.ratingRow}>
               <Star size={13} color="#FF8800" fill="#FF8800" />
               <Text style={styles.ratingText}>
-                {trip.driver.rating.toFixed(2)}★
+                {trip.driver.rating.toFixed(2)}
               </Text>
               <Text style={styles.reviewsCount}>
                 ({trip.driver.totalTrips})

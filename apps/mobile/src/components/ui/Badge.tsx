@@ -23,20 +23,12 @@ export interface BadgeProps {
   variant?: BadgeVariant;
   icon?: React.ReactNode;
   dot?: boolean;
-  flag?: string; // e.g. 'KZ' | 'UZ' | 'KG' | 'TJ' or emoji directly
+  flag?: string; // e.g. 'KZ' | 'UZ' | 'KG' | 'TJ'
   size?: 'sm' | 'md';
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   testID?: string;
 }
-
-const FLAG_MAP: Record<string, string> = {
-  KZ: '🇰🇿',
-  UZ: '🇺🇿',
-  KG: '🇰🇬',
-  TJ: '🇹🇯',
-  TM: '🇹🇲',
-};
 
 export const Badge: React.FC<BadgeProps> = React.memo(
   ({
@@ -113,7 +105,6 @@ export const Badge: React.FC<BadgeProps> = React.memo(
 
     const colors = getColors();
     const isMedium = size === 'md';
-    const flagEmoji = flag ? FLAG_MAP[flag.toUpperCase()] || flag : null;
 
     return (
       <View
@@ -126,7 +117,6 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         ]}
       >
         {dot && <View style={[styles.dot, { backgroundColor: colors.dot }]} />}
-        {flagEmoji && <Text style={styles.flagText}>{flagEmoji}</Text>}
         {icon && <View style={styles.icon}>{icon}</View>}
         <Text
           style={[

@@ -24,7 +24,6 @@ import {
   Compass,
   Wind,
   Luggage,
-  Sparkles,
 } from 'lucide-react-native';
 
 interface TripsListScreenProps {
@@ -187,7 +186,7 @@ export const TripsListScreen: React.FC<TripsListScreenProps> = ({
         </View>
       </View>
 
-      {/* "Barchasi | Xalqaro 🇰🇿 | Shaharlararo" Filter Tabs */}
+      {/* "Barchasi | Xalqaro | Shaharlararo" Filter Tabs */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[
@@ -227,7 +226,7 @@ export const TripsListScreen: React.FC<TripsListScreenProps> = ({
               filterCategory === 'INTERNATIONAL' && styles.tabTextActive,
             ]}
           >
-            Xalqaro 🇰🇿 ({categoryCounts.intl})
+            Xalqaro ({categoryCounts.intl})
           </Text>
         </TouchableOpacity>
 
@@ -275,7 +274,7 @@ export const TripsListScreen: React.FC<TripsListScreenProps> = ({
               onlyVerified && styles.filterChipTextActive,
             ]}
           >
-            Tekshirilgan ★
+            Tekshirilgan
           </Text>
         </TouchableOpacity>
 

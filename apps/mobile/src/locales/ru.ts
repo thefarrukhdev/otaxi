@@ -18,7 +18,7 @@ export const ru: TranslationKeys = {
     seats: 'Места',
     price: 'Цена',
     currency: 'UZS',
-    verifiedDriver: 'Проверенный водитель ★',
+    verifiedDriver: 'Проверенный водитель',
     international: 'Международный рейс',
     intercity: 'Междугородний',
     all: 'Все',

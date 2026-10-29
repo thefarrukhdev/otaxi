@@ -79,13 +79,6 @@ export const CorridorQuickSelect: React.FC<CorridorQuickSelectProps> = React.mem
       onSelectRoute(route);
     };
 
-    const getFlag = (to: string, countryCode?: string) => {
-      if (countryCode === 'KZ' || to === 'Shymkent') return ' 🇰🇿';
-      if (countryCode === 'KG' || to === 'Bishkek') return ' 🇰🇬';
-      if (countryCode === 'TJ' || to === "Xo'jand" || to === 'Xo’jand') return ' 🇹🇯';
-      return '';
-    };
-
     return (
       <View style={styles.container}>
         <Text style={styles.sectionTitle}>Mashhur yo'nalishlar</Text>
@@ -98,7 +91,6 @@ export const CorridorQuickSelect: React.FC<CorridorQuickSelectProps> = React.mem
           {CORRIDOR_ROUTES.map((route, index) => {
             const isSelected =
               selectedTo === route.to && (!selectedFrom || selectedFrom === route.from);
-            const flag = getFlag(route.to, route.countryCode);
 
             return (
               <TouchableOpacity
@@ -112,7 +104,6 @@ export const CorridorQuickSelect: React.FC<CorridorQuickSelectProps> = React.mem
               >
                 <Text style={[styles.routeText, isSelected && styles.routeTextSelected]}>
                   {route.to}
-                  {flag}
                 </Text>
                 <Text style={[styles.priceText, isSelected && styles.priceTextSelected]}>
                   {route.price.split(' ')[0]}k

@@ -18,7 +18,7 @@ export const en: TranslationKeys = {
     seats: 'Seats',
     price: 'Price',
     currency: 'UZS',
-    verifiedDriver: 'Verified Driver ★',
+    verifiedDriver: 'Verified Driver',
     international: 'Cross-Border',
     intercity: 'Intercity',
     all: 'All',

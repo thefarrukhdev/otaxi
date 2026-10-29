@@ -159,7 +159,7 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
             updateTripStatus('COMPLETED');
             Haptics.success();
             Alert.alert(
-              'Safar muvaffaqiyatli yakunlandi! 🎉',
+              'Safar muvaffaqiyatli yakunlandi!',
               '324,000 UZS daromad hamyoningizga muvaffaqiyatli tushirildi. Yangi reys e’lon qilishingiz mumkin.'
             );
           },
@@ -342,7 +342,7 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
             <View>
               <View style={styles.routeBadgeRow}>
                 {activeDriverTrip.isInternational && (
-                  <Badge label="Xalqaro reys" flag="KZ" variant="brand" size="sm" />
+                  <Badge label="Xalqaro reys" variant="brand" size="sm" />
                 )}
                 <Text style={styles.departureTimeText}>
                   Jo’nash: {activeDriverTrip.departureTime}
