@@ -507,12 +507,12 @@ const styles = StyleSheet.create({
     ...SHADOWS.md,
   },
   containerDark: {
-    backgroundColor: '#111827', // Obsidian Card Graphite
-    borderColor: '#1f2937',
+    backgroundColor: '#15171E',
+    borderColor: '#272B35',
   },
   containerLight: {
-    backgroundColor: '#ffffff',
-    borderColor: '#e2e8f0',
+    backgroundColor: '#15171E',
+    borderColor: '#272B35',
   },
 
   // Header
@@ -611,7 +611,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   speedValueLight: {
-    color: '#0f172a',
+    color: '#ffffff',
   },
   speedUnitText: {
     fontSize: 10,
@@ -635,12 +635,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   metricTileDark: {
-    backgroundColor: '#1e293b',
-    borderColor: '#334155',
+    backgroundColor: '#1D2029',
+    borderColor: '#272B35',
   },
   metricTileLight: {
-    backgroundColor: '#f8fafc',
-    borderColor: '#e2e8f0',
+    backgroundColor: '#1D2029',
+    borderColor: '#272B35',
   },
   metricIconBox: {
     marginRight: 10,

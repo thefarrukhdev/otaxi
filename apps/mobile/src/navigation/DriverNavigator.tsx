@@ -15,11 +15,11 @@ export const DriverNavigator: React.FC = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: COLORS.amber[400],
+        tabBarActiveTintColor: '#FF8800',
         tabBarInactiveTintColor: '#64748B',
         tabBarStyle: {
-          backgroundColor: '#090D16', // Cockpit Obsidian
-          borderTopColor: '#1F2937',
+          backgroundColor: '#0C0D11',
+          borderTopColor: '#1E222A',
           borderTopWidth: 1,
           height: 68,
           paddingTop: 8,

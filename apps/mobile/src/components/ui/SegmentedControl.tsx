@@ -129,14 +129,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   containerPassenger: {
-    backgroundColor: COLORS.gray[100],
+    backgroundColor: '#15171E',
     borderWidth: 1,
-    borderColor: COLORS.gray[200],
+    borderColor: '#272B35',
   },
   containerDriver: {
-    backgroundColor: COLORS.navy[900],
+    backgroundColor: '#15171E',
     borderWidth: 1,
-    borderColor: COLORS.navy[800],
+    borderColor: '#272B35',
   },
   item: {
     flex: 1,
@@ -154,18 +154,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   itemSelectedPassenger: {
-    backgroundColor: COLORS.white,
-    shadowColor: '#000',
+    backgroundColor: '#FF8800',
+    shadowColor: '#FF8800',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 2,
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
     elevation: 2,
   },
   itemSelectedDriver: {
-    backgroundColor: COLORS.amber[500],
-    shadowColor: COLORS.amber[500],
+    backgroundColor: '#FF8800',
+    shadowColor: '#FF8800',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.25,
     shadowRadius: 3,
     elevation: 2,
   },
@@ -174,24 +174,24 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   labelSmall: {
     fontSize: 12,
   },
   labelPassenger: {
-    color: COLORS.gray[600],
+    color: '#94A3B8',
   },
   labelDriver: {
-    color: COLORS.navy[300],
+    color: '#94A3B8',
   },
   labelSelectedPassenger: {
-    color: COLORS.emerald[800],
-    fontWeight: '700',
+    color: '#0C0D11',
+    fontWeight: '900',
   },
   labelSelectedDriver: {
-    color: COLORS.navy[950],
-    fontWeight: '700',
+    color: '#0C0D11',
+    fontWeight: '900',
   },
   badge: {
     paddingHorizontal: 6,

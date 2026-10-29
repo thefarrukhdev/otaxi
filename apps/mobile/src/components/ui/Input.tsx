@@ -76,7 +76,7 @@ export const Input: React.FC<InputProps> = React.memo(
               styles.textInput,
               isDriver ? styles.textInputDriver : styles.textInputPassenger,
             ]}
-            placeholderTextColor={isDriver ? COLORS.navy[400] : COLORS.gray[400]}
+            placeholderTextColor="#64748B"
             value={value}
             onChangeText={onChangeText}
             onFocus={(e) => {
@@ -92,7 +92,7 @@ export const Input: React.FC<InputProps> = React.memo(
 
           {clearable && hasValue && (
             <TouchableOpacity onPress={handleClear} style={styles.clearBtn} activeOpacity={0.7}>
-              <XCircle size={16} color={isDriver ? COLORS.navy[400] : COLORS.gray[400]} />
+              <XCircle size={16} color="#94A3B8" />
             </TouchableOpacity>
           )}
 
@@ -102,7 +102,7 @@ export const Input: React.FC<InputProps> = React.memo(
         {error ? (
           <Text style={styles.errorText}>{error}</Text>
         ) : hint ? (
-          <Text style={[styles.hintText, isDriver && styles.hintTextDriver]}>{hint}</Text>
+          <Text style={[styles.hintText, styles.hintTextDriver]}>{hint}</Text>
         ) : null}
       </View>
     );
@@ -118,12 +118,12 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 13,
-    fontWeight: '600',
-    color: COLORS.gray[700],
+    fontWeight: '700',
+    color: '#CBD5E1',
     marginBottom: 6,
   },
   labelDriver: {
-    color: COLORS.navy[200],
+    color: '#CBD5E1',
   },
   inputWrapper: {
     flexDirection: 'row',
@@ -134,20 +134,20 @@ const styles = StyleSheet.create({
     height: 48,
   },
   inputWrapperPassenger: {
-    backgroundColor: COLORS.white,
-    borderColor: COLORS.gray[200],
+    backgroundColor: '#0C0D11',
+    borderColor: '#272B35',
   },
   inputWrapperDriver: {
-    backgroundColor: COLORS.navy[900],
-    borderColor: COLORS.navy[700],
+    backgroundColor: '#0C0D11',
+    borderColor: '#272B35',
   },
   inputFocusedPassenger: {
-    borderColor: COLORS.emerald[600],
-    backgroundColor: COLORS.white,
+    borderColor: '#FF8800',
+    backgroundColor: '#0C0D11',
   },
   inputFocusedDriver: {
-    borderColor: COLORS.amber[500],
-    backgroundColor: COLORS.navy[900],
+    borderColor: '#FF8800',
+    backgroundColor: '#0C0D11',
   },
   inputError: {
     borderColor: COLORS.red[500],
@@ -172,23 +172,23 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   textInputPassenger: {
-    color: COLORS.gray[900],
+    color: '#FFFFFF',
   },
   textInputDriver: {
-    color: COLORS.white,
+    color: '#FFFFFF',
   },
   errorText: {
     fontSize: 12,
-    color: COLORS.red[600],
+    color: COLORS.red[500],
     marginTop: 4,
     fontWeight: '500',
   },
   hintText: {
     fontSize: 12,
-    color: COLORS.gray[500],
+    color: '#94A3B8',
     marginTop: 4,
   },
   hintTextDriver: {
-    color: COLORS.navy[400],
+    color: '#94A3B8',
   },
 });

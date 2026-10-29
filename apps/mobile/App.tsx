@@ -1,16 +1,16 @@
 import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AppProvider, useApp } from './src/context/AppContext';
+import { AppProvider } from './src/context/AppContext';
 import { AppNavigator } from './src/navigation/AppNavigator';
 
 const AppContent: React.FC = () => {
-  const { userMode } = useApp();
   return (
-    <>
-      <StatusBar style={userMode === 'DRIVER' ? 'light' : 'dark'} />
+    <View style={styles.root}>
+      <StatusBar style="light" backgroundColor="#0C0D11" />
       <AppNavigator />
-    </>
+    </View>
   );
 };
 
@@ -23,3 +23,10 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: '#0C0D11',
+  },
+});
