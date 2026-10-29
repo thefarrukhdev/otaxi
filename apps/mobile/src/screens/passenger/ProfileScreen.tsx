@@ -326,8 +326,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
   },
   logoutBtn: {
-    borderColor: 'rgba(239, 68, 68, 0.3)',
-    backgroundColor: 'rgba(239, 68, 68, 0.08)',
+    borderColor: '#661F25',
+    backgroundColor: '#281417',
   },
   modalOverlay: {
     flex: 1,

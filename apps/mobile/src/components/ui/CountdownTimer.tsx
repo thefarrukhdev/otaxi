@@ -107,14 +107,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 8,
-    backgroundColor: 'rgba(255, 136, 0, 0.12)',
+    backgroundColor: '#251B10',
     borderWidth: 1,
-    borderColor: 'rgba(255, 136, 0, 0.25)',
+    borderColor: '#593412',
     alignSelf: 'flex-start',
   },
   pillUrgent: {
-    backgroundColor: 'rgba(239, 68, 68, 0.14)',
-    borderColor: 'rgba(239, 68, 68, 0.35)',
+    backgroundColor: '#281417',
+    borderColor: '#661F25',
   },
   pillExpired: {
     backgroundColor: '#1D2029',
@@ -135,8 +135,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardUrgent: {
-    borderColor: 'rgba(239, 68, 68, 0.4)',
-    backgroundColor: 'rgba(239, 68, 68, 0.08)',
+    borderColor: '#7F1D1D',
+    backgroundColor: '#281417',
   },
   cardExpired: {
     borderColor: '#272B35',

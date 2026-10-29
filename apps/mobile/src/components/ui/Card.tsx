@@ -106,8 +106,9 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   glass: {
-    backgroundColor: 'rgba(21, 23, 30, 0.92)',
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: '#15171E',
+    borderColor: '#272B35',
     borderWidth: 1,
+    ...SHADOWS.sm,
   },
 });

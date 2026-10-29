@@ -118,7 +118,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
             activeOpacity={0.8}
           >
             <View style={styles.statHeaderRow}>
-              <View style={[styles.statIconWrapper, { backgroundColor: 'rgba(245, 158, 11, 0.15)' }]}>
+              <View style={[styles.statIconWrapper, { backgroundColor: '#251B10' }]}>
                 <Wallet size={18} color={COLORS.amber[400]} />
               </View>
               <Text style={styles.statHint}>Pul yechish ➔</Text>
@@ -134,7 +134,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
           {/* 2. Today's Earnings */}
           <View style={styles.statBox}>
             <View style={styles.statHeaderRow}>
-              <View style={[styles.statIconWrapper, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
+              <View style={[styles.statIconWrapper, { backgroundColor: '#0F261C' }]}>
                 <TrendingUp size={18} color={COLORS.emerald[400]} />
               </View>
             </View>
@@ -148,7 +148,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
           {/* 3. Rating */}
           <View style={styles.statBox}>
             <View style={styles.statHeaderRow}>
-              <View style={[styles.statIconWrapper, { backgroundColor: 'rgba(250, 204, 21, 0.15)' }]}>
+              <View style={[styles.statIconWrapper, { backgroundColor: '#252110' }]}>
                 <Star size={18} color="#FACC15" fill="#FACC15" />
               </View>
             </View>
@@ -160,7 +160,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
           {/* 4. Total Trips */}
           <View style={styles.statBox}>
             <View style={styles.statHeaderRow}>
-              <View style={[styles.statIconWrapper, { backgroundColor: 'rgba(56, 189, 248, 0.15)' }]}>
+              <View style={[styles.statIconWrapper, { backgroundColor: '#121F33' }]}>
                 <Car size={18} color="#38BDF8" />
               </View>
             </View>
@@ -254,7 +254,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
             }}
             activeOpacity={0.85}
           >
-            <View style={[styles.actionIconBox, { backgroundColor: 'rgba(245, 158, 11, 0.15)' }]}>
+            <View style={[styles.actionIconBox, { backgroundColor: '#251B10' }]}>
               <PlusCircle size={22} color={COLORS.amber[400]} />
             </View>
             <Text style={styles.actionTitle}>Yangi reys e’lon qilish</Text>
@@ -274,7 +274,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
             }}
             activeOpacity={0.85}
           >
-            <View style={[styles.actionIconBox, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
+            <View style={[styles.actionIconBox, { backgroundColor: '#0F261C' }]}>
               <Wallet size={22} color={COLORS.emerald[400]} />
             </View>
             <Text style={styles.actionTitle}>Hamyon & Pul yechish</Text>

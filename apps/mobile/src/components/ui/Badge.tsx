@@ -54,7 +54,7 @@ export const Badge: React.FC<BadgeProps> = React.memo(
       switch (variant) {
         case 'brand':
           return {
-            bg: 'rgba(255, 136, 0, 0.14)',
+            bg: '#251B10',
             border: 'transparent',
             text: '#FF8800',
             dot: '#FF8800',
@@ -62,7 +62,7 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         case 'warning':
         case 'amber':
           return {
-            bg: 'rgba(255, 136, 0, 0.14)',
+            bg: '#251B10',
             border: 'transparent',
             text: '#FF8800',
             dot: '#FF8800',
@@ -70,7 +70,7 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         case 'info':
         case 'blue':
           return {
-            bg: 'rgba(59, 130, 246, 0.14)',
+            bg: '#121F33',
             border: 'transparent',
             text: '#60A5FA',
             dot: '#60A5FA',
@@ -78,7 +78,7 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         case 'danger':
         case 'red':
           return {
-            bg: 'rgba(239, 68, 68, 0.14)',
+            bg: '#281417',
             border: 'transparent',
             text: '#F87171',
             dot: '#EF4444',
@@ -86,7 +86,7 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         case 'international':
         case 'purple':
           return {
-            bg: 'rgba(139, 92, 246, 0.14)',
+            bg: '#201633',
             border: 'transparent',
             text: '#A78BFA',
             dot: '#A78BFA',
@@ -94,7 +94,7 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         case 'neutral':
         case 'gray':
           return {
-            bg: '#1A1D26',
+            bg: '#1C202A',
             border: 'transparent',
             text: '#94A3B8',
             dot: '#64748B',
@@ -103,7 +103,7 @@ export const Badge: React.FC<BadgeProps> = React.memo(
         case 'emerald':
         default:
           return {
-            bg: 'rgba(16, 185, 129, 0.14)',
+            bg: '#0F261C',
             border: 'transparent',
             text: '#10B981',
             dot: '#10B981',

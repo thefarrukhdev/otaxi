@@ -12,8 +12,8 @@ export const COLORS = {
     800: '#9a3412',
     900: '#7c2d12',
     primary: '#FF8800',
-    glow: 'rgba(255, 136, 0, 0.22)',
-    subtle: 'rgba(255, 136, 0, 0.12)',
+    glow: '#332014',
+    subtle: '#251B10',
   },
   // Dark Luxury Palette
   noir: {

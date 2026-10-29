@@ -303,8 +303,8 @@ export const RouteMap: React.FC<RouteMapProps> = React.memo(
         return {
           label: 'Tezkor',
           color: '#10B981',
-          bg: isDark ? 'rgba(16, 185, 129, 0.15)' : COLORS.emerald[50],
-          border: isDark ? 'rgba(16, 185, 129, 0.3)' : COLORS.emerald[200],
+          bg: isDark ? '#0F261C' : COLORS.emerald[50],
+          border: isDark ? '#163D2D' : COLORS.emerald[200],
           dotColor: '#10B981',
           desc: "Navbat kam, tirbandliksiz o'tish",
         };
@@ -313,8 +313,8 @@ export const RouteMap: React.FC<RouteMapProps> = React.memo(
         return {
           label: "O'rtacha",
           color: '#F59E0B',
-          bg: isDark ? 'rgba(245, 158, 11, 0.15)' : COLORS.amber[50],
-          border: isDark ? 'rgba(245, 158, 11, 0.3)' : COLORS.amber[200],
+          bg: isDark ? '#251B10' : COLORS.amber[50],
+          border: isDark ? '#3D2817' : COLORS.amber[200],
           dotColor: '#F59E0B',
           desc: "Mo'tadil oqim, qisqa kutish",
         };
@@ -322,8 +322,8 @@ export const RouteMap: React.FC<RouteMapProps> = React.memo(
       return {
         label: 'Tirband',
         color: '#EF4444',
-        bg: isDark ? 'rgba(239, 68, 68, 0.15)' : COLORS.red[50],
-        border: isDark ? 'rgba(239, 68, 68, 0.3)' : COLORS.red[200],
+        bg: isDark ? '#281417' : COLORS.red[50],
+        border: isDark ? '#451F25' : COLORS.red[200],
         dotColor: '#EF4444',
         desc: "Katta navbat, rejalashtirish zarur",
       };

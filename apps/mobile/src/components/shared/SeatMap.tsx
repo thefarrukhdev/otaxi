@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 2,
-    backgroundColor: 'rgba(255, 136, 0, 0.2)',
+    backgroundColor: '#251B10',
     paddingHorizontal: 5,
     paddingVertical: 1.5,
     borderRadius: 8,
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
     color: '#475569',
   },
   priceTag: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: '#1C2029',
     paddingHorizontal: 6,
     paddingVertical: 3,
     borderRadius: 8,

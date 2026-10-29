@@ -282,11 +282,11 @@ const styles = StyleSheet.create({
   noticeBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 136, 0, 0.12)',
+    backgroundColor: '#251B10',
     padding: 12,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 136, 0, 0.35)',
+    borderColor: '#593412',
     gap: 10,
     marginBottom: 16,
   },
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
   },
   itemCardChecked: {
     backgroundColor: '#1D2029',
-    borderColor: 'rgba(255, 136, 0, 0.4)',
+    borderColor: '#FF8800',
   },
   checkboxWrapper: {
     marginTop: 1,
@@ -341,12 +341,12 @@ const styles = StyleSheet.create({
     color: '#FF8800',
   },
   requiredBadge: {
-    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+    backgroundColor: '#281417',
     paddingHorizontal: 6,
     paddingVertical: 1,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: 'rgba(239, 68, 68, 0.35)',
+    borderColor: '#661F25',
   },
   requiredBadgeText: {
     fontSize: 10,
