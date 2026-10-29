@@ -21,8 +21,6 @@ import { CountryCode } from '@otaxi/types';
 import {
   Search,
   ArrowUpDown,
-  Clock,
-  Star,
   Users,
   ArrowRight,
 } from 'lucide-react-native';
@@ -103,54 +101,43 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           />
         )}
 
-        {/* Taxi Orange & Dark Noir Search Card */}
+        {/* Minimalist Taxi Orange Search Card */}
         <View style={styles.searchCard}>
-          {/* Route Section */}
-          <View style={styles.routeBox}>
-            <View style={styles.pinCol}>
-              <View style={styles.originDot} />
-              <View style={styles.routeLine} />
-              <View style={styles.destDot} />
+          {/* Route Inputs */}
+          <View style={styles.routeInputs}>
+            <View style={styles.inputRow}>
+              <View style={styles.dotOrigin} />
+              <TextInput
+                style={styles.inputField}
+                value={fromCity}
+                onChangeText={setFromCity}
+                placeholder="Qayerdan..."
+                placeholderTextColor="#64748B"
+              />
+              {toCity ? (
+                <TouchableOpacity
+                  style={styles.swapBtn}
+                  onPress={handleSwapCities}
+                  activeOpacity={0.7}
+                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                >
+                  <ArrowUpDown size={13} color="#94A3B8" />
+                </TouchableOpacity>
+              ) : null}
             </View>
 
-            <View style={styles.inputsCol}>
-              {/* From */}
-              <View style={styles.inputItem}>
-                <Text style={styles.inputMiniLabel}>QAYERDAN</Text>
-                <TextInput
-                  style={styles.inputField}
-                  value={fromCity}
-                  onChangeText={setFromCity}
-                  placeholder="Shahar nomi"
-                  placeholderTextColor="#64748B"
-                />
-              </View>
+            <View style={styles.inputDivider} />
 
-              <View style={styles.divider} />
-
-              {/* To */}
-              <View style={styles.inputItem}>
-                <Text style={styles.inputMiniLabel}>QAYERGA</Text>
-                <TextInput
-                  style={styles.inputField}
-                  value={toCity}
-                  onChangeText={setToCity}
-                  placeholder="Samarqand, Shymkent..."
-                  placeholderTextColor="#64748B"
-                />
-              </View>
+            <View style={styles.inputRow}>
+              <View style={styles.dotDest} />
+              <TextInput
+                style={styles.inputField}
+                value={toCity}
+                onChangeText={setToCity}
+                placeholder="Qayerga borasiz? (Samarqand, Shymkent...)"
+                placeholderTextColor="#64748B"
+              />
             </View>
-
-            {/* Swap Button */}
-            {toCity ? (
-              <TouchableOpacity
-                style={styles.swapBtn}
-                onPress={handleSwapCities}
-                activeOpacity={0.7}
-              >
-                <ArrowUpDown size={14} color="#FF8800" />
-              </TouchableOpacity>
-            ) : null}
           </View>
 
           {/* Options Row: Date & Passengers */}
@@ -235,21 +222,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Taxi Orange Primary CTA Button (matches user's screenshot) */}
+          {/* Clean Solid CTA Button */}
           <TouchableOpacity
             style={styles.searchButton}
             onPress={handleSearch}
             activeOpacity={0.88}
           >
-            <Search size={18} color="#0C0D11" strokeWidth={2.8} />
+            <Search size={17} color="#0C0D11" strokeWidth={2.6} />
             <Text style={styles.searchButtonText}>
               {matchingTrips.length > 0
                 ? `Reyslarni ko'rish (${matchingTrips.length})`
                 : 'Reyslarni qidirish'}
             </Text>
-            <View style={styles.ctaArrowCircle}>
-              <ArrowRight size={14} color="#FFFFFF" strokeWidth={3} />
-            </View>
+            <ArrowRight size={16} color="#0C0D11" strokeWidth={2.6} />
           </TouchableOpacity>
         </View>
 
@@ -298,25 +283,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                     </View>
 
                     <View style={styles.tripMetaRow}>
-                      <View style={styles.timeTag}>
-                        <Clock size={11} color="#94A3B8" />
-                        <Text style={styles.timeTagText}>{depTime}</Text>
-                      </View>
+                      <Text style={styles.timeTagText}>{depTime}</Text>
                       <Text style={styles.metaDot}>•</Text>
                       <Text style={styles.carText}>{trip.vehicle.model}</Text>
                       <Text style={styles.metaDot}>•</Text>
-                      <View style={styles.ratingRow}>
-                        <Star size={11} color="#FF8800" fill="#FF8800" />
-                        <Text style={styles.ratingText}>{trip.driver.rating}</Text>
-                      </View>
+                      <Text style={styles.ratingText}>★ {trip.driver.rating}</Text>
                     </View>
                   </View>
 
                   <View style={styles.tripCardRight}>
                     <Text style={styles.priceNumber}>
-                      {trip.pricePerSeat.toLocaleString('uz-UZ')}
+                      {trip.pricePerSeat.toLocaleString('uz-UZ')}{' '}
+                      <Text style={styles.priceCurrency}>UZS</Text>
                     </Text>
-                    <Text style={styles.priceCurrency}>UZS</Text>
                     <Text style={styles.seatsLeftText}>{trip.availableSeats} ta joy</Text>
                   </View>
                 </TouchableOpacity>
@@ -362,7 +341,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#15171E',
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#272B35',
+    borderColor: '#242834',
     padding: 14,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -371,76 +350,52 @@ const styles = StyleSheet.create({
     elevation: 4,
     marginBottom: 8,
   },
-  routeBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#1A1D26',
+  routeInputs: {
+    backgroundColor: '#191C25',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#242834',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    position: 'relative',
+    borderColor: '#222632',
+    paddingHorizontal: 14,
+    paddingVertical: 4,
     marginBottom: 12,
   },
-  pinCol: {
+  inputRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    width: 14,
-    marginRight: 10,
-    paddingVertical: 10,
+    height: 40,
+    gap: 10,
   },
-  originDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+  dotOrigin: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
     backgroundColor: '#FF8800',
   },
-  routeLine: {
-    width: 1.5,
-    height: 28,
-    backgroundColor: '#2E3340',
-    marginVertical: 3,
-  },
-  destDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+  dotDest: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
     borderWidth: 1.5,
     borderColor: '#FF8800',
     backgroundColor: 'transparent',
   },
-  inputsCol: {
-    flex: 1,
-  },
-  inputItem: {
-    paddingVertical: 2,
-  },
-  inputMiniLabel: {
-    fontSize: 9,
-    fontWeight: '800',
-    color: '#71717A',
-    letterSpacing: 0.5,
-    marginBottom: 2,
-  },
   inputField: {
+    flex: 1,
     fontSize: 14.5,
     fontWeight: '700',
     color: '#FFFFFF',
     padding: 0,
-    height: 22,
   },
-  divider: {
+  inputDivider: {
     height: 1,
-    backgroundColor: '#242834',
-    marginVertical: 4,
+    backgroundColor: '#222632',
+    marginLeft: 17,
   },
   swapBtn: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     backgroundColor: '#222530',
-    borderWidth: 1,
-    borderColor: '#303444',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -453,19 +408,19 @@ const styles = StyleSheet.create({
   dateSelector: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#1A1D26',
+    backgroundColor: '#191C25',
     borderRadius: 10,
     padding: 3,
     gap: 3,
     borderWidth: 1,
-    borderColor: '#242834',
+    borderColor: '#222632',
   },
   datePill: {
     flex: 1,
     height: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
+    borderRadius: 7,
   },
   datePillActive: {
     backgroundColor: '#272B36',
@@ -473,7 +428,7 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#94A3B8',
+    color: '#8A92A6',
   },
   dateTextActive: {
     fontWeight: '800',
@@ -482,13 +437,13 @@ const styles = StyleSheet.create({
   passengersBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1A1D26',
+    backgroundColor: '#191C25',
     borderRadius: 10,
     height: 38,
     paddingHorizontal: 6,
     gap: 6,
     borderWidth: 1,
-    borderColor: '#242834',
+    borderColor: '#222632',
   },
   passengersValueRow: {
     flexDirection: 'row',
@@ -504,7 +459,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 6,
-    backgroundColor: '#242834',
+    backgroundColor: '#222530',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -524,7 +479,7 @@ const styles = StyleSheet.create({
     gap: 8,
     height: 48,
     borderRadius: 12,
-    backgroundColor: '#FF8800', // Iconic Radiant Taxi Orange
+    backgroundColor: '#FF8800',
     shadowColor: '#FF8800',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.35,
@@ -536,15 +491,6 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     color: '#0C0D11',
     letterSpacing: 0.2,
-  },
-  ctaArrowCircle: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: '#0C0D11',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 2,
   },
   tripsSection: {
     marginTop: 8,

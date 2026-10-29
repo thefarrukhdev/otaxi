@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Linking, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { PassengerBooking } from '../../types';
-import { Haptics } from '../ui/Haptics';
-import { Phone, ChevronRight } from 'lucide-react-native';
+import { ChevronRight } from 'lucide-react-native';
 
 export interface ActiveRideBannerProps {
   booking: PassengerBooking;
@@ -13,13 +12,6 @@ export interface ActiveRideBannerProps {
 export const ActiveRideBanner: React.FC<ActiveRideBannerProps> = React.memo(
   ({ booking, onPressDetails, onOpenChecklist }) => {
     const isInternational = booking.trip.isInternational;
-
-    const handleCallDriver = () => {
-      Haptics.light();
-      Linking.openURL(`tel:${booking.trip.driver.phone}`).catch(() => {
-        Alert.alert("Qo'ng'iroq", `Haydovchi raqami: ${booking.trip.driver.phone}`);
-      });
-    };
 
     return (
       <TouchableOpacity
@@ -34,39 +26,30 @@ export const ActiveRideBanner: React.FC<ActiveRideBannerProps> = React.memo(
               <View style={styles.pulseDot} />
               <Text style={styles.statusLabel}>FAOL SAFAR</Text>
               {isInternational && <Text style={styles.flag}>🇰🇿</Text>}
+              <Text style={styles.metaDot}>•</Text>
+              <Text style={styles.timeText}>
+                Bugun,{' '}
+                {new Date(booking.trip.departureTime).toLocaleTimeString('uz-UZ', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </Text>
             </View>
 
             <Text style={styles.routeText}>
               {booking.trip.originCity} → {booking.trip.destinationCity}
             </Text>
 
-            <Text style={styles.subText}>
-              Bugun,{' '}
-              {new Date(booking.trip.departureTime).toLocaleTimeString('uz-UZ', {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}{' '}
-              • {booking.trip.vehicle.model}
-            </Text>
+            <Text style={styles.subText}>{booking.trip.vehicle.model}</Text>
           </View>
 
-          {/* Right PIN & Action */}
+          {/* Right PIN Badge */}
           <View style={styles.rightSection}>
             <View style={styles.pinTag}>
-              <Text style={styles.pinLabel}>BORT KODI</Text>
+              <Text style={styles.pinLabel}>BORT</Text>
               <Text style={styles.pinValue}>{booking.verificationCode}</Text>
             </View>
-
-            <View style={styles.actionButtons}>
-              <TouchableOpacity
-                onPress={handleCallDriver}
-                style={styles.iconCircle}
-                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-              >
-                <Phone size={13} color="#FF8800" />
-              </TouchableOpacity>
-              <ChevronRight size={18} color="#94A3B8" />
-            </View>
+            <ChevronRight size={18} color="#64748B" />
           </View>
         </View>
       </TouchableOpacity>
@@ -101,7 +84,7 @@ const styles = StyleSheet.create({
   statusRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 5,
     marginBottom: 4,
   },
   pulseDot: {
@@ -119,6 +102,15 @@ const styles = StyleSheet.create({
   flag: {
     fontSize: 11,
   },
+  metaDot: {
+    fontSize: 10,
+    color: '#475569',
+  },
+  timeText: {
+    fontSize: 11,
+    color: '#94A3B8',
+    fontWeight: '600',
+  },
   routeText: {
     fontSize: 15,
     fontWeight: '800',
@@ -127,49 +119,34 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   subText: {
-    fontSize: 12,
-    color: '#94A3B8',
+    fontSize: 11.5,
+    color: '#64748B',
     fontWeight: '500',
   },
   rightSection: {
-    alignItems: 'flex-end',
-    gap: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   pinTag: {
-    backgroundColor: 'rgba(255, 136, 0, 0.12)',
+    backgroundColor: 'rgba(255, 136, 0, 0.1)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 136, 0, 0.35)',
+    borderColor: 'rgba(255, 136, 0, 0.25)',
     paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
+    paddingVertical: 4,
+    borderRadius: 8,
     alignItems: 'center',
   },
   pinLabel: {
-    fontSize: 8,
+    fontSize: 7.5,
     fontWeight: '800',
     color: '#FFA033',
-    letterSpacing: 0.4,
+    letterSpacing: 0.5,
   },
   pinValue: {
     fontSize: 13,
     fontWeight: '900',
     color: '#FF8800',
-    fontFamily: 'monospace',
-    letterSpacing: 1,
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  iconCircle: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#1E212B',
-    borderWidth: 1,
-    borderColor: '#2A2E3B',
-    alignItems: 'center',
-    justifyContent: 'center',
+    letterSpacing: 0.8,
   },
 });

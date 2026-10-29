@@ -138,14 +138,12 @@ export const PassengerNavigator: React.FC = () => {
 const styles = StyleSheet.create({
   iconCapsule: {
     height: 28,
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
   },
   iconCapsuleActive: {
-    backgroundColor: 'rgba(255, 136, 0, 0.18)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 136, 0, 0.3)',
+    backgroundColor: 'rgba(255, 136, 0, 0.15)',
   },
 });

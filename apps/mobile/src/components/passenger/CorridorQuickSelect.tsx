@@ -111,7 +111,7 @@ export const CorridorQuickSelect: React.FC<CorridorQuickSelectProps> = React.mem
                 activeOpacity={0.75}
               >
                 <Text style={[styles.routeText, isSelected && styles.routeTextSelected]}>
-                  {route.from} → {route.to}
+                  {route.to}
                   {flag}
                 </Text>
                 <Text style={[styles.priceText, isSelected && styles.priceTextSelected]}>
