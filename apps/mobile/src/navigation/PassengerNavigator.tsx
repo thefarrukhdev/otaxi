@@ -40,17 +40,20 @@ export const PassengerNavigator: React.FC = () => {
           backgroundColor: '#0C0D11',
           borderTopColor: '#1E222A',
           borderTopWidth: 1,
-          height: 68,
-          paddingTop: 8,
-          paddingBottom: 10,
+          height: 62,
+          paddingTop: 6,
+          paddingBottom: 6,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: 10.5,
           fontWeight: '700',
-          marginTop: 2,
+          marginTop: 1,
+          marginBottom: 2,
         },
         tabBarItemStyle: {
           paddingVertical: 2,
+          justifyContent: 'center',
+          alignItems: 'center',
         },
       }}
     >
@@ -60,7 +63,7 @@ export const PassengerNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Qidiruv',
           tabBarIcon: ({ color, focused }) => (
-            <Search size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+            <Search size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
           ),
         }}
       />
@@ -70,7 +73,7 @@ export const PassengerNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Reyslar',
           tabBarIcon: ({ color, focused }) => (
-            <Compass size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+            <Compass size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
           ),
         }}
       />
@@ -80,7 +83,7 @@ export const PassengerNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Safarlarim',
           tabBarIcon: ({ color, focused }) => (
-            <Ticket size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+            <Ticket size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
           ),
         }}
       />
@@ -90,7 +93,7 @@ export const PassengerNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Chegara',
           tabBarIcon: ({ color, focused }) => (
-            <ShieldCheck size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+            <ShieldCheck size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
           ),
         }}
       />
@@ -100,7 +103,7 @@ export const PassengerNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Profil',
           tabBarIcon: ({ color, focused }) => (
-            <User size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+            <User size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
           ),
         }}
       />

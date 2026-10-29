@@ -21,17 +21,20 @@ export const DriverNavigator: React.FC = () => {
           backgroundColor: '#0C0D11',
           borderTopColor: '#1E222A',
           borderTopWidth: 1,
-          height: 68,
-          paddingTop: 8,
-          paddingBottom: 10,
+          height: 62,
+          paddingTop: 6,
+          paddingBottom: 6,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: 10.5,
           fontWeight: '700',
-          marginTop: 2,
+          marginTop: 1,
+          marginBottom: 2,
         },
         tabBarItemStyle: {
           paddingVertical: 2,
+          justifyContent: 'center',
+          alignItems: 'center',
         },
       }}
     >
@@ -41,7 +44,7 @@ export const DriverNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Boshqaruv',
           tabBarIcon: ({ color, focused }) => (
-            <LayoutDashboard size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+            <LayoutDashboard size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
           ),
         }}
       />
@@ -51,7 +54,7 @@ export const DriverNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Yangi reys',
           tabBarIcon: ({ color, focused }) => (
-            <PlusCircle size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+            <PlusCircle size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
           ),
         }}
       />
@@ -61,7 +64,7 @@ export const DriverNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Faol reys',
           tabBarIcon: ({ color, focused }) => (
-            <Car size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+            <Car size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
           ),
         }}
       />
@@ -71,7 +74,7 @@ export const DriverNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Hamyon',
           tabBarIcon: ({ color, focused }) => (
-            <Wallet size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+            <Wallet size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
           ),
         }}
       />
@@ -81,7 +84,7 @@ export const DriverNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Hujjatlar',
           tabBarIcon: ({ color, focused }) => (
-            <ShieldCheck size={22} color={color} strokeWidth={focused ? 2.5 : 2} />
+            <ShieldCheck size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
           ),
         }}
       />
