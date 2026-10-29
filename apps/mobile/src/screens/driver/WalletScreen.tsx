@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
-    paddingBottom: 40,
+    paddingBottom: 100,
   },
   balanceCard: {
     backgroundColor: '#111827', // Card Graphite

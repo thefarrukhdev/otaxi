@@ -1,11 +1,11 @@
 import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DashboardScreen } from '../screens/driver/DashboardScreen';
 import { CreateTripScreen } from '../screens/driver/CreateTripScreen';
 import { ActiveTripScreen } from '../screens/driver/ActiveTripScreen';
 import { WalletScreen } from '../screens/driver/WalletScreen';
 import { VerificationScreen } from '../screens/driver/VerificationScreen';
-import { COLORS } from '../lib/theme';
 import { LayoutDashboard, PlusCircle, Car, Wallet, ShieldCheck } from 'lucide-react-native';
 
 const Tab = createBottomTabNavigator();
@@ -16,25 +16,31 @@ export const DriverNavigator: React.FC = () => {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: '#FF8800',
-        tabBarInactiveTintColor: '#64748B',
+        tabBarInactiveTintColor: '#8A92A6',
+        tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#0C0D11',
-          borderTopColor: '#1E222A',
-          borderTopWidth: 1,
-          height: 62,
-          paddingTop: 6,
-          paddingBottom: 6,
-        },
-        tabBarLabelStyle: {
-          fontSize: 10.5,
-          fontWeight: '700',
-          marginTop: 1,
-          marginBottom: 2,
+          position: 'absolute',
+          bottom: 16,
+          left: 14,
+          right: 14,
+          height: 64,
+          borderRadius: 32,
+          backgroundColor: '#15171E',
+          borderWidth: 1.5,
+          borderColor: '#272B35',
+          shadowColor: '#000000',
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.5,
+          shadowRadius: 16,
+          elevation: 12,
+          paddingHorizontal: 8,
+          paddingTop: 0,
+          paddingBottom: 0,
         },
         tabBarItemStyle: {
-          paddingVertical: 2,
           justifyContent: 'center',
           alignItems: 'center',
+          flex: 1,
         },
       }}
     >
@@ -42,9 +48,10 @@ export const DriverNavigator: React.FC = () => {
         name="Dashboard"
         component={DashboardScreen}
         options={{
-          tabBarLabel: 'Boshqaruv',
-          tabBarIcon: ({ color, focused }) => (
-            <LayoutDashboard size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
+              <LayoutDashboard size={focused ? 20 : 19} color={focused ? '#FF8800' : '#8A92A6'} strokeWidth={focused ? 2.6 : 2} />
+            </View>
           ),
         }}
       />
@@ -52,9 +59,10 @@ export const DriverNavigator: React.FC = () => {
         name="CreateTrip"
         component={CreateTripScreen}
         options={{
-          tabBarLabel: 'Yangi reys',
-          tabBarIcon: ({ color, focused }) => (
-            <PlusCircle size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
+              <PlusCircle size={focused ? 20 : 19} color={focused ? '#FF8800' : '#8A92A6'} strokeWidth={focused ? 2.6 : 2} />
+            </View>
           ),
         }}
       />
@@ -62,9 +70,10 @@ export const DriverNavigator: React.FC = () => {
         name="ActiveTrip"
         component={ActiveTripScreen}
         options={{
-          tabBarLabel: 'Faol reys',
-          tabBarIcon: ({ color, focused }) => (
-            <Car size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
+              <Car size={focused ? 20 : 19} color={focused ? '#FF8800' : '#8A92A6'} strokeWidth={focused ? 2.6 : 2} />
+            </View>
           ),
         }}
       />
@@ -72,9 +81,10 @@ export const DriverNavigator: React.FC = () => {
         name="Wallet"
         component={WalletScreen}
         options={{
-          tabBarLabel: 'Hamyon',
-          tabBarIcon: ({ color, focused }) => (
-            <Wallet size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
+              <Wallet size={focused ? 20 : 19} color={focused ? '#FF8800' : '#8A92A6'} strokeWidth={focused ? 2.6 : 2} />
+            </View>
           ),
         }}
       />
@@ -82,12 +92,26 @@ export const DriverNavigator: React.FC = () => {
         name="Verification"
         component={VerificationScreen}
         options={{
-          tabBarLabel: 'Hujjatlar',
-          tabBarIcon: ({ color, focused }) => (
-            <ShieldCheck size={20} color={color} strokeWidth={focused ? 2.5 : 2} />
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
+              <ShieldCheck size={focused ? 20 : 19} color={focused ? '#FF8800' : '#8A92A6'} strokeWidth={focused ? 2.6 : 2} />
+            </View>
           ),
         }}
       />
     </Tab.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  iconCapsule: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconCapsuleActive: {
+    backgroundColor: 'rgba(255, 136, 0, 0.15)',
+  },
+});
