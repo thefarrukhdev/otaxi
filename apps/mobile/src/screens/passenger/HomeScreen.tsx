@@ -10,11 +10,9 @@ import {
 import { Header } from '../../components/Header';
 import { ActiveRideBanner } from '../../components/passenger/ActiveRideBanner';
 import { BorderChecklistModal } from '../../components/BorderChecklistModal';
-import {
-  CorridorQuickSelect,
-  RouteOption,
-} from '../../components/passenger';
+import { CorridorQuickSelect, RouteOption } from '../../components/passenger';
 import { Haptics } from '../../components/ui/Haptics';
+import { PriceDisplay } from '../../components/ui/PriceDisplay';
 import { useApp } from '../../context/AppContext';
 import { getBorderChecklist } from '../../lib/data';
 import { CountryCode } from '@otaxi/types';
@@ -296,10 +294,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   </View>
 
                   <View style={styles.tripCardRight}>
-                    <Text style={styles.priceNumber}>
-                      {trip.pricePerSeat.toLocaleString('uz-UZ')}{' '}
-                      <Text style={styles.priceCurrency}>UZS</Text>
-                    </Text>
+                    <PriceDisplay
+                      amount={trip.pricePerSeat}
+                      currency="UZS"
+                      size="sm"
+                    />
                     <Text style={styles.seatsLeftText}>{trip.availableSeats} ta joy</Text>
                   </View>
                 </TouchableOpacity>

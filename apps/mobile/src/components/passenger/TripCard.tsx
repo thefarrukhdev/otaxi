@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { DetailedTrip } from '../../types';
 import { Haptics } from '../ui/Haptics';
+import { Badge } from '../ui/Badge';
+import { Avatar } from '../ui/Avatar';
+import { PriceDisplay } from '../ui/PriceDisplay';
 import {
   Star,
   Clock,
@@ -49,8 +52,6 @@ const getCountryFlag = (countryCode: string): string => {
 };
 
 export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) => {
-  const [imageError, setImageError] = useState(false);
-
   const departureTime = formatClockTime(trip.departureTime);
   const arrivalTime = formatClockTime(trip.estimatedArrivalTime);
 
@@ -66,13 +67,6 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
     onPress();
   };
 
-  const driverInitials = trip.driver.fullName
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
-
   const isLowSeats = trip.availableSeats === 1;
 
   return (
@@ -86,11 +80,11 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
       {/* Top Meta Row */}
       <View style={styles.topRow}>
         {trip.isInternational ? (
-          <Text style={styles.intlText}>🇰🇿 Xalqaro</Text>
+          <Badge label="Xalqaro" flag="KZ" variant="brand" size="sm" />
         ) : trip.departureType === 'WHEN_FULL' ? (
-          <Text style={styles.whenFullText}>⚡ Jonli reys (To’lsa ketamiz)</Text>
+          <Badge label="To’lsa ketamiz" variant="brand" size="sm" />
         ) : (
-          <Text style={styles.domesticText}>Shaharlararo</Text>
+          <Badge label="Shaharlararo" variant="neutral" size="sm" />
         )}
 
         <Text style={[styles.seatsText, isLowSeats && styles.seatsTextWarning]}>
@@ -141,17 +135,12 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
       {/* Driver, Car & Amenities Row */}
       <View style={styles.driverSection}>
         <View style={styles.driverInfo}>
-          {!imageError && trip.driver.photoUrl ? (
-            <Image
-              source={{ uri: trip.driver.photoUrl }}
-              style={styles.driverAvatar}
-              onError={() => setImageError(true)}
-            />
-          ) : (
-            <View style={styles.driverAvatarFallback}>
-              <Text style={styles.driverAvatarText}>{driverInitials}</Text>
-            </View>
-          )}
+          <Avatar
+            source={trip.driver.photoUrl}
+            name={trip.driver.fullName}
+            size="md"
+            isVerified={trip.driver.isVerified}
+          />
 
           <View style={styles.driverDetails}>
             <Text style={styles.driverName} numberOfLines={1}>
@@ -205,10 +194,11 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
       <View style={styles.footerRow}>
         <View>
           <Text style={styles.priceLabel}>1 ta o'rindiq:</Text>
-          <Text style={styles.priceValue}>
-            {trip.pricePerSeat.toLocaleString('uz-UZ')}{' '}
-            <Text style={styles.priceCurrency}>{trip.currency}</Text>
-          </Text>
+          <PriceDisplay
+            amount={trip.pricePerSeat}
+            currency={trip.currency}
+            size="md"
+          />
           {trip.seats[0]?.priceDelta ? (
             <Text style={styles.frontSeatPriceHint}>
               Old o’rindiq: {(trip.pricePerSeat + trip.seats[0].priceDelta).toLocaleString('uz-UZ')} UZS

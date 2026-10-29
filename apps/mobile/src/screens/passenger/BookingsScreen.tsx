@@ -13,6 +13,7 @@ import { Header } from '../../components/Header';
 import { BoardingPassCard } from '../../components/BoardingPassCard';
 import { BorderChecklistModal } from '../../components/BorderChecklistModal';
 import { Haptics } from '../../components/ui/Haptics';
+import { EmptyState } from '../../components/ui';
 import { useApp } from '../../context/AppContext';
 import { getBorderChecklist } from '../../lib/data';
 import { BookingStatus } from '@otaxi/types';
@@ -146,31 +147,21 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ navigation }) =>
         }
       >
         {displayedList.length === 0 ? (
-          <View style={styles.emptyBox}>
-            <View style={styles.emptyIconCircle}>
-              <Ticket size={44} color="#64748B" />
-            </View>
-            <Text style={styles.emptyTitle}>
-              {activeTab === 'ACTIVE'
+          <EmptyState
+            icon={<Ticket size={32} color="#FF8800" strokeWidth={2.4} />}
+            title={
+              activeTab === 'ACTIVE'
                 ? 'Hozircha faol safarlar mavjud emas'
-                : 'Safarlar tarixi bo\'sh'}
-            </Text>
-            <Text style={styles.emptyDesc}>
-              {activeTab === 'ACTIVE'
-                ? 'Yangi shaharlararo yoki xalqaro reys qidirib, o\'zingizga qulay o\'rindiqni band qiling.'
-                : 'Bajarilgan va bekor qilingan safarlaringiz shu yerda saqlanadi.'}
-            </Text>
-            {activeTab === 'ACTIVE' && (
-              <TouchableOpacity
-                style={styles.findTripsBtn}
-                onPress={() => navigation.navigate('Home')}
-                activeOpacity={0.85}
-              >
-                <Compass size={16} color="#0C0D11" strokeWidth={2.5} />
-                <Text style={styles.findTripsBtnText}>Reyslarni qidirish</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+                : "Safarlar tarixi bo'sh"
+            }
+            description={
+              activeTab === 'ACTIVE'
+                ? "Yangi shaharlararo yoki xalqaro reys qidirib, o'zingizga qulay o'rindiqni band qiling."
+                : 'Bajarilgan va bekor qilingan safarlaringiz shu yerda saqlanadi.'
+            }
+            actionTitle={activeTab === 'ACTIVE' ? 'Reyslarni qidirish' : undefined}
+            onActionPress={activeTab === 'ACTIVE' ? () => navigation.navigate('Home') : undefined}
+          />
         ) : (
           displayedList.map((booking) => (
             <BoardingPassCard

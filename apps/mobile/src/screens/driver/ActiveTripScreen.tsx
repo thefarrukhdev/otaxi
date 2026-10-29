@@ -342,7 +342,7 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
             <View>
               <View style={styles.routeBadgeRow}>
                 {activeDriverTrip.isInternational && (
-                  <Text style={styles.intlFlagText}>🇰🇿 Xalqaro reys</Text>
+                  <Badge label="Xalqaro reys" flag="KZ" variant="brand" size="sm" />
                 )}
                 <Text style={styles.departureTimeText}>
                   Jo’nash: {activeDriverTrip.departureTime}

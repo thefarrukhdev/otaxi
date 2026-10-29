@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert, Linking } from 'react-
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { PassengerBooking } from '../../types';
 import { Button } from '../ui/Button';
+import { Badge } from '../ui/Badge';
 import { Haptics } from '../ui/Haptics';
 import {
   Phone,
@@ -93,7 +94,7 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
               <Text style={styles.confirmedText}>{isConfirmed ? 'Tasdiqlangan' : booking.status}</Text>
             </View>
             {isInternational && (
-              <Text style={styles.intlText}>🇰🇿 Xalqaro</Text>
+              <Badge label="Xalqaro" flag="KZ" variant="brand" size="sm" />
             )}
           </View>
         </View>

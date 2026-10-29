@@ -6,12 +6,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  Modal,
 } from 'react-native';
 import { COLORS } from '../../lib/theme';
 import { Header } from '../../components/shared/Header';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import { Avatar } from '../../components/ui/Avatar';
+import { BottomSheetModal } from '../../components/ui/BottomSheetModal';
 import { Haptics } from '../../components/ui/Haptics';
 import { useApp } from '../../context/AppContext';
 import { SupportedLanguage } from '../../locales';
@@ -70,9 +71,11 @@ export const ProfileScreen: React.FC = () => {
       >
         {/* User Profile Card */}
         <Card variant="surface" style={styles.userCard}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>FB</Text>
-          </View>
+          <Avatar
+            name="Farrukh Bek"
+            size="lg"
+            isVerified
+          />
           <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Text style={styles.userName}>Farrukh Bek</Text>
@@ -160,58 +163,40 @@ export const ProfileScreen: React.FC = () => {
         />
       </ScrollView>
 
-      {/* Language Selector Modal */}
-      <Modal
+      {/* Language Selector BottomSheetModal */}
+      <BottomSheetModal
         visible={langModalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setLangModalVisible(false)}
+        onClose={() => setLangModalVisible(false)}
+        title={t.profile.language}
+        subtitle="Interfeys tilini tanlang"
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <View>
-                <Text style={styles.modalTitle}>{t.profile.language}</Text>
-                <Text style={styles.modalSubtitle}>Interfeys tilini tanlang</Text>
-              </View>
+        <View style={styles.langList}>
+          {LANGUAGE_OPTIONS.map((item) => {
+            const isSelected = item.code === language;
+            return (
               <TouchableOpacity
-                onPress={() => setLangModalVisible(false)}
-                style={styles.closeBtn}
-                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                key={item.code}
+                style={[styles.langItem, isSelected && styles.langItemSelected]}
+                onPress={() => handleSelectLanguage(item.code)}
+                activeOpacity={0.8}
               >
-                <X size={20} color="#94A3B8" />
+                <Text style={styles.langItemFlag}>{item.flag}</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.langItemLabel, isSelected && styles.langItemLabelSelected]}>
+                    {item.label}
+                  </Text>
+                  <Text style={styles.langItemSub}>{item.subLabel}</Text>
+                </View>
+                {isSelected && (
+                  <View style={styles.checkCircle}>
+                    <Check size={14} color="#0C0D11" strokeWidth={3} />
+                  </View>
+                )}
               </TouchableOpacity>
-            </View>
-
-            <View style={styles.langList}>
-              {LANGUAGE_OPTIONS.map((item) => {
-                const isSelected = item.code === language;
-                return (
-                  <TouchableOpacity
-                    key={item.code}
-                    style={[styles.langItem, isSelected && styles.langItemSelected]}
-                    onPress={() => handleSelectLanguage(item.code)}
-                    activeOpacity={0.8}
-                  >
-                    <Text style={styles.langItemFlag}>{item.flag}</Text>
-                    <View style={{ flex: 1 }}>
-                      <Text style={[styles.langItemLabel, isSelected && styles.langItemLabelSelected]}>
-                        {item.label}
-                      </Text>
-                      <Text style={styles.langItemSub}>{item.subLabel}</Text>
-                    </View>
-                    {isSelected && (
-                      <View style={styles.checkCircle}>
-                        <Check size={14} color="#0C0D11" strokeWidth={3} />
-                      </View>
-                    )}
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </View>
+            );
+          })}
         </View>
-      </Modal>
+      </BottomSheetModal>
     </View>
   );
 };

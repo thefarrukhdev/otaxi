@@ -177,7 +177,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
               <View style={styles.tagRow}>
                 <Text style={styles.nextTripTag}>NAVBATDAGI REYS</Text>
                 {activeDriverTrip.isInternational && (
-                  <Text style={styles.intlFlagText}>🇰🇿 Xalqaro</Text>
+                  <Badge label="Xalqaro" flag="KZ" variant="brand" size="sm" />
                 )}
               </View>
 

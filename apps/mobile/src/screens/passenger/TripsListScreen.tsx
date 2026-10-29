@@ -12,6 +12,7 @@ import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
 import { TripCard } from '../../components/passenger/TripCard';
 import { Haptics } from '../../components/ui/Haptics';
+import { EmptyState } from '../../components/ui';
 import { useApp } from '../../context/AppContext';
 import { DetailedTrip } from '../../types';
 import {
@@ -368,22 +369,13 @@ export const TripsListScreen: React.FC<TripsListScreenProps> = ({
           />
         }
         ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <View style={styles.emptyIconCircle}>
-              <Compass size={44} color={COLORS.gray[300]} />
-            </View>
-            <Text style={styles.emptyTitle}>Reyslar topilmadi</Text>
-            <Text style={styles.emptyDescription}>
-              Tanlangan filtrlar yoki qidiruv so'rovi bo'yicha hozircha bo'sh reyslar yo'q.
-            </Text>
-            <TouchableOpacity
-              style={styles.resetFiltersBtn}
-              onPress={handleResetFilters}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.resetFiltersBtnText}>Filtrlarni tozalash</Text>
-            </TouchableOpacity>
-          </View>
+          <EmptyState
+            icon={<Compass size={32} color="#FF8800" strokeWidth={2.4} />}
+            title="Reyslar topilmadi"
+            description="Tanlangan filtrlar yoki qidiruv so'rovi bo'yicha hozircha bo'sh reyslar yo'q."
+            actionTitle="Filtrlarni tozalash"
+            onActionPress={handleResetFilters}
+          />
         }
       />
     </View>

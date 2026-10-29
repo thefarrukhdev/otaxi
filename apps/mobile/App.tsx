@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppProvider } from './src/context/AppContext';
+import { ToastProvider } from './src/components/ui';
 import { AppNavigator } from './src/navigation/AppNavigator';
 
 const AppContent: React.FC = () => {
@@ -18,7 +19,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <AppProvider>
-        <AppContent />
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
       </AppProvider>
     </SafeAreaProvider>
   );

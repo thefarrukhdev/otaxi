@@ -22,6 +22,7 @@ import Svg, {
 } from 'react-native-svg';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { Haptics } from '../ui/Haptics';
+import { Badge } from '../ui/Badge';
 import {
   Car,
   Navigation,
@@ -441,7 +442,7 @@ export const RouteMap: React.FC<RouteMapProps> = React.memo(
                   {originCity} ➔ {destinationCity}
                 </Text>
                 {actualIsInternational && (
-                  <Text style={styles.intlFlagText}>🇰🇿 Xalqaro</Text>
+                  <Badge label="Xalqaro" flag="KZ" variant="brand" size="sm" />
                 )}
               </View>
               <Text style={[styles.headerSubtitle, { color: themeColors.textSecondary }]}>
