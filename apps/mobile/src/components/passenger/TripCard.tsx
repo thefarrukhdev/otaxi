@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { DetailedTrip } from '../../types';
-import { Badge } from '../ui/Badge';
 import { Haptics } from '../ui/Haptics';
 import {
   Star,
-  ShieldCheck,
   Clock,
   Car,
   ChevronRight,
@@ -85,32 +83,17 @@ export const TripCard: React.FC<TripCardProps> = React.memo(({ trip, onPress }) 
       accessibilityRole="button"
       accessibilityLabel={`Reys ${trip.originCity} dan ${trip.destinationCity} ga`}
     >
-      {/* Top Badges Row */}
+      {/* Top Meta Row */}
       <View style={styles.topRow}>
-        <View style={styles.badgeGroup}>
-          {trip.isInternational ? (
-            <Badge
-              label={`Xalqaro ${destFlag}`}
-              variant="international"
-            />
-          ) : (
-            <Badge label="Shaharlararo 🇺🇿" variant="success" />
-          )}
+        {trip.isInternational ? (
+          <Text style={styles.intlText}>🇰🇿 Xalqaro</Text>
+        ) : (
+          <Text style={styles.domesticText}>Shaharlararo</Text>
+        )}
 
-          {trip.driver.isVerified && (
-            <Badge
-              label="Tekshirilgan ★"
-              variant="success"
-              icon={<ShieldCheck size={12} color="#FF8800" />}
-            />
-          )}
-        </View>
-
-        <View style={[styles.seatsPill, isLowSeats && styles.seatsPillWarning]}>
-          <Text style={[styles.seatsText, isLowSeats && styles.seatsTextWarning]}>
-            {isLowSeats ? "Oxirgi 1 ta joy!" : `${trip.availableSeats} ta bo'sh joy`}
-          </Text>
-        </View>
+        <Text style={[styles.seatsText, isLowSeats && styles.seatsTextWarning]}>
+          {isLowSeats ? "Oxirgi 1 ta joy!" : `${trip.availableSeats} ta bo'sh joy`}
+        </Text>
       </View>
 
       {/* Timeline Section */}
@@ -254,29 +237,21 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     gap: 8,
   },
-  badgeGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: 6,
-    flex: 1,
+  intlText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FF8800',
   },
-  seatsPill: {
-    backgroundColor: 'rgba(255, 136, 0, 0.12)',
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 136, 0, 0.35)',
-  },
-  seatsPillWarning: {
-    backgroundColor: 'rgba(239, 68, 68, 0.15)',
-    borderColor: 'rgba(239, 68, 68, 0.35)',
+  domesticText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#94A3B8',
   },
   seatsText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#FF8800',
+    fontVariant: ['tabular-nums'],
   },
   seatsTextWarning: {
     color: '#F87171',
@@ -321,16 +296,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     marginBottom: 5,
-    backgroundColor: '#1D2029',
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#272B35',
   },
   durationText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#94A3B8',
   },
   timelineLine: {

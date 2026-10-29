@@ -125,14 +125,14 @@ export const PassengerManifestCard: React.FC<PassengerManifestCardProps> = React
 
                   <View style={styles.statusBadgeWrap}>
                     {isBoarded ? (
-                      <View style={styles.boardedBadge}>
-                        <CheckCheck size={13} color={COLORS.emerald[400]} />
-                        <Text style={styles.boardedBadgeText}>Bortda (Tasdiqlangan)</Text>
+                      <View style={styles.statusRowInline}>
+                        <CheckCheck size={13} color="#10B981" />
+                        <Text style={styles.boardedText}>Mashinada</Text>
                       </View>
                     ) : (
-                      <View style={styles.waitingBadge}>
-                        <Clock size={13} color={COLORS.amber[400]} />
-                        <Text style={styles.waitingBadgeText}>Kutilmoqda</Text>
+                      <View style={styles.statusRowInline}>
+                        <Clock size={13} color="#FF8800" />
+                        <Text style={styles.waitingText}>Kutilmoqda</Text>
                       </View>
                     )}
                   </View>
@@ -154,24 +154,24 @@ export const PassengerManifestCard: React.FC<PassengerManifestCardProps> = React
                     )}
                   </View>
 
-                  {/* Payment Pill */}
+                  {/* Payment Info */}
                   <View style={styles.paymentCol}>
                     {passenger.paymentStatus === 'PAID' ? (
-                      <View style={styles.paidPill}>
-                        <CreditCard size={12} color={COLORS.emerald[400]} />
+                      <View style={styles.paidRow}>
+                        <CreditCard size={12} color="#10B981" />
                         <Text style={styles.paidText}>To’langan</Text>
                       </View>
                     ) : (
-                      <View style={styles.cashPill}>
-                        <Banknote size={12} color={COLORS.amber[400]} />
+                      <View style={styles.cashRow}>
+                        <Banknote size={12} color="#FF8800" />
                         <Text style={styles.cashText}>Yetib borganda</Text>
                       </View>
                     )}
 
                     {isBoarded && (
-                      <View style={styles.verifiedCodePill}>
-                        <ShieldCheck size={11} color={COLORS.emerald[400]} />
-                        <Text style={styles.verifiedCodeText}>Kod: #{passenger.verificationCode}</Text>
+                      <View style={styles.verifiedCodeRow}>
+                        <ShieldCheck size={11} color="#10B981" />
+                        <Text style={styles.verifiedCodeText}>#{passenger.verificationCode}</Text>
                       </View>
                     )}
                   </View>
@@ -278,16 +278,13 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   counterBadge: {
-    backgroundColor: '#090D16',
+    backgroundColor: '#1E293B',
     paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#374151',
+    paddingVertical: 4,
+    borderRadius: 14,
   },
   counterBadgeComplete: {
     backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    borderColor: 'rgba(16, 185, 129, 0.4)',
   },
   counterText: {
     fontSize: 12,
@@ -365,13 +362,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E293B',
     paddingHorizontal: 8,
     paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#334155',
+    borderRadius: 12,
   },
   seatBadgeBoarded: {
     backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    borderColor: 'rgba(16, 185, 129, 0.3)',
   },
   seatBadgeText: {
     fontSize: 11,
@@ -382,37 +376,20 @@ const styles = StyleSheet.create({
     color: COLORS.emerald[400],
   },
   statusBadgeWrap: {},
-  waitingBadge: {
+  statusRowInline: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(245, 158, 11, 0.12)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(245, 158, 11, 0.3)',
   },
-  waitingBadgeText: {
+  boardedText: {
     fontSize: 11,
     fontWeight: '700',
-    color: COLORS.amber[400],
+    color: '#10B981',
   },
-  boardedBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.35)',
-  },
-  boardedBadgeText: {
+  waitingText: {
     fontSize: 11,
     fontWeight: '700',
-    color: COLORS.emerald[400],
+    color: '#FF8800',
   },
   passengerMainRow: {
     flexDirection: 'row',
@@ -449,51 +426,35 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     gap: 4,
   },
-  paidPill: {
+  paidRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.25)',
   },
   paidText: {
     fontSize: 11,
     fontWeight: '700',
-    color: COLORS.emerald[400],
+    color: '#10B981',
   },
-  cashPill: {
+  cashRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(245, 158, 11, 0.25)',
   },
   cashText: {
     fontSize: 11,
     fontWeight: '700',
-    color: COLORS.amber[400],
+    color: '#FF8800',
   },
-  verifiedCodePill: {
+  verifiedCodeRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    backgroundColor: '#1E293B',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 5,
   },
   verifiedCodeText: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '700',
-    color: COLORS.emerald[400],
+    color: '#10B981',
     fontVariant: ['tabular-nums'],
   },
   passengerActionsRow: {

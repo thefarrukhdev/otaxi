@@ -63,9 +63,9 @@ export const VerificationScreen: React.FC = () => {
         <View style={styles.stepperCard}>
           <View style={styles.stepperHeader}>
             <Text style={styles.stepperTitle}>ARIZA VA TEKSHIRUV HOLATI</Text>
-            <View style={styles.liveApprovedBadge}>
-              <CheckCircle2 size={12} color={COLORS.emerald[400]} />
-              <Text style={styles.liveApprovedText}>TASDIQLANGAN</Text>
+            <View style={styles.liveApprovedRow}>
+              <CheckCircle2 size={13} color="#10B981" />
+              <Text style={styles.liveApprovedText}>Tasdiqlangan</Text>
             </View>
           </View>
 
@@ -129,9 +129,9 @@ export const VerificationScreen: React.FC = () => {
               <Text style={styles.docTitle}>Haydovchilik guvohnomasi (Prava)</Text>
               <Text style={styles.docSubtitle}>Old va orqa tomoni (B toifa, 2030-yilgacha amal qiladi)</Text>
             </View>
-            <View style={styles.badgeSuccess}>
-              <CheckCircle2 size={11} color={COLORS.emerald[400]} />
-              <Text style={styles.badgeSuccessText}>Tasdiqlangan</Text>
+            <View style={styles.statusSuccessRow}>
+              <CheckCircle2 size={13} color="#10B981" />
+              <Text style={styles.statusSuccessText}>Tasdiqlangan</Text>
             </View>
           </View>
 
@@ -160,9 +160,9 @@ export const VerificationScreen: React.FC = () => {
                 Chevrolet Malibu 2 (Davlat raqami: 01 A 777 AA, 2023)
               </Text>
             </View>
-            <View style={styles.badgeSuccess}>
-              <CheckCircle2 size={11} color={COLORS.emerald[400]} />
-              <Text style={styles.badgeSuccessText}>Tasdiqlangan</Text>
+            <View style={styles.statusSuccessRow}>
+              <CheckCircle2 size={13} color="#10B981" />
+              <Text style={styles.statusSuccessText}>Tasdiqlangan</Text>
             </View>
           </View>
 
@@ -191,9 +191,9 @@ export const VerificationScreen: React.FC = () => {
                 O’zbekiston va Qozog’iston hududida yaroqli xalqaro polis
               </Text>
             </View>
-            <View style={styles.badgeSuccess}>
-              <CheckCircle2 size={11} color={COLORS.emerald[400]} />
-              <Text style={styles.badgeSuccessText}>Amalda</Text>
+            <View style={styles.statusSuccessRow}>
+              <CheckCircle2 size={13} color="#10B981" />
+              <Text style={styles.statusSuccessText}>Amalda</Text>
             </View>
           </View>
 
@@ -220,9 +220,9 @@ export const VerificationScreen: React.FC = () => {
               <Text style={styles.docTitle}>Avtomobil fotosuratlari (4 ta tomon)</Text>
               <Text style={styles.docSubtitle}>Oldi, orqa, o’ng tomon va salon tozaligi</Text>
             </View>
-            <View style={styles.badgeSuccess}>
-              <CheckCircle2 size={11} color={COLORS.emerald[400]} />
-              <Text style={styles.badgeSuccessText}>4/4 Tayyor</Text>
+            <View style={styles.statusSuccessRow}>
+              <CheckCircle2 size={13} color="#10B981" />
+              <Text style={styles.statusSuccessText}>4/4 Tayyor</Text>
             </View>
           </View>
 
@@ -321,21 +321,15 @@ const styles = StyleSheet.create({
     color: '#94A3B8',
     letterSpacing: 0.8,
   },
-  liveApprovedBadge: {
+  liveApprovedRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
   },
   liveApprovedText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: COLORS.emerald[400],
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#10B981',
   },
   stepsRow: {
     flexDirection: 'row',
@@ -453,21 +447,15 @@ const styles = StyleSheet.create({
     marginTop: 2,
     lineHeight: 15,
   },
-  badgeSuccess: {
+  statusSuccessRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
   },
-  badgeSuccessText: {
-    fontSize: 10,
+  statusSuccessText: {
+    fontSize: 11,
     fontWeight: '700',
-    color: COLORS.emerald[400],
+    color: '#10B981',
   },
   docMetaRow: {
     flexDirection: 'row',

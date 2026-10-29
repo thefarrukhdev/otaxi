@@ -441,10 +441,7 @@ export const RouteMap: React.FC<RouteMapProps> = React.memo(
                   {originCity} ➔ {destinationCity}
                 </Text>
                 {actualIsInternational && (
-                  <View style={styles.intlPill}>
-                    <Globe size={10} color="#3B82F6" />
-                    <Text style={styles.intlPillText}>Xalqaro</Text>
-                  </View>
+                  <Text style={styles.intlFlagText}>🇰🇿 Xalqaro</Text>
                 )}
               </View>
               <Text style={[styles.headerSubtitle, { color: themeColors.textSecondary }]}>
@@ -920,19 +917,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: -0.2,
   },
-  intlPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 3,
-    backgroundColor: 'rgba(59, 130, 246, 0.12)',
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-    borderRadius: 12,
-  },
-  intlPillText: {
-    fontSize: 10,
+  intlFlagText: {
+    fontSize: 11,
     fontWeight: '700',
-    color: '#60A5FA',
+    color: '#FF8800',
   },
   headerSubtitle: {
     fontSize: 11,
@@ -1031,8 +1019,7 @@ const styles = StyleSheet.create({
     top: -18,
     paddingHorizontal: 5,
     paddingVertical: 1,
-    borderRadius: 6,
-    borderWidth: 1,
+    borderRadius: 8,
     zIndex: 3,
   },
   carSpeedText: {

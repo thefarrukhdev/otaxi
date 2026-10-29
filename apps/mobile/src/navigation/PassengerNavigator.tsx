@@ -43,8 +43,8 @@ export const PassengerNavigator: React.FC = () => {
           right: 14,
           maxWidth: 480,
           marginHorizontal: 'auto',
-          height: 70,
-          borderRadius: 35,
+          height: 64,
+          borderRadius: 32,
           backgroundColor: '#15171E',
           borderWidth: 1.2,
           borderColor: '#272B35',
@@ -55,7 +55,7 @@ export const PassengerNavigator: React.FC = () => {
           elevation: 12,
           paddingHorizontal: 8,
           paddingTop: 6,
-          paddingBottom: 8,
+          paddingBottom: 6,
         },
         tabBarItemStyle: {
           justifyContent: 'center',
@@ -67,7 +67,6 @@ export const PassengerNavigator: React.FC = () => {
           fontWeight: '700',
           marginTop: 2,
           marginBottom: 0,
-          lineHeight: 14,
         },
       }}
     >
@@ -77,9 +76,7 @@ export const PassengerNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Qidiruv',
           tabBarIcon: ({ focused }) => (
-            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
-              <Search size={focused ? 20 : 19} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.5 : 2} />
-            </View>
+            <Search size={22} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.4 : 1.8} />
           ),
         }}
       />
@@ -89,9 +86,7 @@ export const PassengerNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Reyslar',
           tabBarIcon: ({ focused }) => (
-            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
-              <Compass size={focused ? 20 : 19} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.5 : 2} />
-            </View>
+            <Compass size={22} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.4 : 1.8} />
           ),
         }}
       />
@@ -101,9 +96,7 @@ export const PassengerNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Safarlarim',
           tabBarIcon: ({ focused }) => (
-            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
-              <Ticket size={focused ? 20 : 19} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.5 : 2} />
-            </View>
+            <Ticket size={22} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.4 : 1.8} />
           ),
         }}
       />
@@ -113,9 +106,7 @@ export const PassengerNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Chegara',
           tabBarIcon: ({ focused }) => (
-            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
-              <ShieldCheck size={focused ? 20 : 19} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.5 : 2} />
-            </View>
+            <ShieldCheck size={22} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.4 : 1.8} />
           ),
         }}
       />
@@ -125,9 +116,7 @@ export const PassengerNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Profil',
           tabBarIcon: ({ focused }) => (
-            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
-              <User size={focused ? 20 : 19} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.5 : 2} />
-            </View>
+            <User size={22} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.4 : 1.8} />
           ),
         }}
       />
@@ -135,15 +124,4 @@ export const PassengerNavigator: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  iconCapsule: {
-    height: 28,
-    paddingHorizontal: 12,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconCapsuleActive: {
-    backgroundColor: 'rgba(255, 136, 0, 0.15)',
-  },
-});
+const styles = StyleSheet.create({});

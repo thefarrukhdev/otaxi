@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
-import { Badge } from '../../components/Badge';
 import { SeatMap } from '../../components/SeatMap';
 import { BorderChecklistModal } from '../../components/BorderChecklistModal';
 import { RouteMap } from '../../components/RouteMap';
@@ -292,7 +291,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
                   <Text style={styles.borderAlertTitle}>
                     Xalqaro chegara nazorati gidi
                   </Text>
-                  <Badge label="Muhim" variant="international" />
+                  <Text style={styles.importantText}>Muhim</Text>
                 </View>
                 <Text style={styles.borderAlertSubtitle}>
                   {trip.originCity} ➔ {trip.destinationCity} bo'yicha hujjatlar va talablar.
@@ -412,11 +411,10 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
               <View style={styles.driverNameRow}>
                 <Text style={styles.driverName}>{trip.driver.fullName}</Text>
                 {trip.driver.isVerified && (
-                  <Badge
-                    label="Tekshirilgan haydovchi ★"
-                    variant="success"
-                    icon={<ShieldCheck size={11} color={COLORS.emerald[700]} />}
-                  />
+                  <View style={styles.verifiedRow}>
+                    <ShieldCheck size={13} color="#10B981" />
+                    <Text style={styles.verifiedText}>Tekshirilgan</Text>
+                  </View>
                 )}
               </View>
               <View style={styles.driverMetaRow}>
@@ -773,6 +771,11 @@ const styles = StyleSheet.create({
     gap: 6,
     marginBottom: 2,
   },
+  importantText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FF8800',
+  },
   borderAlertTitle: {
     fontSize: 13,
     fontWeight: '800',
@@ -940,6 +943,16 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     marginBottom: 2,
   },
+  verifiedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  verifiedText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#10B981',
+  },
   driverName: {
     fontSize: 14,
     fontWeight: '800',
@@ -991,9 +1004,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1D2029',
     paddingHorizontal: 8,
     paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#272B35',
+    borderRadius: 12,
   },
   plateText: {
     fontSize: 11,

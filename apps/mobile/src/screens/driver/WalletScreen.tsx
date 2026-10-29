@@ -75,9 +75,9 @@ export const WalletScreen: React.FC = () => {
                 <Text style={styles.currencyText}>UZS</Text>
               </Text>
             </View>
-            <View style={styles.zeroFeePill}>
-              <Zap size={13} color={COLORS.amber[400]} />
-              <Text style={styles.zeroFeePillText}>0% komissiya</Text>
+            <View style={styles.zeroFeeRow}>
+              <Zap size={13} color="#FF8800" />
+              <Text style={styles.zeroFeeText}>0% komissiya</Text>
             </View>
           </View>
 
@@ -123,10 +123,7 @@ export const WalletScreen: React.FC = () => {
                 (Ushbu hafta)
               </Text>
             </View>
-            <View style={styles.growthBadge}>
-              <TrendingUp size={12} color={COLORS.emerald[400]} />
-              <Text style={styles.growthBadgeText}>+18% o’sish</Text>
-            </View>
+            <Text style={styles.growthText}>+18% o’sish</Text>
           </View>
 
           {/* Bar Chart Visualization */}
@@ -294,21 +291,15 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#94A3B8',
   },
-  zeroFeePill: {
+  zeroFeeRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(245, 158, 11, 0.12)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(245, 158, 11, 0.25)',
   },
-  zeroFeePillText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: COLORS.amber[400],
+  zeroFeeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FF8800',
   },
   balanceMetaRow: {
     flexDirection: 'row',
@@ -378,21 +369,10 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: COLORS.amber[400],
   },
-  growthBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
-  },
-  growthBadgeText: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: COLORS.emerald[400],
+  growthText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#10B981',
   },
   barsContainer: {
     flexDirection: 'row',

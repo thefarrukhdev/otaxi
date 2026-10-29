@@ -211,29 +211,20 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
         {/* Status Stepper Card */}
         <View style={styles.stepperCard}>
           <View style={styles.stepperHeader}>
-            <Text style={styles.stepperTitle}>SAFAR HOLATI STEYPERI</Text>
-            <View
+            <Text style={styles.stepperTitle}>Safar bosqichlari</Text>
+            <Text
               style={[
-                styles.tripStatusBadge,
+                styles.tripStatusText,
                 activeDriverTrip.status === 'COMPLETED'
-                  ? styles.tripStatusBadgeCompleted
-                  : styles.tripStatusBadgeActive,
+                  ? styles.tripStatusTextCompleted
+                  : styles.tripStatusTextActive,
               ]}
             >
-              <Text
-                style={[
-                  styles.tripStatusBadgeText,
-                  activeDriverTrip.status === 'COMPLETED'
-                    ? styles.tripStatusTextCompleted
-                    : styles.tripStatusTextActive,
-                ]}
-              >
-                {activeDriverTrip.status === 'SCHEDULED' && 'Kutilmoqda'}
-                {activeDriverTrip.status === 'DEPARTED' && 'Safarga chiqildi'}
-                {activeDriverTrip.status === 'AT_BORDER' && 'Chegara postida'}
-                {activeDriverTrip.status === 'COMPLETED' && 'Yakunlandi'}
-              </Text>
-            </View>
+              {activeDriverTrip.status === 'SCHEDULED' && 'Kutilmoqda'}
+              {activeDriverTrip.status === 'DEPARTED' && 'Safarga chiqildi'}
+              {activeDriverTrip.status === 'AT_BORDER' && 'Chegara postida'}
+              {activeDriverTrip.status === 'COMPLETED' && 'Yakunlandi'}
+            </Text>
           </View>
 
           {/* Stepper Progress Visual Track */}
@@ -537,29 +528,15 @@ const styles = StyleSheet.create({
     color: '#94A3B8',
     letterSpacing: 0.8,
   },
-  tripStatusBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-  },
-  tripStatusBadgeActive: {
-    backgroundColor: 'rgba(245, 158, 11, 0.15)',
-    borderColor: 'rgba(245, 158, 11, 0.3)',
-  },
-  tripStatusBadgeCompleted: {
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    borderColor: 'rgba(16, 185, 129, 0.3)',
-  },
-  tripStatusBadgeText: {
-    fontSize: 10,
-    fontWeight: '800',
+  tripStatusText: {
+    fontSize: 11,
+    fontWeight: '700',
   },
   tripStatusTextActive: {
-    color: COLORS.amber[400],
+    color: '#FF8800',
   },
   tripStatusTextCompleted: {
-    color: COLORS.emerald[400],
+    color: '#10B981',
   },
   stepperVisualRow: {
     flexDirection: 'row',

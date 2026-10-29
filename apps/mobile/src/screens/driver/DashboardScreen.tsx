@@ -66,17 +66,12 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
             <View style={{ flex: 1 }}>
               <View style={styles.statusTitleRow}>
                 <Text style={styles.statusTitle}>
-                  {isOnline ? 'Safarga tayyorman (ONLAYN)' : 'Dam olish rejimi (OFLAYN)'}
+                  {isOnline ? 'Safarga tayyorman' : 'Dam olish rejimi'}
                 </Text>
-                <View style={[styles.onlineBadge, isOnline ? styles.onlineBadgeActive : styles.onlineBadgeInactive]}>
-                  <Text style={[styles.onlineBadgeText, isOnline ? styles.onlineBadgeTextActive : styles.onlineBadgeTextInactive]}>
-                    {isOnline ? 'Faol qatnov' : 'Nofaol'}
-                  </Text>
-                </View>
               </View>
               <Text style={styles.statusSubtitle}>
                 {isOnline
-                  ? 'Yo’lovchilar sizning reyslaringizni ko’rib, real vaqtda bron qilishlari mumkin'
+                  ? 'Yo’lovchilar reyslaringizni real vaqtda bron qilishlari mumkin'
                   : 'Yangi buyurtmalar vaqtinchalik qabul qilinmaydi'}
               </Text>
             </View>
@@ -103,15 +98,9 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
             <ShieldCheck size={20} color={COLORS.emerald[400]} />
           </View>
           <View style={{ flex: 1 }}>
-            <View style={styles.verifHeaderRow}>
-              <Text style={styles.verificationBannerTitle}>Tasdiqlangan Xalqaro Haydovchi</Text>
-              <View style={styles.verifPill}>
-                <CheckCircle2 size={11} color={COLORS.emerald[400]} />
-                <Text style={styles.verifPillText}>Litsenziyalangan</Text>
-              </View>
-            </View>
+            <Text style={styles.verificationBannerTitle}>Tasdiqlangan Xalqaro Haydovchi</Text>
             <Text style={styles.verificationBannerDesc}>
-              Barcha rasmiy hujjatlar tasdiqlangan: O’zbekiston va Qozog’iston qatnoviga to’liq ruxsat
+              Barcha rasmiy hujjatlar tasdiqlangan: xalqaro va shahar qatnoviga ruxsat
             </Text>
           </View>
           <ArrowRight size={16} color="#94A3B8" />
@@ -148,9 +137,6 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
               <View style={[styles.statIconWrapper, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
                 <TrendingUp size={18} color={COLORS.emerald[400]} />
               </View>
-              <View style={styles.greenTag}>
-                <Text style={styles.greenTagText}>+15%</Text>
-              </View>
             </View>
             <Text style={styles.statLabel}>Bugungi tushum</Text>
             <Text style={styles.statValueEmerald}>
@@ -165,9 +151,6 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
               <View style={[styles.statIconWrapper, { backgroundColor: 'rgba(250, 204, 21, 0.15)' }]}>
                 <Star size={18} color="#FACC15" fill="#FACC15" />
               </View>
-              <View style={styles.ratingBadge}>
-                <Text style={styles.ratingBadgeText}>Top 5%</Text>
-              </View>
             </View>
             <Text style={styles.statLabel}>Haftalik reyting</Text>
             <Text style={styles.statValue}>4.95 ★</Text>
@@ -180,13 +163,10 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
               <View style={[styles.statIconWrapper, { backgroundColor: 'rgba(56, 189, 248, 0.15)' }]}>
                 <Car size={18} color="#38BDF8" />
               </View>
-              <View style={styles.successRateBadge}>
-                <Text style={styles.successRateText}>100%</Text>
-              </View>
             </View>
             <Text style={styles.statLabel}>Bajarilgan safarlar</Text>
             <Text style={styles.statValue}>185 ta</Text>
-            <Text style={styles.statSubText}>Bekor qilinmagan qatnov</Text>
+            <Text style={styles.statSubText}>Muvaffaqiyatli qatnovlar</Text>
           </View>
         </View>
 
@@ -365,27 +345,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#F8FAFC',
   },
-  onlineBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 2.5,
-    borderRadius: 12,
-  },
-  onlineBadgeActive: {
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
-  },
-  onlineBadgeInactive: {
-    backgroundColor: '#1E293B',
-  },
-  onlineBadgeText: {
-    fontSize: 10,
-    fontWeight: '700',
-  },
-  onlineBadgeTextActive: {
-    color: COLORS.emerald[400],
-  },
-  onlineBadgeTextInactive: {
-    color: '#94A3B8',
-  },
   statusSubtitle: {
     fontSize: 11,
     color: '#94A3B8',
@@ -423,20 +382,6 @@ const styles = StyleSheet.create({
   verificationBannerTitle: {
     fontSize: 13,
     fontWeight: '800',
-    color: COLORS.emerald[400],
-  },
-  verifPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 3,
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
-    paddingHorizontal: 8,
-    paddingVertical: 2.5,
-    borderRadius: 12,
-  },
-  verifPillText: {
-    fontSize: 10,
-    fontWeight: '700',
     color: COLORS.emerald[400],
   },
   verificationBannerDesc: {
@@ -513,39 +458,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#64748B',
     marginTop: 4,
-  },
-  greenTag: {
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    paddingHorizontal: 8,
-    paddingVertical: 2.5,
-    borderRadius: 12,
-  },
-  greenTagText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: COLORS.emerald[400],
-  },
-  ratingBadge: {
-    backgroundColor: 'rgba(250, 204, 21, 0.15)',
-    paddingHorizontal: 8,
-    paddingVertical: 2.5,
-    borderRadius: 12,
-  },
-  ratingBadgeText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: '#FACC15',
-  },
-  successRateBadge: {
-    backgroundColor: 'rgba(56, 189, 248, 0.15)',
-    paddingHorizontal: 8,
-    paddingVertical: 2.5,
-    borderRadius: 12,
-  },
-  successRateText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: '#38BDF8',
   },
   nextTripCard: {
     backgroundColor: '#111827',

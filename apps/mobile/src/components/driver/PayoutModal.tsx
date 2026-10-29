@@ -137,9 +137,9 @@ export const PayoutModal: React.FC<PayoutModalProps> = React.memo(({ visible, on
                   <Text style={styles.balanceCurrency}>UZS</Text>
                 </Text>
               </View>
-              <View style={styles.instantPill}>
-                <Zap size={14} color={COLORS.amber[400]} />
-                <Text style={styles.instantPillText}>Bir zumda</Text>
+              <View style={styles.instantRow}>
+                <Zap size={14} color="#FF8800" />
+                <Text style={styles.instantText}>Bir zumda</Text>
               </View>
             </View>
 
@@ -384,21 +384,15 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#94A3B8',
   },
-  instantPill: {
+  instantRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(245, 158, 11, 0.12)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(245, 158, 11, 0.25)',
   },
-  instantPillText: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: COLORS.amber[400],
+  instantText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FF8800',
   },
   promoBanner: {
     flexDirection: 'row',

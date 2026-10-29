@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, Linking } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { PassengerBooking } from '../../types';
-import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Haptics } from '../ui/Haptics';
 import {
@@ -89,20 +88,19 @@ export const BoardingPassCard: React.FC<BoardingPassCardProps> = React.memo(
           </View>
 
           <View style={styles.headerRight}>
-            <Badge
-              label={isConfirmed ? 'Tasdiqlangan' : booking.status}
-              variant={isConfirmed ? 'success' : 'neutral'}
-              icon={<CheckCircle size={12} color="#FF8800" />}
-            />
+            <View style={styles.confirmedRow}>
+              <CheckCircle size={13} color="#10B981" />
+              <Text style={styles.confirmedText}>{isConfirmed ? 'Tasdiqlangan' : booking.status}</Text>
+            </View>
             {isInternational && (
-              <Badge label="Xalqaro" variant="international" flag="KZ" />
+              <Text style={styles.intlText}>🇰🇿 Xalqaro</Text>
             )}
           </View>
         </View>
 
         {/* Boarding Code Security Highlight Banner */}
         <View style={styles.codeSection}>
-          <Text style={styles.codeLabel}>HAYDOVCHIGA AYTILADIGAN 4 XONALI BORT KODI</Text>
+          <Text style={styles.codeLabel}>HAYDOVCHIGA AYTILADIGAN TASDIQLASH KODI</Text>
           
           <View style={styles.codeRow}>
             <View style={styles.digitsRow}>
@@ -282,7 +280,22 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     alignItems: 'flex-end',
-    gap: 5,
+    gap: 4,
+  },
+  confirmedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  confirmedText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#10B981',
+  },
+  intlText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FF8800',
   },
   codeSection: {
     padding: 16,

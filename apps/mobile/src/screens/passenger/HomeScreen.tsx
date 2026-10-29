@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
   counterBtn: {
     width: 24,
     height: 24,
-    borderRadius: 6,
+    borderRadius: 12,
     backgroundColor: '#222530',
     alignItems: 'center',
     justifyContent: 'center',

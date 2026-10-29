@@ -43,11 +43,11 @@ export const ActiveRideBanner: React.FC<ActiveRideBannerProps> = React.memo(
             <Text style={styles.subText}>{booking.trip.vehicle.model}</Text>
           </View>
 
-          {/* Right PIN Badge */}
+          {/* Right Verification Code */}
           <View style={styles.rightSection}>
-            <View style={styles.pinTag}>
-              <Text style={styles.pinLabel}>BORT</Text>
-              <Text style={styles.pinValue}>{booking.verificationCode}</Text>
+            <View style={styles.codeColumn}>
+              <Text style={styles.codeLabel}>Kod</Text>
+              <Text style={styles.codeValue}>#{booking.verificationCode}</Text>
             </View>
             <ChevronRight size={18} color="#64748B" />
           </View>
@@ -128,25 +128,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  pinTag: {
-    backgroundColor: 'rgba(255, 136, 0, 0.1)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 136, 0, 0.25)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-    alignItems: 'center',
+  codeColumn: {
+    alignItems: 'flex-end',
   },
-  pinLabel: {
-    fontSize: 7.5,
+  codeLabel: {
+    fontSize: 10,
+    color: '#94A3B8',
+    fontWeight: '600',
+  },
+  codeValue: {
+    fontSize: 15,
     fontWeight: '800',
-    color: '#FFA033',
-    letterSpacing: 0.5,
-  },
-  pinValue: {
-    fontSize: 13,
-    fontWeight: '900',
     color: '#FF8800',
-    letterSpacing: 0.8,
+    fontVariant: ['tabular-nums'],
   },
 });

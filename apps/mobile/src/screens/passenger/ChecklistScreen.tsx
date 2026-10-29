@@ -188,14 +188,14 @@ export const ChecklistScreen: React.FC = () => {
             <View style={styles.progressBadgeRow}>
               <Text style={styles.progressHeading}>Chegara tayyorgarligi</Text>
               {isAllRequiredChecked ? (
-                <View style={styles.readyPill}>
-                  <CheckCircle2 size={12} color={COLORS.emerald[700]} />
-                  <Text style={styles.readyPillText}>Tayyorsiz</Text>
+                <View style={styles.readyRow}>
+                  <CheckCircle2 size={13} color="#10B981" />
+                  <Text style={styles.readyText}>Tayyorsiz</Text>
                 </View>
               ) : (
-                <View style={styles.pendingPill}>
-                  <AlertTriangle size={12} color={COLORS.amber[700]} />
-                  <Text style={styles.pendingPillText}>Tayyorlanmoqda</Text>
+                <View style={styles.pendingRow}>
+                  <AlertTriangle size={13} color="#FF8800" />
+                  <Text style={styles.pendingText}>Tayyorlanmoqda</Text>
                 </View>
               )}
             </View>
@@ -470,36 +470,24 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#FFFFFF',
   },
-  readyPill: {
+  readyRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(255, 136, 0, 0.15)',
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 136, 0, 0.35)',
   },
-  readyPillText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: '#FF8800',
+  readyText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#10B981',
   },
-  pendingPill: {
+  pendingRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(255, 136, 0, 0.15)',
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 136, 0, 0.35)',
   },
-  pendingPillText: {
-    fontSize: 10,
-    fontWeight: '800',
+  pendingText: {
+    fontSize: 11,
+    fontWeight: '700',
     color: '#FF8800',
   },
   progressStatusDesc: {
@@ -517,15 +505,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     backgroundColor: 'rgba(255, 136, 0, 0.15)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 136, 0, 0.35)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 14,
   },
   quickActionBtnText: {
-    fontSize: 10,
-    fontWeight: '800',
+    fontSize: 11,
+    fontWeight: '700',
     color: '#FF8800',
   },
   resetActionBtn: {
@@ -533,11 +519,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     backgroundColor: '#1D2029',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#272B35',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 14,
   },
   resetActionBtnText: {
     fontSize: 10,

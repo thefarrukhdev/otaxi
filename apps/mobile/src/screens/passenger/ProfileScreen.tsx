@@ -12,7 +12,6 @@ import { COLORS } from '../../lib/theme';
 import { Header } from '../../components/shared/Header';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Badge } from '../../components/ui/Badge';
 import { Haptics } from '../../components/ui/Haptics';
 import { useApp } from '../../context/AppContext';
 import { SupportedLanguage } from '../../locales';
@@ -80,9 +79,7 @@ export const ProfileScreen: React.FC = () => {
               <ShieldCheck size={16} color="#FF8800" />
             </View>
             <Text style={styles.userPhone}>+998 90 999 88 11</Text>
-            <View style={{ marginTop: 4 }}>
-              <Badge label={t.common.verifiedDriver.replace(' ★', '')} variant="neutral" size="sm" />
-            </View>
+            <Text style={styles.verifiedRoleText}>Tasdiqlangan haydovchi</Text>
           </View>
         </Card>
 
@@ -260,6 +257,12 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#94A3B8',
     marginTop: 2,
+  },
+  verifiedRoleText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#10B981',
+    marginTop: 3,
   },
   switchModeCard: {
     flexDirection: 'row',

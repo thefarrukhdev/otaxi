@@ -25,8 +25,8 @@ export const DriverNavigator: React.FC = () => {
           right: 14,
           maxWidth: 480,
           marginHorizontal: 'auto',
-          height: 70,
-          borderRadius: 35,
+          height: 64,
+          borderRadius: 32,
           backgroundColor: '#15171E',
           borderWidth: 1.2,
           borderColor: '#272B35',
@@ -37,7 +37,7 @@ export const DriverNavigator: React.FC = () => {
           elevation: 12,
           paddingHorizontal: 8,
           paddingTop: 6,
-          paddingBottom: 8,
+          paddingBottom: 6,
         },
         tabBarItemStyle: {
           justifyContent: 'center',
@@ -49,7 +49,6 @@ export const DriverNavigator: React.FC = () => {
           fontWeight: '700',
           marginTop: 2,
           marginBottom: 0,
-          lineHeight: 14,
         },
       }}
     >
@@ -59,9 +58,7 @@ export const DriverNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Boshqaruv',
           tabBarIcon: ({ focused }) => (
-            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
-              <LayoutDashboard size={focused ? 20 : 19} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.5 : 2} />
-            </View>
+            <LayoutDashboard size={22} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.4 : 1.8} />
           ),
         }}
       />
@@ -71,9 +68,7 @@ export const DriverNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Yangi reys',
           tabBarIcon: ({ focused }) => (
-            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
-              <PlusCircle size={focused ? 20 : 19} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.5 : 2} />
-            </View>
+            <PlusCircle size={22} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.4 : 1.8} />
           ),
         }}
       />
@@ -83,9 +78,7 @@ export const DriverNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Faol reys',
           tabBarIcon: ({ focused }) => (
-            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
-              <Car size={focused ? 20 : 19} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.5 : 2} />
-            </View>
+            <Car size={22} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.4 : 1.8} />
           ),
         }}
       />
@@ -95,9 +88,7 @@ export const DriverNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Hamyon',
           tabBarIcon: ({ focused }) => (
-            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
-              <Wallet size={focused ? 20 : 19} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.5 : 2} />
-            </View>
+            <Wallet size={22} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.4 : 1.8} />
           ),
         }}
       />
@@ -107,9 +98,7 @@ export const DriverNavigator: React.FC = () => {
         options={{
           tabBarLabel: 'Hujjatlar',
           tabBarIcon: ({ focused }) => (
-            <View style={[styles.iconCapsule, focused && styles.iconCapsuleActive]}>
-              <ShieldCheck size={focused ? 20 : 19} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.5 : 2} />
-            </View>
+            <ShieldCheck size={22} color={focused ? '#FF8800' : '#94A3B8'} strokeWidth={focused ? 2.4 : 1.8} />
           ),
         }}
       />
@@ -117,15 +106,4 @@ export const DriverNavigator: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  iconCapsule: {
-    height: 28,
-    paddingHorizontal: 12,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconCapsuleActive: {
-    backgroundColor: 'rgba(255, 136, 0, 0.15)',
-  },
-});
+const styles = StyleSheet.create({});
