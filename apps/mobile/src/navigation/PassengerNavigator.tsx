@@ -9,6 +9,7 @@ import { BookingsScreen } from '../screens/passenger/BookingsScreen';
 import { ChecklistScreen } from '../screens/passenger/ChecklistScreen';
 import { ProfileScreen } from '../screens/passenger/ProfileScreen';
 import { Search, Compass, Ticket, User } from 'lucide-react-native';
+import { FloatingTabBar } from '../components/ui';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -33,43 +34,9 @@ const DirectTripsStack = () => (
 export const PassengerNavigator: React.FC = () => {
   return (
     <Tab.Navigator
+      tabBar={(props) => <FloatingTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#FF8800',
-        tabBarInactiveTintColor: '#94A3B8',
-        tabBarShowLabel: true,
-        tabBarStyle: {
-          position: 'absolute',
-          bottom: 16,
-          left: 14,
-          right: 14,
-          maxWidth: 480,
-          marginHorizontal: 'auto',
-          height: 64,
-          borderRadius: 32,
-          backgroundColor: '#15171E',
-          borderWidth: 1.2,
-          borderColor: '#272B35',
-          shadowColor: '#000000',
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.5,
-          shadowRadius: 16,
-          elevation: 12,
-          paddingHorizontal: 8,
-          paddingTop: 6,
-          paddingBottom: 6,
-        },
-        tabBarItemStyle: {
-          justifyContent: 'center',
-          alignItems: 'center',
-          paddingVertical: 2,
-        },
-        tabBarLabelStyle: {
-          fontSize: 10.5,
-          fontWeight: '700',
-          marginTop: 2,
-          marginBottom: 0,
-        },
       }}
     >
       <Tab.Screen
