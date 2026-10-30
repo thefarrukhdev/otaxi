@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
-import { Badge } from '../../components/Badge';
+import { Button, Card, Badge, SegmentedControl, EmptyState } from '../../components/ui';
 import { ProgressRing } from '../../components/ui/ProgressRing';
 import { Haptics } from '../../components/ui/Haptics';
 import { useApp } from '../../context/AppContext';
@@ -93,73 +93,16 @@ export const ChecklistScreen: React.FC = () => {
       />
 
       {/* Route Switcher Tabs */}
-      <View style={styles.tabsWrapper}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.tabsRow}
-        >
-          <TouchableOpacity
-            style={[
-              styles.tabBtn,
-              selectedRouteKey === 'UZ-KZ' && styles.tabBtnActive,
-            ]}
-            onPress={() => {
-              Haptics.light();
-              setSelectedRouteKey('UZ-KZ');
-            }}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                selectedRouteKey === 'UZ-KZ' && styles.tabTextActive,
-              ]}
-            >
-              O'zbekiston — Qozog'iston (UZ-KZ)
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.tabBtn,
-              selectedRouteKey === 'UZ-KG' && styles.tabBtnActive,
-            ]}
-            onPress={() => {
-              Haptics.light();
-              setSelectedRouteKey('UZ-KG');
-            }}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                selectedRouteKey === 'UZ-KG' && styles.tabTextActive,
-              ]}
-            >
-              O'zbekiston — Qirg'iziston (UZ-KG)
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.tabBtn,
-              selectedRouteKey === 'UZ-TJ' && styles.tabBtnActive,
-            ]}
-            onPress={() => {
-              Haptics.light();
-              setSelectedRouteKey('UZ-TJ');
-            }}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                selectedRouteKey === 'UZ-TJ' && styles.tabTextActive,
-              ]}
-            >
-              O'zbekiston — Tojikiston (UZ-TJ)
-            </Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
+      <SegmentedControl
+        items={[
+          { id: 'UZ-KZ', label: "O'zbekiston — Qozog'iston" },
+          { id: 'UZ-KG', label: "O'zbekiston — Qirg'iziston" },
+          { id: 'UZ-TJ', label: "O'zbekiston — Tojikiston" },
+        ]}
+        selectedId={selectedRouteKey}
+        onSelect={(id) => setSelectedRouteKey(id)}
+        style={{ marginHorizontal: 16, marginTop: 12, marginBottom: 8 }}
+      />
 
       <ScrollView
         style={styles.scrollView}
@@ -167,7 +110,8 @@ export const ChecklistScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
       >
         {/* Progress Ring Hero Card */}
-        <View
+        <Card
+          variant="surface"
           style={[
             styles.progressCard,
             isAllRequiredChecked && styles.progressCardSuccess,
@@ -186,17 +130,11 @@ export const ChecklistScreen: React.FC = () => {
           <View style={styles.progressTextCol}>
             <View style={styles.progressBadgeRow}>
               <Text style={styles.progressHeading}>Chegara tayyorgarligi</Text>
-              {isAllRequiredChecked ? (
-                <View style={styles.readyRow}>
-                  <CheckCircle2 size={13} color="#10B981" />
-                  <Text style={styles.readyText}>Tayyorsiz</Text>
-                </View>
-              ) : (
-                <View style={styles.pendingRow}>
-                  <AlertTriangle size={13} color="#FF8800" />
-                  <Text style={styles.pendingText}>Tayyorlanmoqda</Text>
-                </View>
-              )}
+              <Badge
+                variant={isAllRequiredChecked ? 'success' : 'warning'}
+                size="sm"
+                label={isAllRequiredChecked ? 'Tayyorsiz' : 'Tayyorlanmoqda'}
+              />
             </View>
 
             <Text style={styles.progressStatusDesc}>
@@ -206,29 +144,29 @@ export const ChecklistScreen: React.FC = () => {
             </Text>
 
             <View style={styles.progressActionRow}>
-              <TouchableOpacity
-                style={styles.quickActionBtn}
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<CheckCircle2 size={12} color="#10B981" />}
+                title="Barchasini belgilash"
                 onPress={handleCheckAll}
-              >
-                <CheckCircle2 size={12} color={COLORS.emerald[700]} />
-                <Text style={styles.quickActionBtnText}>Barchasini belgilash</Text>
-              </TouchableOpacity>
+              />
 
               {totalCheckedCount > 0 && (
-                <TouchableOpacity
-                  style={styles.resetActionBtn}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<RotateCcw size={12} color="#94A3B8" />}
+                  title="Qayta o'rnatish"
                   onPress={handleReset}
-                >
-                  <RotateCcw size={12} color={COLORS.gray[500]} />
-                  <Text style={styles.resetActionBtnText}>Qayta o'rnatish</Text>
-                </TouchableOpacity>
+                />
               )}
             </View>
           </View>
-        </View>
+        </Card>
 
         {/* Route Info & Official Source Card */}
-        <View style={styles.infoCard}>
+        <Card variant="surface" style={styles.infoCard}>
           <View style={styles.infoHeader}>
             <View style={styles.iconCircle}>
               <Globe size={20} color={COLORS.blue[600]} />
@@ -244,150 +182,83 @@ export const ChecklistScreen: React.FC = () => {
               Rasmiy manba: {currentChecklist.officialSource} • Versiya: {currentChecklist.version}
             </Text>
           </View>
-        </View>
+        </Card>
 
         {/* Category Filters */}
-        <View style={styles.categoryFiltersRow}>
-          <TouchableOpacity
-            style={[
-              styles.catFilterChip,
-              categoryFilter === 'ALL' && styles.catFilterChipActive,
-            ]}
-            onPress={() => {
-              Haptics.light();
-              setCategoryFilter('ALL');
-            }}
-          >
-            <Text
-              style={[
-                styles.catFilterChipText,
-                categoryFilter === 'ALL' && styles.catFilterChipTextActive,
-              ]}
-            >
-              Barchasi ({currentChecklist.items.length})
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.catFilterChip,
-              categoryFilter === 'REQUIRED' && styles.catFilterChipActive,
-            ]}
-            onPress={() => {
-              Haptics.light();
-              setCategoryFilter('REQUIRED');
-            }}
-          >
-            <Text
-              style={[
-                styles.catFilterChipText,
-                categoryFilter === 'REQUIRED' && styles.catFilterChipTextActive,
-              ]}
-            >
-              Majburiy ({totalRequired})
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.catFilterChip,
-              categoryFilter === 'PASSPORT_VISA' && styles.catFilterChipActive,
-            ]}
-            onPress={() => {
-              Haptics.light();
-              setCategoryFilter('PASSPORT_VISA');
-            }}
-          >
-            <Text
-              style={[
-                styles.catFilterChipText,
-                categoryFilter === 'PASSPORT_VISA' &&
-                  styles.catFilterChipTextActive,
-              ]}
-            >
-              Pasport & Viza
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.catFilterChip,
-              categoryFilter === 'CUSTOMS' && styles.catFilterChipActive,
-            ]}
-            onPress={() => {
-              Haptics.light();
-              setCategoryFilter('CUSTOMS');
-            }}
-          >
-            <Text
-              style={[
-                styles.catFilterChipText,
-                categoryFilter === 'CUSTOMS' && styles.catFilterChipTextActive,
-              ]}
-            >
-              Bojxona
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <SegmentedControl
+          size="sm"
+          items={[
+            { id: 'ALL', label: `Barchasi (${currentChecklist.items.length})` },
+            { id: 'REQUIRED', label: `Majburiy (${totalRequired})` },
+            { id: 'PASSPORT_VISA', label: 'Pasport & Viza' },
+            { id: 'CUSTOMS', label: 'Bojxona' },
+          ]}
+          selectedId={categoryFilter}
+          onSelect={(id) => setCategoryFilter(id as any)}
+          style={{ marginBottom: 14 }}
+        />
 
         {/* Checklist Items List */}
-        <View style={styles.itemsSection}>
-          {filteredItems.map((item, index) => {
-            const isChecked = !!checkedItems[item.id];
-            return (
-              <TouchableOpacity
-                key={item.id}
-                style={[styles.itemCard, isChecked && styles.itemCardChecked]}
-                onPress={() => handleToggle(item.id)}
-                activeOpacity={0.8}
-              >
-                <View style={styles.itemHeader}>
-                  <View style={styles.itemBadgeGroup}>
-                    <View style={styles.categoryBadge}>
-                      <Text style={styles.categoryBadgeText}>
-                        {item.categoryTitle}
-                      </Text>
-                    </View>
-                    {item.isRequired && (
-                      <View style={styles.requiredBadge}>
-                        <Text style={styles.requiredBadgeText}>Majburiy</Text>
-                      </View>
-                    )}
-                  </View>
-
-                  <View style={styles.checkboxWrapper}>
-                    {isChecked ? (
-                      <CheckSquare size={22} color={COLORS.emerald[600]} />
-                    ) : (
-                      <Square size={22} color={COLORS.gray[400]} />
-                    )}
-                  </View>
-                </View>
-
-                <Text
-                  style={[
-                    styles.itemTitle,
-                    isChecked && styles.itemTitleChecked,
-                  ]}
+        {filteredItems.length === 0 ? (
+          <EmptyState
+            icon={<ShieldCheck size={32} color="#FF8800" />}
+            title="Talablar topilmadi"
+            description="Ushbu toifada ko'rsatiladigan chegara talablari mavjud emas."
+          />
+        ) : (
+          <View style={styles.itemsSection}>
+            {filteredItems.map((item) => {
+              const isChecked = !!checkedItems[item.id];
+              return (
+                <Card
+                  key={item.id}
+                  variant="surface"
+                  pressable
+                  onPress={() => handleToggle(item.id)}
+                  style={[styles.itemCard, isChecked && styles.itemCardChecked]}
                 >
-                  {item.title}
-                </Text>
+                  <View style={styles.itemHeader}>
+                    <View style={styles.itemBadgeGroup}>
+                      <Badge
+                        variant="neutral"
+                        size="sm"
+                        label={item.categoryTitle}
+                      />
+                      {item.isRequired && (
+                        <Badge
+                          variant="warning"
+                          size="sm"
+                          label="Majburiy"
+                        />
+                      )}
+                    </View>
 
-                <Text style={styles.itemDescription}>
-                  {item.description}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+                    <View style={styles.checkboxWrapper}>
+                      {isChecked ? (
+                        <CheckSquare size={22} color="#10B981" />
+                      ) : (
+                        <Square size={22} color="#64748B" />
+                      )}
+                    </View>
+                  </View>
 
-        {/* Legal Disclaimer Footer */}
-        <View style={styles.disclaimerBox}>
-          <Info size={16} color={COLORS.gray[500]} />
-          <Text style={styles.disclaimerText}>
-            Eslatma: Chegara va bojxona nazorati talablari davlat organlari tomonidan yangilanishi mumkin. Safarga chiqishdan oldin rasmiy organlar bilan aniqlashtirish tavsiya etiladi.
-          </Text>
-        </View>
+                  <Text
+                    style={[
+                      styles.itemTitle,
+                      isChecked && styles.itemTitleChecked,
+                    ]}
+                  >
+                    {item.title}
+                  </Text>
+
+                  <Text style={styles.itemDescription}>
+                    {item.description}
+                  </Text>
+                </Card>
+              );
+            })}
+          </View>
+        )}
       </ScrollView>
     </View>
   );

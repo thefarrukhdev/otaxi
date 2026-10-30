@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
-import { Badge } from '../../components/Badge';
+import { Button, Card, Badge } from '../../components/ui';
 import { RouteMap } from '../../components/RouteMap';
 import { LiveTrackingCard } from '../../components/LiveTrackingCard';
 import { PassengerManifestCard } from '../../components/driver/PassengerManifestCard';
@@ -209,7 +209,7 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         {/* Status Stepper Card */}
-        <View style={styles.stepperCard}>
+        <Card variant="surface" style={styles.stepperCard}>
           <View style={styles.stepperHeader}>
             <Text style={styles.stepperTitle}>Safar bosqichlari</Text>
             <Text
@@ -278,7 +278,7 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
               );
             })}
           </View>
-        </View>
+        </Card>
 
         {/* Interactive Tactical Route Corridor Map (Obsidian Cockpit Mode) */}
         <RouteMap
@@ -337,7 +337,7 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
         />
 
         {/* Route Summary Info Card */}
-        <View style={styles.routeCard}>
+        <Card variant="surface" style={styles.routeCard}>
           <View style={styles.routeHeaderRow}>
             <View>
               <View style={styles.routeBadgeRow}>
@@ -365,7 +365,7 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
               <Text style={styles.plateText}>{activeDriverTrip.vehicle.licensePlate}</Text>
             </Text>
           </View>
-        </View>
+        </Card>
 
         {/* Low Connectivity / Mountain Pass Alert */}
         <View style={styles.corridorOfflineBanner}>
@@ -384,56 +384,36 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
 
         {/* Main Progression Action Button */}
         {activeDriverTrip.status !== 'COMPLETED' ? (
-          <TouchableOpacity
-            style={[
-              styles.primaryActionBtn,
-              activeDriverTrip.status === 'SCHEDULED'
-                ? styles.primaryActionBtnScheduled
-                : styles.primaryActionBtnDeparted,
-            ]}
-            onPress={handleNextStatus}
-            activeOpacity={0.85}
-          >
-            {activeDriverTrip.status === 'SCHEDULED' && (
-              <>
-                <Play size={18} color={COLORS.navy[950]} />
-                <Text style={styles.primaryActionBtnText}>
-                  Safarga chiqish (Barcha yo’lovchilar bilan)
-                </Text>
-              </>
-            )}
-
-            {activeDriverTrip.status === 'DEPARTED' && (
-              <>
-                {activeDriverTrip.isInternational ? (
-                  <>
-                    <ShieldCheck size={18} color={COLORS.navy[950]} />
-                    <Text style={styles.primaryActionBtnText}>
-                      Chegara punktiga yetib kelindi (Bojxona)
-                    </Text>
-                  </>
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
+            leftIcon={
+              activeDriverTrip.status === 'SCHEDULED' ? (
+                <Play size={18} color="#0C0D11" />
+              ) : activeDriverTrip.status === 'DEPARTED' ? (
+                activeDriverTrip.isInternational ? (
+                  <ShieldCheck size={18} color="#0C0D11" />
                 ) : (
-                  <>
-                    <Flag size={18} color={COLORS.navy[950]} />
-                    <Text style={styles.primaryActionBtnText}>
-                      Safarni yakunlash va daromadni olish
-                    </Text>
-                  </>
-                )}
-              </>
-            )}
-
-            {activeDriverTrip.status === 'AT_BORDER' && (
-              <>
-                <Flag size={18} color={COLORS.navy[950]} />
-                <Text style={styles.primaryActionBtnText}>
-                  Chegaradan o’tildi va safarni yakunlash
-                </Text>
-              </>
-            )}
-          </TouchableOpacity>
+                  <Flag size={18} color="#0C0D11" />
+                )
+              ) : (
+                <Flag size={18} color="#0C0D11" />
+              )
+            }
+            title={
+              activeDriverTrip.status === 'SCHEDULED'
+                ? "Safarga chiqish (Barcha yo'lovchilar bilan)"
+                : activeDriverTrip.status === 'DEPARTED'
+                ? activeDriverTrip.isInternational
+                  ? "Chegara punktiga yetib kelindi (Bojxona)"
+                  : "Safarni yakunlash va daromadni olish"
+                : "Chegaradan o'tildi va safarni yakunlash"
+            }
+            onPress={handleNextStatus}
+          />
         ) : (
-          <View style={styles.completedTripCard}>
+          <Card variant="surface" style={styles.completedTripCard}>
             <View style={styles.completedHeader}>
               <CheckCircle2 size={24} color={COLORS.emerald[400]} />
               <View style={{ flex: 1 }}>
@@ -445,20 +425,21 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
             </View>
 
             {navigation && (
-              <TouchableOpacity
-                style={styles.viewWalletBtn}
+              <Button
+                variant="outline"
+                size="md"
+                fullWidth
+                leftIcon={<Wallet size={16} color="#FF8800" />}
+                rightIcon={<ArrowRight size={14} color="#FF8800" />}
+                title="Hamyon va balansni ko'rish"
                 onPress={() => {
                   Haptics.selection();
                   navigation.navigate('Wallet');
                 }}
-                activeOpacity={0.85}
-              >
-                <Wallet size={16} color={COLORS.amber[400]} />
-                <Text style={styles.viewWalletBtnText}>Hamyon va balansni ko’rish</Text>
-                <ArrowRight size={14} color={COLORS.amber[400]} />
-              </TouchableOpacity>
+                style={{ marginTop: 12 }}
+              />
             )}
-          </View>
+          </Card>
         )}
 
         {/* SOS Emergency Dispatcher */}
@@ -498,7 +479,7 @@ export const ActiveTripScreen: React.FC<{ navigation?: any }> = ({ navigation })
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090D16', // Cockpit Obsidian
+    backgroundColor: '#0C0D11',
   },
   scrollView: {
     flex: 1,
@@ -508,11 +489,11 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   stepperCard: {
-    backgroundColor: '#111827', // Card Graphite
+    backgroundColor: '#15171E',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1.5,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginBottom: 14,
     ...SHADOWS.md,
   },
@@ -594,11 +575,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.emerald[600],
   },
   routeCard: {
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     borderRadius: 18,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginBottom: 12,
     ...SHADOWS.sm,
   },
@@ -715,11 +696,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     paddingVertical: 12,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
   },
   viewWalletBtnText: {
     fontSize: 13,

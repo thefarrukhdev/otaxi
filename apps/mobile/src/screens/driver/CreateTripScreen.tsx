@@ -13,6 +13,7 @@ import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
 import { useApp } from '../../context/AppContext';
 import { Haptics } from '../../components/ui/Haptics';
+import { Button, Card, Input, SegmentedControl, Badge } from '../../components/ui';
 import {
   PlusCircle,
   MapPin,
@@ -200,55 +201,37 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         {/* Route Type Toggle */}
-        <View style={styles.card}>
+        <Card variant="surface" style={styles.card}>
           <Text style={styles.cardLabel}>Safar turi (Qatnov geografiyasi)</Text>
-          <View style={styles.typeToggleRow}>
-            <TouchableOpacity
-              style={[styles.typeBtn, !isInternational && styles.typeBtnActive]}
-              onPress={() => {
-                Haptics.selection();
-                setIsInternational(false);
-              }}
-              activeOpacity={0.8}
-            >
-              <Car size={16} color={!isInternational ? COLORS.amber[400] : '#94A3B8'} />
-              <Text style={[styles.typeBtnText, !isInternational && styles.typeBtnTextActive]}>
-                Shaharlararo reys
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.typeBtn, isInternational && styles.typeBtnActiveInternational]}
-              onPress={() => {
-                Haptics.selection();
-                setIsInternational(true);
-              }}
-              activeOpacity={0.8}
-            >
-              <Globe size={16} color={isInternational ? COLORS.amber[400] : '#94A3B8'} />
-              <Text
-                style={[
-                  styles.typeBtnText,
-                  isInternational && styles.typeBtnTextActiveInternational,
-                ]}
-              >
-                Xalqaro reys
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <SegmentedControl
+            items={[
+              {
+                id: 'local',
+                label: 'Shaharlararo reys',
+                icon: <Car size={16} color={!isInternational ? '#0C0D11' : '#94A3B8'} />,
+              },
+              {
+                id: 'international',
+                label: 'Xalqaro reys',
+                icon: <Globe size={16} color={isInternational ? '#0C0D11' : '#94A3B8'} />,
+              },
+            ]}
+            selectedId={isInternational ? 'international' : 'local'}
+            onSelect={(id) => setIsInternational(id === 'international')}
+          />
 
           {isInternational && (
             <View style={styles.internationalAlert}>
-              <ShieldAlert size={16} color={COLORS.amber[400]} />
+              <ShieldAlert size={16} color="#FF8800" />
               <Text style={styles.internationalAlertText}>
                 Xalqaro reyslarda yo’lovchilarga OTAXI chegara chek-listi (PAS-11) avtomatik ko’rsatiladi va haydovchidan chet elga chiqish xorijiy pasporti talab qilinadi.
               </Text>
             </View>
           )}
-        </View>
+        </Card>
 
         {/* Popular Corridors Quick-Select */}
-        <View style={styles.card}>
+        <Card variant="surface" style={styles.card}>
           <Text style={styles.cardLabel}>Mashhur yo’nalishlar (Tezkor tanlov)</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.corridorScroll}>
             {POPULAR_CORRIDORS.map((c, idx) => (
@@ -267,101 +250,68 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
               </TouchableOpacity>
             ))}
           </ScrollView>
-        </View>
+        </Card>
 
         {/* Route Cities & Pick-up points */}
-        <View style={styles.card}>
+        <Card variant="surface" style={styles.card}>
           <Text style={styles.cardLabel}>Yo’nalish va bekatlar</Text>
 
           {/* Origin */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.fieldLabel}>Jo’nash shahri</Text>
-            <View style={styles.inputBox}>
-              <MapPin size={16} color={COLORS.emerald[400]} style={{ marginRight: 8 }} />
-              <TextInput
-                style={styles.textInput}
-                value={originCity}
-                onChangeText={setOriginCity}
-                placeholder="Toshkent"
-                placeholderTextColor="#64748B"
-              />
-            </View>
-          </View>
+          <Input
+            label="Jo'nash shahri"
+            value={originCity}
+            onChangeText={setOriginCity}
+            placeholder="Toshkent"
+            leftIcon={<MapPin size={16} color={COLORS.emerald[400]} />}
+            containerStyle={{ marginBottom: 12 }}
+          />
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.fieldLabel}>Jo’nash aniq manzili / bekat</Text>
-            <View style={styles.inputBox}>
-              <TextInput
-                style={styles.textInput}
-                value={originAddress}
-                onChangeText={setOriginAddress}
-                placeholder="Masalan: Olmazor metro bekati, avtoshoxbekat"
-                placeholderTextColor="#64748B"
-              />
-            </View>
-          </View>
+          <Input
+            label="Jo'nash aniq manzili / bekat"
+            value={originAddress}
+            onChangeText={setOriginAddress}
+            placeholder="Masalan: Olmazor metro bekati, avtoshoxbekat"
+            containerStyle={{ marginBottom: 14 }}
+          />
 
           {/* Destination */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.fieldLabel}>Yetib borish shahri</Text>
-            <View style={styles.inputBox}>
-              <MapPin size={16} color={COLORS.amber[400]} style={{ marginRight: 8 }} />
-              <TextInput
-                style={styles.textInput}
-                value={destinationCity}
-                onChangeText={setDestinationCity}
-                placeholder="Samarqand / Shymkent"
-                placeholderTextColor="#64748B"
-              />
-            </View>
-          </View>
+          <Input
+            label="Yetib borish shahri"
+            value={destinationCity}
+            onChangeText={setDestinationCity}
+            placeholder="Samarqand / Shymkent"
+            leftIcon={<MapPin size={16} color="#FF8800" />}
+            containerStyle={{ marginBottom: 12 }}
+          />
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.fieldLabel}>Yetib borish manzili</Text>
-            <View style={styles.inputBox}>
-              <TextInput
-                style={styles.textInput}
-                value={destinationAddress}
-                onChangeText={setDestinationAddress}
-                placeholder="Masalan: Registon maydoni / Kolos bekati"
-                placeholderTextColor="#64748B"
-              />
-            </View>
-          </View>
-        </View>
+          <Input
+            label="Yetib borish manzili"
+            value={destinationAddress}
+            onChangeText={setDestinationAddress}
+            placeholder="Masalan: Registon maydoni / Kolos bekati"
+            containerStyle={{ marginBottom: 4 }}
+          />
+        </Card>
 
         {/* Date & Departure Mode Selection */}
-        <View style={styles.card}>
+        <Card variant="surface" style={styles.card}>
           <Text style={styles.cardLabel}>Jo’nash tartibi (Rejim)</Text>
-          <View style={styles.typeToggleRow}>
-            <TouchableOpacity
-              style={[styles.typeBtn, departureType === 'WHEN_FULL' && styles.typeBtnActive]}
-              onPress={() => {
-                Haptics.selection();
-                setDepartureType('WHEN_FULL');
-              }}
-              activeOpacity={0.8}
-            >
-              <Zap size={16} color={departureType === 'WHEN_FULL' ? '#FF8800' : '#94A3B8'} />
-              <Text style={[styles.typeBtnText, departureType === 'WHEN_FULL' && styles.typeBtnTextActive]}>
-                To’lsa jo’naymiz (Jonli)
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.typeBtn, departureType === 'SCHEDULED' && styles.typeBtnActive]}
-              onPress={() => {
-                Haptics.selection();
-                setDepartureType('SCHEDULED');
-              }}
-              activeOpacity={0.8}
-            >
-              <Clock size={16} color={departureType === 'SCHEDULED' ? '#FF8800' : '#94A3B8'} />
-              <Text style={[styles.typeBtnText, departureType === 'SCHEDULED' && styles.typeBtnTextActive]}>
-                Aniq vaqt bo’yicha
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <SegmentedControl
+            items={[
+              {
+                id: 'WHEN_FULL',
+                label: "To'lsa jo'naymiz (Jonli)",
+                icon: <Zap size={16} color={departureType === 'WHEN_FULL' ? '#0C0D11' : '#94A3B8'} />,
+              },
+              {
+                id: 'SCHEDULED',
+                label: "Aniq vaqt bo'yicha",
+                icon: <Clock size={16} color={departureType === 'SCHEDULED' ? '#0C0D11' : '#94A3B8'} />,
+              },
+            ]}
+            selectedId={departureType}
+            onSelect={(id) => setDepartureType(id as 'WHEN_FULL' | 'SCHEDULED')}
+          />
 
           {departureType === 'WHEN_FULL' ? (
             <View style={styles.whenFullNoteBox}>
@@ -370,7 +320,7 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
               </Text>
             </View>
           ) : (
-            <View style={{ marginTop: 12 }}>
+            <View style={{ marginTop: 14 }}>
               <View style={styles.timePresetsRow}>
                 {TIME_PRESETS.map((t, idx) => {
                   const isSelected = departureTime === t;
@@ -386,7 +336,7 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
                     >
                       <Clock
                         size={12}
-                        color={isSelected ? COLORS.amber[400] : '#94A3B8'}
+                        color={isSelected ? '#FF8800' : '#94A3B8'}
                         style={{ marginRight: 4 }}
                       />
                       <Text
@@ -399,22 +349,20 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
                 })}
               </View>
 
-              <View style={styles.inputBox}>
-                <Calendar size={16} color={COLORS.amber[400]} style={{ marginRight: 8 }} />
-                <TextInput
-                  style={styles.textInput}
-                  value={departureTime}
-                  onChangeText={setDepartureTime}
-                  placeholder="Sana va vaqt (masalan: Ertaga, 07:00)"
-                  placeholderTextColor="#64748B"
-                />
-              </View>
+              <Input
+                label="Sana va vaqt"
+                value={departureTime}
+                onChangeText={setDepartureTime}
+                placeholder="Sana va vaqt (masalan: Ertaga, 07:00)"
+                leftIcon={<Calendar size={16} color="#FF8800" />}
+                containerStyle={{ marginTop: 10 }}
+              />
             </View>
           )}
-        </View>
+        </Card>
 
         {/* Seat Count & Pricing */}
-        <View style={styles.card}>
+        <Card variant="surface" style={styles.card}>
           <Text style={styles.cardLabel}>O’rindiqlar va narx belgilash</Text>
 
           {/* Seats Selector */}
@@ -434,7 +382,7 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
                 >
                   <Users
                     size={16}
-                    color={isSelected ? COLORS.amber[400] : '#94A3B8'}
+                    color={isSelected ? '#0C0D11' : '#94A3B8'}
                     style={{ marginRight: 6 }}
                   />
                   <Text
@@ -448,22 +396,19 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
           </View>
 
           {/* Price per seat input */}
-          <Text style={styles.fieldLabel}>Bitta o’rindiq narxi (UZS)</Text>
-          <View style={styles.inputBox}>
-            <CreditCard size={16} color={COLORS.amber[400]} style={{ marginRight: 8 }} />
-            <TextInput
-              style={[styles.textInput, styles.priceInputText]}
-              value={parsedPrice > 0 ? parsedPrice.toLocaleString('uz-UZ') : ''}
-              onChangeText={(text) => {
-                const cleaned = text.replace(/\D/g, '');
-                setPricePerSeat(cleaned);
-              }}
-              placeholder="90 000"
-              placeholderTextColor="#64748B"
-              keyboardType="number-pad"
-            />
-            <Text style={styles.currencyBadge}>UZS / joy</Text>
-          </View>
+          <Input
+            label="Bitta o’rindiq narxi (UZS)"
+            value={parsedPrice > 0 ? parsedPrice.toLocaleString('uz-UZ') : ''}
+            onChangeText={(text) => {
+              const cleaned = text.replace(/\D/g, '');
+              setPricePerSeat(cleaned);
+            }}
+            placeholder="90 000"
+            keyboardType="number-pad"
+            leftIcon={<CreditCard size={16} color="#FF8800" />}
+            rightIcon={<Text style={styles.currencyBadge}>UZS / joy</Text>}
+            containerStyle={{ marginBottom: 14 }}
+          />
 
           {/* VIP Front Seat Toggle */}
           <View style={styles.toggleItemRow}>
@@ -479,15 +424,15 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
                 Haptics.light();
                 setHasVIPFrontSeat(val);
               }}
-              trackColor={{ false: '#1E293B', true: COLORS.amber[500] }}
+              trackColor={{ false: '#1E293B', true: '#FF8800' }}
               thumbColor="#FFFFFF"
             />
           </View>
 
           {/* Live Revenue Calculator Card */}
-          <View style={styles.revenueCard}>
+          <Card variant="outlined" style={styles.revenueCard}>
             <View style={styles.revenueHeader}>
-              <Calculator size={15} color={COLORS.amber[400]} />
+              <Calculator size={15} color="#FF8800" />
               <Text style={styles.revenueTitle}>Kutilayotgan daromad hisob-kitobi</Text>
             </View>
 
@@ -513,8 +458,8 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
                 {estimatedNetEarnings.toLocaleString('uz-UZ')} UZS
               </Text>
             </View>
-          </View>
-        </View>
+          </Card>
+        </Card>
 
         {/* Collapsible Advanced Settings (Oraliq bekatlar, Qulayliklar, Izoh) */}
         <TouchableOpacity
@@ -535,7 +480,7 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
         {showAdvanced && (
           <>
             {/* Intermediate Stops (Oraliq bekatlar) */}
-            <View style={styles.card}>
+            <Card variant="surface" style={styles.card}>
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardLabel}>Oraliq bekatlar (Tranzit to’xtash joylari)</Text>
                 <Text style={styles.cardLabelCount}>{stops.length} ta bekat</Text>
@@ -575,10 +520,10 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
                   <Text style={styles.addStopBtnText}>Qo’shish</Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </Card>
 
             {/* Vehicle Amenities Switches */}
-            <View style={styles.card}>
+            <Card variant="surface" style={styles.card}>
               <Text style={styles.cardLabel}>Avtomobil qulayliklari</Text>
 
               <View style={styles.amenityRow}>
@@ -632,10 +577,10 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
                   thumbColor="#FFFFFF"
                 />
               </View>
-            </View>
+            </Card>
 
             {/* Trip Notes */}
-            <View style={styles.card}>
+            <Card variant="surface" style={styles.card}>
               <Text style={styles.cardLabel}>Yo’lovchilar uchun qo’shimcha izoh</Text>
               <TextInput
                 style={styles.notesInput}
@@ -646,21 +591,19 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
                 multiline
                 numberOfLines={3}
               />
-            </View>
+            </Card>
           </>
         )}
 
         {/* Submit Publish Button */}
-        <TouchableOpacity
-          style={styles.publishBtn}
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
+          leftIcon={<PlusCircle size={20} color="#0C0D11" />}
+          title={`Reysni e'lon qilish (${estimatedGrossRevenue.toLocaleString('uz-UZ')} UZS)`}
           onPress={handlePublish}
-          activeOpacity={0.85}
-        >
-          <PlusCircle size={20} color={COLORS.navy[950]} />
-          <Text style={styles.publishBtnText}>
-            Reysni e’lon qilish ({estimatedGrossRevenue.toLocaleString('uz-UZ')} UZS)
-          </Text>
-        </TouchableOpacity>
+        />
       </ScrollView>
     </View>
   );
@@ -669,7 +612,7 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090D16', // Cockpit Obsidian
+    backgroundColor: '#0C0D11',
   },
   scrollView: {
     flex: 1,
@@ -679,11 +622,11 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   card: {
-    backgroundColor: '#111827', // Card Graphite
+    backgroundColor: '#15171E',
     borderRadius: 18,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginBottom: 14,
     ...SHADOWS.sm,
   },
@@ -716,7 +659,7 @@ const styles = StyleSheet.create({
     gap: 6,
     backgroundColor: '#090D16',
     borderWidth: 1.5,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     paddingVertical: 12,
     borderRadius: 12,
   },
@@ -760,7 +703,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     backgroundColor: '#111827',
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     alignItems: 'center',
     marginBottom: 14,
   },
@@ -795,7 +738,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginRight: 8,
   },
   corridorChipRoute: {
@@ -825,7 +768,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#090D16',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     paddingHorizontal: 12,
     paddingVertical: 10,
   },
@@ -855,7 +798,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginBottom: 8,
     gap: 8,
   },
@@ -891,7 +834,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#090D16',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     paddingHorizontal: 12,
     paddingVertical: 8,
     fontSize: 13,
@@ -922,7 +865,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#090D16',
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
@@ -952,13 +895,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#090D16',
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     paddingVertical: 10,
     borderRadius: 10,
   },
   seatCountBtnActive: {
-    backgroundColor: '#1E293B',
-    borderColor: COLORS.amber[400],
+    backgroundColor: '#FF8800',
+    borderColor: '#FF8800',
   },
   seatCountText: {
     fontSize: 12,
@@ -966,7 +909,8 @@ const styles = StyleSheet.create({
     color: '#94A3B8',
   },
   seatCountTextActive: {
-    color: COLORS.amber[400],
+    color: '#0C0D11',
+    fontWeight: '900',
   },
   toggleItemRow: {
     flexDirection: 'row',
@@ -976,7 +920,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginTop: 8,
     marginBottom: 12,
   },
@@ -1069,7 +1013,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#090D16',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     padding: 12,
     fontSize: 13,
     color: '#F8FAFC',

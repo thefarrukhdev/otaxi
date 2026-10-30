@@ -13,6 +13,8 @@ import { BorderChecklistModal } from '../../components/BorderChecklistModal';
 import { CorridorQuickSelect, RouteOption } from '../../components/passenger';
 import { Haptics } from '../../components/ui/Haptics';
 import { PriceDisplay } from '../../components/ui/PriceDisplay';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
 import { useApp } from '../../context/AppContext';
 import { getBorderChecklist } from '../../lib/data';
 import { CountryCode } from '@otaxi/types';
@@ -100,7 +102,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         )}
 
         {/* Minimalist Taxi Orange Search Card */}
-        <View style={styles.searchCard}>
+        <Card variant="surface" style={styles.searchCard}>
           {/* Route Inputs */}
           <View style={styles.routeInputs}>
             <View style={styles.inputRow}>
@@ -223,20 +225,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </View>
 
           {/* Clean Solid CTA Button */}
-          <TouchableOpacity
-            style={styles.searchButton}
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
             onPress={handleSearch}
-            activeOpacity={0.88}
-          >
-            <Search size={17} color="#0C0D11" strokeWidth={2.6} />
-            <Text style={styles.searchButtonText}>
-              {matchingTrips.length > 0
+            leftIcon={<Search size={18} color="#0C0D11" strokeWidth={2.6} />}
+            rightIcon={<ArrowRight size={16} color="#0C0D11" strokeWidth={2.6} />}
+            title={
+              matchingTrips.length > 0
                 ? `Reyslarni ko'rish (${matchingTrips.length})`
-                : 'Reyslarni qidirish'}
-            </Text>
-            <ArrowRight size={16} color="#0C0D11" strokeWidth={2.6} />
-          </TouchableOpacity>
-        </View>
+                : 'Reyslarni qidirish'
+            }
+          />
+        </Card>
 
         {/* Popular Corridors */}
         <CorridorQuickSelect

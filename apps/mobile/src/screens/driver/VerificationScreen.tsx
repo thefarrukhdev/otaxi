@@ -11,6 +11,7 @@ import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
 import { useApp } from '../../context/AppContext';
 import { Haptics } from '../../components/ui/Haptics';
+import { Button, Card, Badge } from '../../components/ui';
 import {
   ShieldCheck,
   FileText,
@@ -60,13 +61,10 @@ export const VerificationScreen: React.FC = () => {
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         {/* Verification Status Stepper Card */}
-        <View style={styles.stepperCard}>
+        <Card variant="surface" style={styles.stepperCard}>
           <View style={styles.stepperHeader}>
             <Text style={styles.stepperTitle}>ARIZA VA TEKSHIRUV HOLATI</Text>
-            <View style={styles.liveApprovedRow}>
-              <CheckCircle2 size={13} color="#10B981" />
-              <Text style={styles.liveApprovedText}>Tasdiqlangan</Text>
-            </View>
+            <Badge variant="success" size="sm" label="Tasdiqlangan" />
           </View>
 
           {/* Stepper Dots & Line */}
@@ -114,13 +112,13 @@ export const VerificationScreen: React.FC = () => {
               </Text>
             </View>
           </View>
-        </View>
+        </Card>
 
         {/* 4 Required Documents List */}
         <Text style={styles.sectionHeading}>Yuklangan rasmiy hujjatlar (4 ta)</Text>
 
         {/* 1. Driver License */}
-        <View style={styles.docCard}>
+        <Card variant="surface" style={styles.docCard}>
           <View style={styles.docTopRow}>
             <View style={styles.docIconBox}>
               <FileText size={20} color={COLORS.amber[400]} />
@@ -129,27 +127,23 @@ export const VerificationScreen: React.FC = () => {
               <Text style={styles.docTitle}>Haydovchilik guvohnomasi (Prava)</Text>
               <Text style={styles.docSubtitle}>Old va orqa tomoni (B toifa, 2030-yilgacha amal qiladi)</Text>
             </View>
-            <View style={styles.statusSuccessRow}>
-              <CheckCircle2 size={13} color="#10B981" />
-              <Text style={styles.statusSuccessText}>Tasdiqlangan</Text>
-            </View>
+<Badge variant="success" size="sm" label="Tasdiqlangan" />
           </View>
 
           <View style={styles.docMetaRow}>
             <Text style={styles.docMetaText}>Seriya: AB 7891234 • 8 yillik tajriba</Text>
-            <TouchableOpacity
-              style={styles.reuploadBtn}
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<RefreshCw size={12} color="#FF8800" />}
+              title="Yangilash"
               onPress={() => handleSimulateUpload('Haydovchilik guvohnomasi', 'licenseFront')}
-              activeOpacity={0.7}
-            >
-              <RefreshCw size={12} color={COLORS.amber[400]} />
-              <Text style={styles.reuploadBtnText}>Yangilash</Text>
-            </TouchableOpacity>
+            />
           </View>
-        </View>
+        </Card>
 
         {/* 2. Vehicle Tech Passport */}
-        <View style={styles.docCard}>
+        <Card variant="surface" style={styles.docCard}>
           <View style={styles.docTopRow}>
             <View style={styles.docIconBox}>
               <Car size={20} color={COLORS.emerald[400]} />
@@ -160,27 +154,23 @@ export const VerificationScreen: React.FC = () => {
                 Chevrolet Malibu 2 (Davlat raqami: 01 A 777 AA, 2023)
               </Text>
             </View>
-            <View style={styles.statusSuccessRow}>
-              <CheckCircle2 size={13} color="#10B981" />
-              <Text style={styles.statusSuccessText}>Tasdiqlangan</Text>
-            </View>
+<Badge variant="success" size="sm" label="Tasdiqlangan" />
           </View>
 
           <View style={styles.docMetaRow}>
             <Text style={styles.docMetaText}>Shaxsiy mulk • Texnik ko’rik: 2026-avgust</Text>
-            <TouchableOpacity
-              style={styles.reuploadBtn}
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<RefreshCw size={12} color="#FF8800" />}
+              title="Yangilash"
               onPress={() => handleSimulateUpload('Texpasport', 'techPassport')}
-              activeOpacity={0.7}
-            >
-              <RefreshCw size={12} color={COLORS.amber[400]} />
-              <Text style={styles.reuploadBtnText}>Yangilash</Text>
-            </TouchableOpacity>
+            />
           </View>
-        </View>
+        </Card>
 
         {/* 3. Insurance & International Green Card */}
-        <View style={styles.docCard}>
+        <Card variant="surface" style={styles.docCard}>
           <View style={styles.docTopRow}>
             <View style={styles.docIconBox}>
               <Shield size={20} color="#38BDF8" />
@@ -191,27 +181,23 @@ export const VerificationScreen: React.FC = () => {
                 O’zbekiston va Qozog’iston hududida yaroqli xalqaro polis
               </Text>
             </View>
-            <View style={styles.statusSuccessRow}>
-              <CheckCircle2 size={13} color="#10B981" />
-              <Text style={styles.statusSuccessText}>Amalda</Text>
-            </View>
+<Badge variant="success" size="sm" label="Amalda" />
           </View>
 
           <View style={styles.docMetaRow}>
             <Text style={styles.docMetaText}>Polis muddati: 2026-dekabrgacha • Oson Sug'urta</Text>
-            <TouchableOpacity
-              style={styles.reuploadBtn}
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<RefreshCw size={12} color="#FF8800" />}
+              title="Yangilash"
               onPress={() => handleSimulateUpload('Sug’urta polisi', 'insurance')}
-              activeOpacity={0.7}
-            >
-              <RefreshCw size={12} color={COLORS.amber[400]} />
-              <Text style={styles.reuploadBtnText}>Yangilash</Text>
-            </TouchableOpacity>
+            />
           </View>
-        </View>
+        </Card>
 
         {/* 4. Car Photos (4 Angles) */}
-        <View style={styles.docCard}>
+        <Card variant="surface" style={styles.docCard}>
           <View style={styles.docTopRow}>
             <View style={styles.docIconBox}>
               <Camera size={20} color={COLORS.amber[400]} />
@@ -220,10 +206,7 @@ export const VerificationScreen: React.FC = () => {
               <Text style={styles.docTitle}>Avtomobil fotosuratlari (4 ta tomon)</Text>
               <Text style={styles.docSubtitle}>Oldi, orqa, o’ng tomon va salon tozaligi</Text>
             </View>
-            <View style={styles.statusSuccessRow}>
-              <CheckCircle2 size={13} color="#10B981" />
-              <Text style={styles.statusSuccessText}>4/4 Tayyor</Text>
-            </View>
+<Badge variant="info" size="sm" label="4/4 Tayyor" />
           </View>
 
           {/* 4 Photo Thumbnails Grid */}
@@ -244,10 +227,10 @@ export const VerificationScreen: React.FC = () => {
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </Card>
 
         {/* International Border Mobility Notice (PAS-11) */}
-        <View style={styles.borderNoticeCard}>
+        <Card variant="surface" style={styles.borderNoticeCard}>
           <View style={styles.borderNoticeHeader}>
             <Globe size={18} color={COLORS.amber[400]} />
             <Text style={styles.borderNoticeTitle}>
@@ -266,11 +249,15 @@ export const VerificationScreen: React.FC = () => {
               • Chegara postida har bir yo’lovchining 4 xonali tasdiqlash kodi tekshirilgan bo’lishi zarur.
             </Text>
           </View>
-        </View>
+        </Card>
 
         {/* Help & Support Button */}
-        <TouchableOpacity
-          style={styles.supportBtn}
+        <Button
+          variant="secondary"
+          size="md"
+          fullWidth
+          rightIcon={<ExternalLink size={14} color="#94A3B8" />}
+          title="Hujjatlar bo'yicha yordam va savollar"
           onPress={() => {
             Haptics.light();
             Alert.alert(
@@ -278,11 +265,7 @@ export const VerificationScreen: React.FC = () => {
               'Savollaringiz bo’lsa, 24/7 dispetcherlik xizmati bilan bog’laning: +998 71 200 00 00 yoki @otaxi_driver_bot telegram orqali.'
             );
           }}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.supportBtnText}>Hujjatlar bo’yicha yordam va savollar</Text>
-          <ExternalLink size={14} color="#94A3B8" />
-        </TouchableOpacity>
+        />
       </ScrollView>
     </View>
   );
@@ -291,7 +274,7 @@ export const VerificationScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090D16', // Cockpit Obsidian
+    backgroundColor: '#0C0D11',
   },
   scrollView: {
     flex: 1,
@@ -301,11 +284,11 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   stepperCard: {
-    backgroundColor: '#111827', // Card Graphite
+    backgroundColor: '#15171E',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1.5,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginBottom: 18,
     ...SHADOWS.md,
   },
@@ -379,17 +362,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    backgroundColor: '#0D2818',
     borderRadius: 14,
     padding: 12,
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
+    borderColor: '#10B981',
   },
   approvedIconCircle: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+    backgroundColor: '#154226',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -413,11 +396,11 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   docCard: {
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     borderRadius: 18,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginBottom: 12,
     ...SHADOWS.sm,
   },
@@ -498,7 +481,7 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
   },
   photoSlotTitle: {
     fontSize: 10,
@@ -519,7 +502,7 @@ const styles = StyleSheet.create({
     color: COLORS.emerald[400],
   },
   borderNoticeCard: {
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
@@ -557,11 +540,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     borderRadius: 14,
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
   },
   supportBtnText: {
     fontSize: 12,

@@ -13,7 +13,7 @@ import { Header } from '../../components/Header';
 import { BoardingPassCard } from '../../components/BoardingPassCard';
 import { BorderChecklistModal } from '../../components/BorderChecklistModal';
 import { Haptics } from '../../components/ui/Haptics';
-import { EmptyState } from '../../components/ui';
+import { EmptyState, SegmentedControl } from '../../components/ui';
 import { useApp } from '../../context/AppContext';
 import { getBorderChecklist } from '../../lib/data';
 import { BookingStatus } from '@otaxi/types';
@@ -82,55 +82,35 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ navigation }) =>
       />
 
       {/* Tabs */}
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={[styles.tabBtn, activeTab === 'ACTIVE' && styles.tabBtnActive]}
-          onPress={() => {
-            Haptics.light();
-            setActiveTab('ACTIVE');
-          }}
-          activeOpacity={0.8}
-        >
-          <View style={styles.tabBtnInner}>
-            <Ticket
-              size={15}
-              color={activeTab === 'ACTIVE' ? '#0C0D11' : '#94A3B8'}
-            />
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === 'ACTIVE' && styles.tabTextActive,
-              ]}
-            >
-              Faol safarlar ({activeBookings.length})
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.tabBtn, activeTab === 'HISTORY' && styles.tabBtnActive]}
-          onPress={() => {
-            Haptics.light();
-            setActiveTab('HISTORY');
-          }}
-          activeOpacity={0.8}
-        >
-          <View style={styles.tabBtnInner}>
-            <History
-              size={15}
-              color={activeTab === 'HISTORY' ? '#0C0D11' : '#94A3B8'}
-            />
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === 'HISTORY' && styles.tabTextActive,
-              ]}
-            >
-              Safarlar tarixi ({historyBookings.length})
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+      <SegmentedControl
+        items={[
+          {
+            id: 'ACTIVE',
+            label: 'Faol safarlar',
+            badge: activeBookings.length,
+            icon: (
+              <Ticket
+                size={15}
+                color={activeTab === 'ACTIVE' ? '#0C0D11' : '#94A3B8'}
+              />
+            ),
+          },
+          {
+            id: 'HISTORY',
+            label: 'Safarlar tarixi',
+            badge: historyBookings.length,
+            icon: (
+              <History
+                size={15}
+                color={activeTab === 'HISTORY' ? '#0C0D11' : '#94A3B8'}
+              />
+            ),
+          },
+        ]}
+        selectedId={activeTab}
+        onSelect={(id) => setActiveTab(id as 'ACTIVE' | 'HISTORY')}
+        style={styles.tabContainer}
+      />
 
       <ScrollView
         style={styles.scrollView}
@@ -194,38 +174,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#0C0D11',
   },
   tabContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#15171E',
-    padding: 4,
     marginHorizontal: 16,
     marginTop: 12,
     marginBottom: 6,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#272B35',
-  },
-  tabBtn: {
-    flex: 1,
-    paddingVertical: 9,
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  tabBtnActive: {
-    backgroundColor: '#FF8800',
-  },
-  tabBtnInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  tabText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#94A3B8',
-  },
-  tabTextActive: {
-    color: '#0C0D11',
-    fontWeight: '900',
   },
   scrollView: {
     flex: 1,

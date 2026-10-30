@@ -8,10 +8,10 @@ import {
 } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
-import { Badge } from '../../components/Badge';
 import { PayoutModal } from '../../components/driver/PayoutModal';
 import { useApp } from '../../context/AppContext';
 import { Haptics } from '../../components/ui/Haptics';
+import { Button, Card, Badge, PriceDisplay, SegmentedControl, EmptyState } from '../../components/ui';
 import {
   Wallet,
   ArrowDownCircle,
@@ -65,14 +65,11 @@ export const WalletScreen: React.FC = () => {
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         {/* Main Balance Card */}
-        <View style={styles.balanceCard}>
+        <Card variant="surface" style={styles.balanceCard}>
           <View style={styles.balanceHeader}>
             <View>
               <Text style={styles.balanceLabel}>Mavjud asosiy balans:</Text>
-              <Text style={styles.balanceAmount}>
-                {driverBalance.toLocaleString('uz-UZ')}{' '}
-                <Text style={styles.currencyText}>UZS</Text>
-              </Text>
+              <PriceDisplay amount={driverBalance} currency="UZS" size="xl" />
             </View>
             <View style={styles.zeroFeeRow}>
               <Zap size={13} color="#FF8800" />
@@ -84,33 +81,31 @@ export const WalletScreen: React.FC = () => {
           <View style={styles.balanceMetaRow}>
             <View style={styles.metaCol}>
               <Text style={styles.metaLabel}>Yechib olishga tayyor:</Text>
-              <Text style={styles.metaVal}>{driverBalance.toLocaleString('uz-UZ')} UZS</Text>
+              <PriceDisplay amount={driverBalance} currency="UZS" size="sm" />
             </View>
             <View style={styles.metaCol}>
               <Text style={styles.metaLabel}>Bugungi sof tushum:</Text>
-              <Text style={[styles.metaVal, { color: COLORS.emerald[400] }]}>324,000 UZS</Text>
+              <PriceDisplay amount={324000} currency="UZS" size="sm" />
             </View>
             <View style={styles.metaCol}>
               <Text style={styles.metaLabel}>Kafolat depoziti:</Text>
-              <Text style={styles.metaVal}>100,000 UZS</Text>
+              <PriceDisplay amount={100000} currency="UZS" size="sm" />
             </View>
           </View>
 
           {/* Payout Action Button */}
-          <TouchableOpacity
-            style={styles.payoutButton}
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
+            leftIcon={<Zap size={18} color="#0C0D11" />}
+            title="Kartaga pul yechib olish (Instant Payout)"
             onPress={handleOpenPayout}
-            activeOpacity={0.85}
-          >
-            <Zap size={18} color={COLORS.navy[950]} />
-            <Text style={styles.payoutButtonText}>
-              Kartaga pul yechib olish (Instant Payout)
-            </Text>
-          </TouchableOpacity>
-        </View>
+          />
+        </Card>
 
         {/* Weekly Chart */}
-        <View style={styles.chartCard}>
+        <Card variant="surface" style={styles.chartCard}>
           <View style={styles.chartHeader}>
             <View>
               <Text style={styles.chartTitle}>Haftalik daromad dinamikasi</Text>
@@ -147,7 +142,7 @@ export const WalletScreen: React.FC = () => {
               </View>
             ))}
           </View>
-        </View>
+        </Card>
 
         {/* Transactions History Section */}
         <View style={styles.historySection}>
@@ -160,82 +155,75 @@ export const WalletScreen: React.FC = () => {
           </View>
 
           {/* Filter Tabs */}
-          <View style={styles.filterTabsRow}>
-            {(
-              [
-                { key: 'ALL', label: 'Barchasi' },
-                { key: 'EARNING', label: 'Tushumlar' },
-                { key: 'PAYOUT', label: 'Yechilgan' },
-                { key: 'COMMISSION', label: 'Komissiya' },
-              ] as const
-            ).map((f) => {
-              const isActive = selectedFilter === f.key;
-              return (
-                <TouchableOpacity
-                  key={f.key}
-                  style={[styles.filterChip, isActive && styles.filterChipActive]}
-                  onPress={() => {
-                    Haptics.selection();
-                    setSelectedFilter(f.key);
-                  }}
-                  activeOpacity={0.8}
-                >
-                  <Text style={[styles.filterChipText, isActive && styles.filterChipTextActive]}>
-                    {f.label}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
+          <SegmentedControl
+            size="sm"
+            items={[
+              { id: 'ALL', label: 'Barchasi' },
+              { id: 'EARNING', label: 'Tushumlar' },
+              { id: 'PAYOUT', label: 'Yechilgan' },
+              { id: 'COMMISSION', label: 'Komissiya' },
+            ]}
+            selectedId={selectedFilter}
+            onSelect={(id) => setSelectedFilter(id as FilterType)}
+            style={{ marginBottom: 14 }}
+          />
 
           {/* Transaction List */}
-          <View style={styles.txList}>
-            {filteredTransactions.map((tx) => {
-              const isEarning = tx.type === 'EARNING';
-              const isPayout = tx.type === 'PAYOUT';
-              const isCommission = tx.type === 'COMMISSION';
+          {filteredTransactions.length === 0 ? (
+            <EmptyState
+              icon={<Wallet size={32} color="#FF8800" />}
+              title="Tranzaksiyalar mavjud emas"
+              description="Tanlangan toifada hozircha operatsiyalar amalga oshirilmagan."
+            />
+          ) : (
+            <View style={styles.txList}>
+              {filteredTransactions.map((tx) => {
+                const isEarning = tx.type === 'EARNING';
+                const isPayout = tx.type === 'PAYOUT';
+                const isCommission = tx.type === 'COMMISSION';
 
-              return (
-                <View key={tx.id} style={styles.txCard}>
-                  <View
-                    style={[
-                      styles.txIconBox,
-                      isEarning && styles.txIconBoxEarning,
-                      isPayout && styles.txIconBoxPayout,
-                      isCommission && styles.txIconBoxCommission,
-                    ]}
-                  >
-                    {isEarning && <ArrowUpRight size={18} color={COLORS.emerald[400]} />}
-                    {isPayout && <ArrowDownCircle size={18} color={COLORS.amber[400]} />}
-                    {isCommission && <Percent size={16} color="#94A3B8" />}
-                  </View>
-
-                  <View style={{ flex: 1, paddingRight: 8 }}>
-                    <Text style={styles.txDesc}>{tx.description}</Text>
-                    <Text style={styles.txDate}>{tx.date}</Text>
-                  </View>
-
-                  <View style={{ alignItems: 'flex-end' }}>
-                    <Text
+                return (
+                  <Card key={tx.id} variant="surface" style={styles.txCard}>
+                    <View
                       style={[
-                        styles.txAmount,
-                        isEarning && styles.txAmountPositive,
-                        isPayout && styles.txAmountPayout,
-                        isCommission && styles.txAmountCommission,
+                        styles.txIconBox,
+                        isEarning && styles.txIconBoxEarning,
+                        isPayout && styles.txIconBoxPayout,
+                        isCommission && styles.txIconBoxCommission,
                       ]}
                     >
-                      {tx.amount > 0 ? '+' : ''}
-                      {tx.amount.toLocaleString('uz-UZ')} UZS
-                    </Text>
-                    <View style={styles.txStatusPill}>
-                      <CheckCircle2 size={10} color={COLORS.emerald[400]} />
-                      <Text style={styles.txStatusText}>Bajarildi</Text>
+                      {isEarning && <ArrowUpRight size={18} color={COLORS.emerald[400]} />}
+                      {isPayout && <ArrowDownCircle size={18} color="#FF8800" />}
+                      {isCommission && <Percent size={16} color="#94A3B8" />}
                     </View>
-                  </View>
-                </View>
-              );
-            })}
-          </View>
+
+                    <View style={{ flex: 1, paddingRight: 8 }}>
+                      <Text style={styles.txDesc}>{tx.description}</Text>
+                      <Text style={styles.txDate}>{tx.date}</Text>
+                    </View>
+
+                    <View style={{ alignItems: 'flex-end' }}>
+                      <Text
+                        style={[
+                          styles.txAmount,
+                          isEarning && styles.txAmountPositive,
+                          isPayout && styles.txAmountPayout,
+                          isCommission && styles.txAmountCommission,
+                        ]}
+                      >
+                        {tx.amount > 0 ? '+' : ''}
+                        {tx.amount.toLocaleString('uz-UZ')} UZS
+                      </Text>
+                      <View style={styles.txStatusPill}>
+                        <CheckCircle2 size={10} color={COLORS.emerald[400]} />
+                        <Text style={styles.txStatusText}>Bajarildi</Text>
+                      </View>
+                    </View>
+                  </Card>
+                );
+              })}
+            </View>
+          )}
         </View>
       </ScrollView>
 
@@ -248,7 +236,7 @@ export const WalletScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090D16', // Cockpit Obsidian
+    backgroundColor: '#0C0D11',
   },
   scrollView: {
     flex: 1,
@@ -258,11 +246,11 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   balanceCard: {
-    backgroundColor: '#111827', // Card Graphite
+    backgroundColor: '#15171E',
     borderRadius: 22,
     padding: 18,
     borderWidth: 1.5,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginBottom: 16,
     ...SHADOWS.md,
   },
@@ -306,7 +294,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginBottom: 16,
     gap: 8,
   },
@@ -340,11 +328,11 @@ const styles = StyleSheet.create({
     color: COLORS.navy[950],
   },
   chartCard: {
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginBottom: 18,
     ...SHADOWS.sm,
   },
@@ -399,7 +387,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
   },
   barFill: {
     width: '100%',
@@ -452,9 +440,9 @@ const styles = StyleSheet.create({
   },
   filterChip: {
     flex: 1,
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     paddingVertical: 7,
     borderRadius: 8,
     alignItems: 'center',
@@ -475,11 +463,11 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   txCard: {
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
@@ -493,13 +481,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txIconBoxEarning: {
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    backgroundColor: '#0D2818',
   },
   txIconBoxPayout: {
-    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    backgroundColor: '#2A1805',
   },
   txIconBoxCommission: {
-    backgroundColor: '#1E293B',
+    backgroundColor: '#1F2430',
   },
   txDesc: {
     fontSize: 13,

@@ -15,6 +15,12 @@ import { SeatMap } from '../../components/SeatMap';
 import { BorderChecklistModal } from '../../components/BorderChecklistModal';
 import { RouteMap } from '../../components/RouteMap';
 import { Haptics } from '../../components/ui/Haptics';
+import { Avatar } from '../../components/ui/Avatar';
+import { Badge } from '../../components/ui/Badge';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
+import { Input } from '../../components/ui/Input';
+import { PriceDisplay } from '../../components/ui/PriceDisplay';
 import { useApp } from '../../context/AppContext';
 import { getBorderChecklist } from '../../lib/data';
 import { PaymentProvider, CountryCode } from '@otaxi/types';
@@ -330,7 +336,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
         />
 
         {/* Route Details Card */}
-        <View style={styles.sectionCard}>
+        <Card variant="surface" style={styles.sectionCard}>
           <Text style={styles.sectionHeading}>Marshrut tafsilotlari</Text>
           <View style={styles.timelineRow}>
             <View style={styles.timelinePoint}>
@@ -381,10 +387,10 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
               ))}
             </View>
           )}
-        </View>
+        </Card>
 
         {/* SeatMap Component Integration */}
-        <View style={styles.sectionCard}>
+        <Card variant="surface" style={styles.sectionCard}>
           <SeatMap
             seats={trip.seats}
             selectedSeats={selectedSeats}
@@ -405,25 +411,24 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
                 : 'Hech narsa tanlanmadi'}
             </Text>
           </View>
-        </View>
+        </Card>
 
         {/* Driver Profile & Vehicle Card */}
-        <View style={styles.sectionCard}>
+        <Card variant="surface" style={styles.sectionCard}>
           <Text style={styles.sectionHeading}>Haydovchi va Avtomobil</Text>
 
           <View style={styles.driverRow}>
-            <Image
-              source={{ uri: trip.driver.photoUrl }}
-              style={styles.driverPhoto}
+            <Avatar
+              name={trip.driver.fullName}
+              photoUrl={trip.driver.photoUrl}
+              size="lg"
+              isVerified={trip.driver.isVerified}
             />
             <View style={styles.driverMainInfo}>
               <View style={styles.driverNameRow}>
                 <Text style={styles.driverName}>{trip.driver.fullName}</Text>
                 {trip.driver.isVerified && (
-                  <View style={styles.verifiedRow}>
-                    <ShieldCheck size={13} color="#10B981" />
-                    <Text style={styles.verifiedText}>Tekshirilgan</Text>
-                  </View>
+                  <Badge variant="success" label="Tekshirilgan" size="sm" />
                 )}
               </View>
               <View style={styles.driverMetaRow}>
@@ -488,64 +493,47 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
               )}
             </View>
           </View>
-        </View>
+        </Card>
 
         {/* Passenger Information Input Form */}
-        <View style={styles.sectionCard}>
+        <Card variant="surface" style={styles.sectionCard}>
           <Text style={styles.sectionHeading}>Yo'lovchi ma'lumotlari</Text>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.formLabel}>To'liq ism-familiya *</Text>
-            <View style={styles.formInputWrapper}>
-              <User size={16} color={COLORS.gray[400]} />
-              <TextInput
-                style={styles.formInput}
-                value={passengerName}
-                onChangeText={setPassengerName}
-                placeholder="Ismingiz va familiyangiz"
-                placeholderTextColor={COLORS.gray[400]}
-              />
-            </View>
-          </View>
+          <Input
+            label="To'liq ism-familiya *"
+            value={passengerName}
+            onChangeText={setPassengerName}
+            placeholder="Ismingiz va familiyangiz"
+            leftIcon={<User size={16} color={COLORS.gray[400]} />}
+            containerStyle={{ marginBottom: 14 }}
+          />
 
-          <View style={styles.formGroup}>
-            <Text style={styles.formLabel}>Telefon raqam *</Text>
-            <View style={styles.formInputWrapper}>
-              <Phone size={16} color={COLORS.gray[400]} />
-              <TextInput
-                style={styles.formInput}
-                value={passengerPhone}
-                onChangeText={setPassengerPhone}
-                placeholder="+998 90 123 45 67"
-                keyboardType="phone-pad"
-                placeholderTextColor={COLORS.gray[400]}
-              />
-            </View>
-          </View>
+          <Input
+            label="Telefon raqam *"
+            value={passengerPhone}
+            onChangeText={setPassengerPhone}
+            placeholder="+998 90 123 45 67"
+            keyboardType="phone-pad"
+            leftIcon={<Phone size={16} color={COLORS.gray[400]} />}
+            containerStyle={{ marginBottom: 14 }}
+          />
 
           {trip.isInternational && (
-            <View style={styles.formGroup}>
-              <View style={styles.labelWithHint}>
-                <Text style={styles.formLabel}>Xorijiy pasport seriyasi va raqami *</Text>
-                <Text style={styles.requiredHint}>(Chegara uchun majburiy)</Text>
-              </View>
-              <View style={styles.formInputWrapper}>
-                <FileText size={16} color={COLORS.blue[600]} />
-                <TextInput
-                  style={styles.formInput}
-                  value={passportNumber}
-                  onChangeText={setPassportNumber}
-                  placeholder="Masalan: FA1234567"
-                  autoCapitalize="characters"
-                  placeholderTextColor={COLORS.gray[400]}
-                />
-              </View>
-            </View>
+            <Input
+              label="Xorijiy pasport seriyasi va raqami *"
+              hint="Chegara nazorati uchun majburiy"
+              value={passportNumber}
+              onChangeText={setPassportNumber}
+              placeholder="Masalan: FA1234567"
+              autoCapitalize="characters"
+              leftIcon={<FileText size={16} color={COLORS.blue[400]} />}
+              containerStyle={{ marginBottom: 14 }}
+            />
           )}
-        </View>
+        </Card>
 
         {/* Payment Method Selector */}
-        <View style={styles.sectionCard}>
+        <Card variant="surface" style={styles.sectionCard}>
           <Text style={styles.sectionHeading}>To'lov usuli</Text>
 
           <View style={styles.paymentMethodsGrid}>
@@ -669,7 +657,7 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Card>
       </ScrollView>
 
       {/* Sticky Bottom Bar */}
@@ -678,24 +666,22 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
           <Text style={styles.bottomPriceLabel}>
             Jami to'lov ({selectedSeats.length} ta o'rindiq):
           </Text>
-          <Text style={styles.bottomPriceAmount}>
-            {totalPrice.toLocaleString('uz-UZ')}{' '}
-            <Text style={styles.bottomPriceCurrency}>{trip.currency}</Text>
-          </Text>
+          <PriceDisplay
+            amount={totalPrice}
+            currency={trip.currency}
+            size="lg"
+          />
         </View>
 
-        <TouchableOpacity
-          style={[
-            styles.bookButton,
-            (selectedSeats.length === 0 || isExpired) && styles.bookButtonDisabled,
-          ]}
-          onPress={handleBooking}
+        <Button
+          variant="primary"
+          size="lg"
+          title="Joyni band qilish"
           disabled={selectedSeats.length === 0 || isExpired}
-          activeOpacity={0.88}
-        >
-          <Text style={styles.bookButtonText}>Joyni band qilish</Text>
-          <ArrowRight size={16} color="#0C0D11" strokeWidth={2.8} />
-        </TouchableOpacity>
+          onPress={handleBooking}
+          rightIcon={<ArrowRight size={16} color="#0C0D11" strokeWidth={2.8} />}
+          style={{ minWidth: 170 }}
+        />
       </View>
 
       {/* Border Checklist Modal */}

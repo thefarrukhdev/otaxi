@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { COLORS, SHADOWS } from '../../lib/theme';
 import { Header } from '../../components/Header';
-import { Badge } from '../../components/Badge';
+import { Button, Card, Badge, PriceDisplay } from '../../components/ui';
 import { useApp } from '../../context/AppContext';
 import { Haptics } from '../../components/ui/Haptics';
 import {
@@ -55,7 +55,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         {/* Online / Offline Cockpit Toggle Card */}
-        <View style={[styles.statusCard, isOnline ? styles.statusCardOnline : styles.statusCardOffline]}>
+        <Card variant="surface" style={[styles.statusCard, isOnline ? styles.statusCardOnline : styles.statusCardOffline]}>
           <View style={styles.statusLeft}>
             <View
               style={[
@@ -83,16 +83,17 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
             trackColor={{ false: '#1E293B', true: COLORS.emerald[500] }}
             thumbColor="#FFFFFF"
           />
-        </View>
+        </Card>
 
         {/* Verification Status Banner */}
-        <TouchableOpacity
+        <Card
+          variant="surface"
+          pressable
           style={styles.verificationBanner}
           onPress={() => {
             Haptics.light();
             navigation.navigate('Verification');
           }}
-          activeOpacity={0.85}
         >
           <View style={styles.verifIconBox}>
             <ShieldCheck size={20} color={COLORS.emerald[400]} />
@@ -104,74 +105,70 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
             </Text>
           </View>
           <ArrowRight size={16} color="#94A3B8" />
-        </TouchableOpacity>
+        </Card>
 
         {/* Financial & Performance 2x2 Stats Grid */}
         <View style={styles.statsGrid}>
           {/* 1. Wallet Balance */}
-          <TouchableOpacity
+          <Card
+            variant="surface"
+            pressable
             style={styles.statBox}
             onPress={() => {
               Haptics.selection();
               navigation.navigate('Wallet');
             }}
-            activeOpacity={0.8}
           >
             <View style={styles.statHeaderRow}>
-              <View style={[styles.statIconWrapper, { backgroundColor: '#251B10' }]}>
-                <Wallet size={18} color={COLORS.amber[400]} />
+              <View style={[styles.statIconWrapper, { backgroundColor: '#2A1805' }]}>
+                <Wallet size={18} color="#FF8800" />
               </View>
               <Text style={styles.statHint}>Pul yechish ➔</Text>
             </View>
             <Text style={styles.statLabel}>Hamyon balansi</Text>
-            <Text style={styles.statValueAmber}>
-              {driverBalance.toLocaleString('uz-UZ')}{' '}
-              <Text style={styles.statCurrency}>UZS</Text>
-            </Text>
+            <PriceDisplay amount={driverBalance} currency="UZS" size="md" />
             <Text style={styles.statSubText}>0% komissiya bilan yechish</Text>
-          </TouchableOpacity>
+          </Card>
 
           {/* 2. Today's Earnings */}
-          <View style={styles.statBox}>
+          <Card variant="surface" style={styles.statBox}>
             <View style={styles.statHeaderRow}>
-              <View style={[styles.statIconWrapper, { backgroundColor: '#0F261C' }]}>
+              <View style={[styles.statIconWrapper, { backgroundColor: '#0D2818' }]}>
                 <TrendingUp size={18} color={COLORS.emerald[400]} />
               </View>
             </View>
             <Text style={styles.statLabel}>Bugungi tushum</Text>
-            <Text style={styles.statValueEmerald}>
-              324,000 <Text style={styles.statCurrency}>UZS</Text>
-            </Text>
+            <PriceDisplay amount={324000} currency="UZS" size="md" />
             <Text style={styles.statSubText}>Kechagiga nisbatan o’sish</Text>
-          </View>
+          </Card>
 
           {/* 3. Rating */}
-          <View style={styles.statBox}>
+          <Card variant="surface" style={styles.statBox}>
             <View style={styles.statHeaderRow}>
-              <View style={[styles.statIconWrapper, { backgroundColor: '#252110' }]}>
+              <View style={[styles.statIconWrapper, { backgroundColor: '#2A2005' }]}>
                 <Star size={18} color="#FACC15" fill="#FACC15" />
               </View>
             </View>
             <Text style={styles.statLabel}>Haftalik reyting</Text>
             <Text style={styles.statValue}>4.95</Text>
             <Text style={styles.statSubText}>128 ta yo’lovchi bahosi</Text>
-          </View>
+          </Card>
 
           {/* 4. Total Trips */}
-          <View style={styles.statBox}>
+          <Card variant="surface" style={styles.statBox}>
             <View style={styles.statHeaderRow}>
-              <View style={[styles.statIconWrapper, { backgroundColor: '#121F33' }]}>
+              <View style={[styles.statIconWrapper, { backgroundColor: '#0A1E38' }]}>
                 <Car size={18} color="#38BDF8" />
               </View>
             </View>
             <Text style={styles.statLabel}>Bajarilgan safarlar</Text>
             <Text style={styles.statValue}>185 ta</Text>
             <Text style={styles.statSubText}>Muvaffaqiyatli qatnovlar</Text>
-          </View>
+          </Card>
         </View>
 
         {/* Next Scheduled Trip Card (Navbatdagi Reys) */}
-        <View style={styles.nextTripCard}>
+        <Card variant="surface" style={styles.nextTripCard}>
           <View style={styles.nextTripHeader}>
             <View style={styles.nextTripRouteWrap}>
               <View style={styles.tagRow}>
@@ -222,59 +219,55 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
           </View>
 
           {/* Manage Trip CTA Button */}
-          <TouchableOpacity
-            style={styles.manageTripBtn}
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
+            rightIcon={<ArrowRight size={16} color="#0C0D11" />}
+            title={`Faol reysni boshqarish (${bookedCount} ta yo'lovchi)`}
             onPress={() => {
               Haptics.medium();
               navigation.navigate('ActiveTrip');
             }}
-            activeOpacity={0.85}
-          >
-            <View style={styles.manageTripBtnContent}>
-              <Text style={styles.manageTripBtnText}>Faol reysni boshqarish</Text>
-              <Text style={styles.manageTripBtnSubText}>
-                {bookedCount} ta yo’lovchi kodi va qabul qilish
-              </Text>
-            </View>
-            <View style={styles.manageTripArrowCircle}>
-              <ArrowRight size={16} color={COLORS.navy[950]} />
-            </View>
-          </TouchableOpacity>
-        </View>
+            style={{ marginTop: 12 }}
+          />
+        </Card>
 
         {/* Quick Actions Grid */}
         <Text style={styles.sectionHeading}>Tezkor amallar</Text>
         <View style={styles.actionsGrid}>
           {/* Create Trip */}
-          <TouchableOpacity
+          <Card
+            variant="surface"
+            pressable
             style={styles.actionCard}
             onPress={() => {
               Haptics.selection();
               navigation.navigate('CreateTrip');
             }}
-            activeOpacity={0.85}
           >
-            <View style={[styles.actionIconBox, { backgroundColor: '#251B10' }]}>
-              <PlusCircle size={22} color={COLORS.amber[400]} />
+            <View style={[styles.actionIconBox, { backgroundColor: '#2A1805' }]}>
+              <PlusCircle size={22} color="#FF8800" />
             </View>
             <Text style={styles.actionTitle}>Yangi reys e’lon qilish</Text>
             <Text style={styles.actionDesc}>Shaharlararo yoki xalqaro chegara yo’nalishi</Text>
             <View style={styles.actionFooter}>
               <Text style={styles.actionFooterText}>Reys yaratish</Text>
-              <ArrowRight size={13} color={COLORS.amber[400]} />
+              <ArrowRight size={13} color="#FF8800" />
             </View>
-          </TouchableOpacity>
+          </Card>
 
           {/* Wallet Payout */}
-          <TouchableOpacity
+          <Card
+            variant="surface"
+            pressable
             style={styles.actionCard}
             onPress={() => {
               Haptics.selection();
               navigation.navigate('Wallet');
             }}
-            activeOpacity={0.85}
           >
-            <View style={[styles.actionIconBox, { backgroundColor: '#0F261C' }]}>
+            <View style={[styles.actionIconBox, { backgroundColor: '#0D2818' }]}>
               <Wallet size={22} color={COLORS.emerald[400]} />
             </View>
             <Text style={styles.actionTitle}>Hamyon & Pul yechish</Text>
@@ -285,7 +278,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
               </Text>
               <ArrowRight size={13} color={COLORS.emerald[400]} />
             </View>
-          </TouchableOpacity>
+          </Card>
         </View>
       </ScrollView>
     </View>
@@ -295,7 +288,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090D16', // Cockpit Obsidian
+    backgroundColor: '#0C0D11',
   },
   scrollView: {
     flex: 1,
@@ -315,12 +308,12 @@ const styles = StyleSheet.create({
     ...SHADOWS.md,
   },
   statusCardOnline: {
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     borderColor: 'rgba(16, 185, 129, 0.4)',
   },
   statusCardOffline: {
-    backgroundColor: '#111827',
-    borderColor: '#1F2937',
+    backgroundColor: '#15171E',
+    borderColor: '#272B35',
   },
   statusLeft: {
     flexDirection: 'row',
@@ -352,7 +345,7 @@ const styles = StyleSheet.create({
     lineHeight: 15,
   },
   verificationBanner: {
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     borderRadius: 16,
     padding: 14,
     flexDirection: 'row',
@@ -398,11 +391,11 @@ const styles = StyleSheet.create({
   },
   statBox: {
     width: '48%',
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     ...SHADOWS.sm,
   },
   statHeaderRow: {
@@ -460,11 +453,11 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   nextTripCard: {
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1.5,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginBottom: 20,
     ...SHADOWS.md,
   },
@@ -508,7 +501,7 @@ const styles = StyleSheet.create({
     padding: 12,
     gap: 10,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     marginBottom: 14,
   },
   tripDetailItem: {
@@ -573,11 +566,11 @@ const styles = StyleSheet.create({
   },
   actionCard: {
     flex: 1,
-    backgroundColor: '#111827',
+    backgroundColor: '#15171E',
     borderRadius: 18,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     justifyContent: 'space-between',
     minHeight: 140,
     ...SHADOWS.sm,
