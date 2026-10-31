@@ -33,6 +33,8 @@ import {
   Plus,
   Zap,
   Calculator,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react-native';
 
 interface CreateTripScreenProps {
@@ -470,11 +472,18 @@ export const CreateTripScreen: React.FC<CreateTripScreenProps> = ({ navigation }
           }}
           activeOpacity={0.8}
         >
-          <Text style={styles.advancedToggleText}>
-            {showAdvanced
-              ? "▲ Qo'shimcha sozlamalarni yopish"
-              : "▼ Qo'shimcha sozlamalar (Oraliq bekatlar, qulayliklar, izoh)"}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+            <Text style={styles.advancedToggleText}>
+              {showAdvanced
+                ? "Qo'shimcha sozlamalarni yopish"
+                : "Qo'shimcha sozlamalar (Oraliq bekatlar, qulayliklar, izoh)"}
+            </Text>
+            {showAdvanced ? (
+              <ChevronUp size={16} color={COLORS.brand.primary} />
+            ) : (
+              <ChevronDown size={16} color={COLORS.brand.primary} />
+            )}
+          </View>
         </TouchableOpacity>
 
         {showAdvanced && (

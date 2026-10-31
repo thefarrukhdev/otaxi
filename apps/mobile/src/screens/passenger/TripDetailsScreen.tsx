@@ -21,6 +21,7 @@ import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { PriceDisplay } from '../../components/ui/PriceDisplay';
+import { EmptyState } from '../../components/ui/EmptyState';
 import { useApp } from '../../context/AppContext';
 import { getBorderChecklist } from '../../lib/data';
 import { PaymentProvider, CountryCode } from '@otaxi/types';
@@ -72,11 +73,12 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
 
   // Default selection: seat 1 (front VIP) if available, else first available
   const initialSeat = useMemo(() => {
+    if (!trip || !trip.seats) return [];
     const seat1 = trip.seats.find((s) => s.seatNumber === 1 && s.isAvailable);
     if (seat1) return [1];
     const firstAvail = trip.seats.find((s) => s.isAvailable);
     return firstAvail ? [firstAvail.seatNumber] : [];
-  }, [trip.seats]);
+  }, [trip?.seats]);
 
   const [selectedSeats, setSelectedSeats] = useState<number[]>(initialSeat);
   const [passengerName, setPassengerName] = useState('Farrukh Bek');
@@ -131,18 +133,19 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
 
   // Dynamic price calculation with VIP priceDelta
   const totalPrice = useMemo(() => {
+    if (!trip || !trip.seats) return 0;
     return selectedSeats.reduce((sum, seatNum) => {
       const seat = trip.seats.find((s) => s.seatNumber === seatNum);
       const delta = seat ? seat.priceDelta : 0;
       return sum + trip.pricePerSeat + delta;
     }, 0);
-  }, [selectedSeats, trip.seats, trip.pricePerSeat]);
+  }, [selectedSeats, trip?.seats, trip?.pricePerSeat]);
 
   // Border checklist stats
-  const borderChecklist = useMemo(
-    () => getBorderChecklist(trip.originCountry, trip.destinationCountry),
-    [trip.originCountry, trip.destinationCountry]
-  );
+  const borderChecklist = useMemo(() => {
+    if (!trip) return getBorderChecklist(CountryCode.UZ, CountryCode.KZ);
+    return getBorderChecklist(trip.originCountry, trip.destinationCountry);
+  }, [trip?.originCountry, trip?.destinationCountry]);
 
   const totalRequiredChecklist = borderChecklist.items.filter((i) => i.isRequired).length;
   const checkedRequiredCount = borderChecklist.items.filter(
@@ -234,6 +237,22 @@ export const TripDetailsScreen: React.FC<TripDetailsScreenProps> = ({
       ]
     );
   };
+
+  if (!trip) {
+    return (
+      <View style={styles.container}>
+        <Header title="Reys tafsilotlari" />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <EmptyState
+            title="Reys topilmadi"
+            description="Bunday reys mavjud emas yoki muddati o'tib ketgan."
+            actionTitle="Orqaga qaytish"
+            onActionPress={() => navigation.goBack()}
+          />
+        </View>
+      </View>
+    );
+  }
 
   const isWhenFull = trip.departureType === 'WHEN_FULL';
   const departureTimeStr = isWhenFull ? "To'lganda" : formatClockTime(trip.departureTime);

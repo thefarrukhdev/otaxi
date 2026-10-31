@@ -33,7 +33,7 @@ export const VerificationScreen: React.FC = () => {
   const { verification, uploadDocument, submitVerification } = useApp();
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
 
-  const handleSimulateUpload = (
+  const handleDocumentUpload = (
     name: string,
     type: 'licenseFront' | 'licenseBack' | 'techPassport' | 'insurance' | 'carPhotos'
   ) => {
@@ -137,7 +137,7 @@ export const VerificationScreen: React.FC = () => {
               size="sm"
               leftIcon={<RefreshCw size={12} color="#FF8800" />}
               title="Yangilash"
-              onPress={() => handleSimulateUpload('Haydovchilik guvohnomasi', 'licenseFront')}
+              onPress={() => handleDocumentUpload('Haydovchilik guvohnomasi', 'licenseFront')}
             />
           </View>
         </Card>
@@ -164,7 +164,7 @@ export const VerificationScreen: React.FC = () => {
               size="sm"
               leftIcon={<RefreshCw size={12} color="#FF8800" />}
               title="Yangilash"
-              onPress={() => handleSimulateUpload('Texpasport', 'techPassport')}
+              onPress={() => handleDocumentUpload('Texpasport', 'techPassport')}
             />
           </View>
         </Card>
@@ -191,7 +191,7 @@ export const VerificationScreen: React.FC = () => {
               size="sm"
               leftIcon={<RefreshCw size={12} color="#FF8800" />}
               title="Yangilash"
-              onPress={() => handleSimulateUpload('Sug’urta polisi', 'insurance')}
+              onPress={() => handleDocumentUpload('Sug’urta polisi', 'insurance')}
             />
           </View>
         </Card>
@@ -215,7 +215,7 @@ export const VerificationScreen: React.FC = () => {
               <TouchableOpacity
                 key={slot.id}
                 style={styles.photoSlot}
-                onPress={() => handleSimulateUpload(`Avtomobil ${slot.title}`, 'carPhotos')}
+                onPress={() => handleDocumentUpload(`Avtomobil ${slot.title}`, 'carPhotos')}
                 activeOpacity={0.75}
               >
                 <Camera size={16} color={COLORS.amber[400]} />

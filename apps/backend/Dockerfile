@@ -24,4 +24,4 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/backend/node_modules ./apps/backend/node_modules
 
 EXPOSE 4000
-CMD ["node", "apps/backend/dist/src/main.js"]
+CMD ["node", "apps/backend/dist/main.js"]
