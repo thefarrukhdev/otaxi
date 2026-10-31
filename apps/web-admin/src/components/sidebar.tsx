@@ -12,7 +12,7 @@ import {
   History,
   Car,
   ChevronRight,
-  Sparkles,
+  Settings,
 } from 'lucide-react';
 
 interface NavItem {
@@ -151,7 +151,7 @@ export function Sidebar() {
           </div>
         </div>
         <div className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white cursor-pointer" title="Sozlamalar">
-          <Sparkles className="w-4 h-4" />
+          <Settings className="w-4 h-4" />
         </div>
       </div>
     </aside>
