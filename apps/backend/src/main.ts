@@ -88,8 +88,8 @@ async function bootstrap() {
   await app.listen(port);
 
   logger.log(`=======================================================`);
-  logger.log(`🚀 OTAXI Backend running on: http://localhost:${port}/${apiPrefix}`);
-  logger.log(`📚 Swagger documentation at: http://localhost:${port}/docs`);
+  logger.log(`[OTAXI API] Backend running on: http://localhost:${port}/${apiPrefix}`);
+  logger.log(`[OTAXI API] Swagger documentation at: http://localhost:${port}/docs`);
   logger.log(`=======================================================`);
 }
 
