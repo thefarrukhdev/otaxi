@@ -9,7 +9,7 @@ const DarkNavigationTheme = {
   colors: {
     ...DarkTheme.colors,
     background: '#0C0D11',
-    card: 'transparent',
+    card: '#0C0D11',
     text: '#FFFFFF',
     border: '#272B35',
     primary: '#FF8800',

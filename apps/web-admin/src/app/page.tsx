@@ -160,7 +160,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-bold text-slate-900">Mashhur Koridorlar</h3>
-                <span className="text-xs text-blue-600 font-semibold cursor-pointer">Barchasi</span>
+                <Link href="/trips" className="text-xs text-blue-600 font-semibold hover:text-blue-700">Barchasi</Link>
               </div>
               <p className="text-xs text-slate-500 mb-4">Eng koʻp talab qilinadigan yoʻnalishlar ulushi</p>
 

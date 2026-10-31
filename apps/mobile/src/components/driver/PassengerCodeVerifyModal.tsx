@@ -252,10 +252,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalContent: {
-    backgroundColor: '#111827', // Card Graphite
+    backgroundColor: '#15171E', // Noir Surface
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     padding: 20,
     width: '100%',
     maxWidth: 420,

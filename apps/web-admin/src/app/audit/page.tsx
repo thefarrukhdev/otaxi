@@ -166,6 +166,15 @@ export default function AuditPage() {
                     </td>
                   </tr>
                 ))}
+                {filteredLogs.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="py-12 text-center text-slate-500 text-xs">
+                      <History className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                      <p className="font-semibold text-slate-700">Audit yozuvlari topilmadi</p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">Qidiruv yoki tanlangan obyekt boʻyicha hech qanday log topilmadi.</p>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -174,7 +183,7 @@ export default function AuditPage() {
 
       {/* Selected Log Drawer / Modal if clicked */}
       {selectedLog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80">
           <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl p-6 border border-slate-200 space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">

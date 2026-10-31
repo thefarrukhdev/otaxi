@@ -41,7 +41,7 @@ export function VerificationModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80">
       <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200">
         {/* Modal Header */}
         <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
@@ -114,7 +114,7 @@ export function VerificationModal({
                     href={currentDoc.fileUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-black/75 hover:bg-black text-white text-xs font-medium flex items-center gap-1.5 backdrop-blur-xs transition-colors"
+                    className="absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-black text-white text-xs font-medium flex items-center gap-1.5 transition-colors shadow"
                   >
                     <span>Toʻliq koʻrish</span>
                     <ExternalLink className="w-3 h-3" />

@@ -300,11 +300,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   sheetContainer: {
-    backgroundColor: '#111827', // Card Graphite
+    backgroundColor: '#15171E', // Noir Surface
     borderTopLeftRadius: 26,
     borderTopRightRadius: 26,
     borderWidth: 1,
-    borderColor: '#1F2937',
+    borderColor: '#272B35',
     maxHeight: '90%',
     paddingBottom: 28,
     ...SHADOWS.lg,

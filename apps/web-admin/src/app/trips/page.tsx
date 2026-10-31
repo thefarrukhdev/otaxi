@@ -247,6 +247,15 @@ export default function TripsPage() {
                     </tr>
                   );
                 })}
+                {filteredTrips.length === 0 && (
+                  <tr>
+                    <td colSpan={7} className="py-12 text-center text-slate-500 text-xs">
+                      <Route className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                      <p className="font-semibold text-slate-700">Reyslar topilmadi</p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">Tanlangan filtrlar boʻyicha hech qanday reys mavjud emas.</p>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

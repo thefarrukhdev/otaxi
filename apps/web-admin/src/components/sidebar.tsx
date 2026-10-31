@@ -150,9 +150,13 @@ export function Sidebar() {
             <p className="text-[10px] text-emerald-400 font-medium">Super Administrator</p>
           </div>
         </div>
-        <div className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white cursor-pointer" title="Sozlamalar">
+        <Link
+          href="/audit"
+          className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors"
+          title="Tizim auditi va sozlamalar"
+        >
           <Settings className="w-4 h-4" />
-        </div>
+        </Link>
       </div>
     </aside>
   );

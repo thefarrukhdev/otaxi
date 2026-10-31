@@ -216,6 +216,15 @@ export default function BookingsPage() {
                     </td>
                   </tr>
                 ))}
+                {filteredBookings.length === 0 && (
+                  <tr>
+                    <td colSpan={8} className="py-12 text-center text-slate-500 text-xs">
+                      <Ticket className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                      <p className="font-semibold text-slate-700">Buyurtmalar topilmadi</p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">Qidiruv yoki tanlangan filtrga mos buyurtma mavjud emas.</p>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
